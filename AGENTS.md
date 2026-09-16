@@ -17,8 +17,10 @@ To prevent duplication and configuration drift across different AI agent framewo
    - Do not duplicate these rules or specifications. Treat `.claude/` files as the single source of truth.
 3. **Beginner Onboarding Trigger ("Set everything up for me"):**
    - When a user asks: `"Set everything up for me"`, `"Set up my job search"`, `"Get started"`, `"I'm new, help me set this up"`, or runs `/setup`:
-     - Run `python3 tools/setup_wizard.py --doctor` to check prerequisites.
-     - Guide the user warmly through setting up their candidate profile, choosing their job market (North America 1-Page Jake's Resume vs European 2-Page ModernCV), installing portal scrapers, and compiling their first PDF.
+     - **Phase 1 — Environment:** Run `python3 tools/setup_wizard.py --doctor` to check prerequisites. Then run `python3 tools/setup_wizard.py --install` to install all portal search CLIs. Then run `python3 tools/setup_wizard.py --test-latex jakes` to verify LaTeX compilation.
+     - **Phase 2 — Profile (do not skip):** After the environment wizard completes, immediately read and execute the full workflow in `.claude/commands/setup.md`. This is where the agent collects the user's personal information, reads their documents, and populates all profile files. Do NOT stop after the environment checklist and list "next steps" — continue directly into the profile conversation without waiting to be asked.
+     - The agent should scan `documents/` first. If it contains files, lead with Path A (document scan). If empty, offer all three paths as described in `setup.md`.
+     - Only after profile files are fully populated should the agent summarize what was done and suggest the first scrape or apply command.
 4. **Portal Search Skills:**
    - Job-portal search CLIs live under [.agents/skills/](.agents/skills/) in the portable Agent Skills format (with a `SKILL.md` per portal). Codex and Antigravity discover these automatically; the `/scrape` workflow in [.claude/skills/job-scraper/](.claude/skills/job-scraper/) orchestrates them.
    - Includes Canadian boards (`indeed-search`, `jobbank-ca-search`, `techto-search`, `talent-com-search`, `eluta-search`, `gcjobs-search`), Global/Tech boards (`linkedin-search`, `freehire-search`), and European boards (`jobindex-search`, `jobnet-search`, `jobbank-search`, `jobdanmark-search`).
