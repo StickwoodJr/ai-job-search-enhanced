@@ -24,19 +24,30 @@ python3 tools/setup_wizard.py --install       # Install all portal search CLIs
 python3 tools/setup_wizard.py --test-latex jakes  # Smoke-test LaTeX compilation
 ```
 
-After reporting a summary of the environment check, **immediately proceed to Phase 2 without waiting to be asked**.
+After reporting a summary of the environment check, the agent MUST immediately transition into profile setup. The correct next action is:
 
-## Phase 2: Profile Collection (Do Not Skip)
+1. Use `list_dir` on `documents/` to see if the user has dropped any files there.
+2. Then say something like:
 
-Read `.claude/commands/setup.md` and execute the full workflow defined there. This is where the candidate's personal information, career history, target roles, and search configuration are collected and written to profile files.
+   > "Environment is all set ✅. Now let's build your candidate profile — this is what personalizes every resume and cover letter the agent writes for you.
+   >
+   > I can see [N files / no files] in your `documents/` folder.
+   > [If files exist:] I'll read those now and use them to build your profile — this is the recommended path.
+   > [If empty:] No documents yet, no problem. I can either walk you through a quick interview to capture your background, or you can paste your CV directly here."
 
-**Critical:** Do NOT stop after Phase 1 and list "next steps" for the user to do later. The profile conversation must happen now, as part of this single setup session.
+3. Then immediately begin the profile collection workflow from `.claude/commands/setup.md` Step 0, picking the right path automatically based on what's in `documents/`.
 
-1. Scan `documents/` first (use `list_dir` recursively).
-   - If files are present → lead with **Path A** (document scan, recommended).
-   - If empty → offer all three paths as described in `setup.md` Step 0.
-2. Follow the chosen path through to Step 3 (file generation) and Step 4 (confirmation).
-3. Only after all profile files are populated, present the final summary and suggest the first workflow to run (`/scrape-indeed`, `/apply`, etc.).
+**This transition is not optional and does not require the user to ask again.** Do NOT list "next steps" and stop. Do NOT say "ask me to set up my profile later." Continue the conversation now.
+
+## Phase 2: Profile Collection
+
+Read `.claude/commands/setup.md` and execute the full workflow. This collects the candidate's personal information, career history, target roles, search configuration, swarm sector setup, and RAG notebook connection — all in one session.
+
+1. Scan `documents/` first (`list_dir` recursively).
+   - Files present → lead with **Path A** (document scan).
+   - Empty → offer all three paths (A / B / C) as in `setup.md` Step 0.
+2. Follow the chosen path through Step 3 (file generation) and Step 4 (confirmation).
+3. Only after profile files are fully written, present the final "Setup complete!" summary and suggest first workflows.
 
 ## Key Tool Translations for This Workflow
 
