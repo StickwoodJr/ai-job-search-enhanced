@@ -35,43 +35,73 @@ except ImportError as e:
     sys.exit(1)
 
 SEEN_JOBS_FILE = REPO_ROOT / "job_scraper" / "seen_jobs.json"
+SEEN_JOBS_FILE = REPO_ROOT / "job_scraper" / "seen_jobs.json"
 TRACKER_FILE = REPO_ROOT / "job_search_tracker.csv"
-REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
+SWARM_CONFIG_FILE = REPO_ROOT / "config" / "swarm_sectors.json"
+REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+if not REBUILD_SCRIPT.exists():
+    REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
 
-SECTOR_QUERIES: Dict[str, List[Tuple[str, str]]] = {
+DEFAULT_SECTOR_QUERIES: Dict[str, List[Tuple[str, str]]] = {
     "systems_hardware": [
-        ("Linux Co-op Winter 2027", "Toronto, ON"),
-        ("Systems Administrator Co-op Winter 2027", "Toronto, ON"),
-        ("Windows Server Active Directory Co-op Winter 2027", "Toronto, ON"),
-        ("IT Support Co-op Winter 2027", "York Region, ON"),
-        ("Desktop Support Co-op Winter 2027", "Markham, ON"),
-        ("Service Desk Technician Co-op Winter 2027", "Toronto, ON"),
-        ("Hardware Technician Co-op Winter 2027", "Mississauga, ON"),
-        ("Datacenter Technician Co-op Winter 2027", "Toronto, ON"),
-        ("IT Workplace Services Co-op Winter 2027", "Toronto, ON"),
+        ("Linux Administrator", "Toronto, ON"),
+        ("Systems Administrator", "Toronto, ON"),
+        ("Windows Server Active Directory", "Toronto, ON"),
+        ("IT Support Specialist", "York Region, ON"),
+        ("Desktop Support", "Markham, ON"),
+        ("Service Desk Technician", "Toronto, ON"),
+        ("Hardware Technician", "Mississauga, ON"),
+        ("Datacenter Technician", "Toronto, ON"),
+        ("IT Workplace Services", "Toronto, ON"),
     ],
     "networking_noc": [
-        ("Network Administrator Co-op Winter 2027", "Toronto, ON"),
-        ("Network Support Co-op Winter 2027", "Toronto, ON"),
-        ("Cisco Co-op Winter 2027", "Toronto, ON"),
-        ("NOC Analyst Co-op Winter 2027", "Toronto, ON"),
-        ("NOC Technician Co-op Winter 2027", "Toronto, ON"),
-        ("Telecom Technician Co-op Winter 2027", "Mississauga, ON"),
-        ("Network Infrastructure Co-op Winter 2027", "Markham, ON"),
-        ("Network Security Co-op Winter 2027", "Toronto, ON"),
+        ("Network Administrator", "Toronto, ON"),
+        ("Network Support Specialist", "Toronto, ON"),
+        ("Cisco Network Engineer", "Toronto, ON"),
+        ("NOC Analyst", "Toronto, ON"),
+        ("NOC Technician", "Toronto, ON"),
+        ("Telecom Technician", "Mississauga, ON"),
+        ("Network Infrastructure", "Markham, ON"),
+        ("Network Security Specialist", "Toronto, ON"),
     ],
     "cloud_cyber": [
-        ("Cloud Infrastructure Co-op Winter 2027", "Toronto, ON"),
-        ("Cloud Engineer Co-op Winter 2027", "Toronto, ON"),
-        ("DevOps Co-op Winter 2027", "Toronto, ON"),
-        ("Cyber Security Co-op Winter 2027", "Toronto, ON"),
-        ("Information Security Co-op Winter 2027", "Toronto, ON"),
-        ("SOC Analyst Co-op Winter 2027", "Toronto, ON"),
-        ("Vulnerability Analyst Co-op Winter 2027", "Toronto, ON"),
-        ("Technical Systems Analyst Co-op Winter 2027", "Toronto, ON"),
-        ("OT Cybersecurity Co-op Winter 2027", "Toronto, ON"),
+        ("Cloud Infrastructure Specialist", "Toronto, ON"),
+        ("Cloud Engineer", "Toronto, ON"),
+        ("DevOps Engineer", "Toronto, ON"),
+        ("Cybersecurity Analyst", "Toronto, ON"),
+        ("Information Security Specialist", "Toronto, ON"),
+        ("SOC Analyst", "Toronto, ON"),
+        ("Vulnerability Analyst", "Toronto, ON"),
+        ("Technical Systems Analyst", "Toronto, ON"),
     ],
 }
+
+def load_sector_queries() -> Dict[str, List[Tuple[str, str]]]:
+    """Load sector queries from config/swarm_sectors.json or return defaults."""
+    if SWARM_CONFIG_FILE.exists():
+        try:
+            with open(SWARM_CONFIG_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                sectors = data.get("sectors", {})
+                loaded = {}
+                default_loc = data.get("home_location", "Toronto, ON")
+                for sec_key, sec_info in sectors.items():
+                    raw_queries = sec_info.get("queries", [])
+                    query_list = []
+                    for q in raw_queries:
+                        if isinstance(q, (list, tuple)) and len(q) >= 2:
+                            query_list.append((str(q[0]), str(q[1])))
+                        elif isinstance(q, str):
+                            query_list.append((q, default_loc))
+                    if query_list:
+                        loaded[sec_key] = query_list
+                if loaded:
+                    return loaded
+        except Exception as e:
+            sys.stderr.write(f"Warning: Failed to load swarm_sectors.json: {e}\n")
+    return DEFAULT_SECTOR_QUERIES
+
+SECTOR_QUERIES = load_sector_queries()
 
 running = True
 

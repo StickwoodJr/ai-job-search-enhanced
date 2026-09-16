@@ -1,8 +1,8 @@
-# /indeed-swarm-scraper — Multi-Sector Indeed Canada Swarm Scraper
+# /indeed-swarm-scraper — Multi-Sector Indeed Swarm Scraper
 
-You are executing the **multi-agent Indeed Swarm Scraper workflow** exclusively targeting **Indeed Canada** (`ca.indeed.com`) for Golden Stickwood.
+You are executing the **multi-agent Indeed Swarm Scraper workflow** targeting **Indeed** (`indeed.ca` / `indeed.com`).
 
-The swarm scraper partitions the search space across **3 specialized sector subagents / daemons**, executing parallel surveillance loops while enforcing atomic state management, strict Seneca Polytechnic Computer Systems Technology (CTYC) curriculum alignment, and geographic commute thresholds ($\le 70\text{ km}$ from Newmarket, ON).
+The swarm scraper partitions the search space across **specialized sector subagents / daemons** defined in `config/swarm_sectors.json`, executing parallel surveillance loops while enforcing atomic state management, candidate profile qualification criteria, and user-configured commute thresholds.
 
 ---
 

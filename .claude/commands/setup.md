@@ -387,6 +387,19 @@ Replace all placeholder tokens in the search queries file with the user's actual
   - Priority 3: Adjacent roles they could pivot into
   - Priority 4: Broader roles (wider net)
 
+### 9. Configure Indeed Swarm Scraper (`config/swarm_sectors.json`)
+Configure the high-performance multi-sector scraper sectors, queries, home location, and commute radius:
+- Set `target_candidate` to the user's name
+- Set `home_location` to their target city/region
+- Set `max_distance_km` to their commute radius (e.g., 50 km)
+- Configure target sectors (e.g. Systems & IT Support, Networking & NOC, Cloud & Cyber) with location-targeted search query pairs
+
+### 10. Configure Educational Curriculum RAG (`rag/user_config.json`)
+Connect to Google NotebookLM to enable coursework-grounded bullet generation for `/rag-apply`:
+- Ask the user if they have an existing NotebookLM notebook containing their course syllabi, lab reports, or code.
+- If yes: set `default_notebook_id` and `default_notebook_title` in `rag/user_config.json`.
+- If no: guide them to scan `documents/` with `python rag/notebook_manager.py scan-documents`, upload materials to https://notebooklm.google.com, and register the notebook ID.
+
 ---
 
 ## Step 4: Confirm & Next Steps
@@ -401,8 +414,10 @@ Present a summary:
 > - `.claude/skills/job-application-assistant/04-job-evaluation.md` - Personalized evaluation framework
 > - `.claude/skills/job-application-assistant/05-cv-templates.md` - CV templates with your profile statements
 > - `.claude/skills/job-application-assistant/07-interview-prep.md` - STAR examples from your experience
-> - `cv/main_example.tex` - Your LaTeX CV template
+> - `cv/main_example.tex` / `cv/jakes_resume_template.tex` - Your LaTeX CV template
 > - `.claude/skills/job-scraper/search-queries.md` - Job search queries for `/scrape`
+> - `config/swarm_sectors.json` - Target sector queries for `/indeed-swarm-scraper`
+> - `rag/user_config.json` - Educational Curriculum RAG notebook configuration
 >
 > **Privacy note:** the files above now contain your personal data and are *tracked by git*.
 > A GitHub fork of the template is always public (forks of public repos cannot be made
@@ -410,8 +425,12 @@ Present a summary:
 > repository instead - see SETUP.md section 8 for the private-remote setup.
 >
 > **Try it out:**
-> - Run `/scrape` to search for matching jobs right now
-> - Run `/apply` with a job posting URL to see the full application workflow
+> - Run `/indeed-swarm-scraper` to run 3 parallel sector searches with atomic deduplication
+> - Run `/scrape-indeed` to search targeted roles on Indeed Canada
+> - Run `/rag-apply <URL>` to tailor a LaTeX CV verified against your coursework with primary lab proof
+> - Run `/apply <URL>` to run standard fit evaluation and draft a tailored application
+> - Run `/interview <Company>` to prepare STAR stories and practice mock interview questions
+> - Run `/html-report` to open your interactive offline application tracker dashboard
 > - Run `/setup --section search` later to update your search queries as your priorities evolve
 
 If Path A left any STAR stubs in `07-interview-prep.md`, also note:

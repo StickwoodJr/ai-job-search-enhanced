@@ -1,0 +1,106 @@
+{
+  "target_candidate": "[YOUR_NAME]",
+  "home_location": "Toronto, ON",
+  "max_distance_km": 50,
+  "target_term": "Co-op / Internship / Entry-level / Full-time",
+  "sectors": {
+    "systems_hardware": {
+      "name": "Systems & IT Support",
+      "description": "Linux, Systems Administration, Windows Server, Active Directory, Service Desk, Desktop Support",
+      "queries": [
+        [
+          "Linux Administrator",
+          "Toronto, ON"
+        ],
+        [
+          "Systems Administrator",
+          "Toronto, ON"
+        ],
+        [
+          "Windows Server Active Directory",
+          "Toronto, ON"
+        ],
+        [
+          "IT Support Specialist",
+          "Toronto, ON"
+        ],
+        [
+          "Desktop Support",
+          "Toronto, ON"
+        ],
+        [
+          "Service Desk Technician",
+          "Toronto, ON"
+        ],
+        [
+          "Datacenter Operations",
+          "Toronto, ON"
+        ]
+      ]
+    },
+    "networking_noc": {
+      "name": "Networking & NOC",
+      "description": "Cisco Routing & Switching, Network Administration, NOC Operations, Network Security, Firewalls",
+      "queries": [
+        [
+          "Network Administrator",
+          "Toronto, ON"
+        ],
+        [
+          "Network Support Specialist",
+          "Toronto, ON"
+        ],
+        [
+          "Cisco Network Engineer",
+          "Toronto, ON"
+        ],
+        [
+          "NOC Analyst",
+          "Toronto, ON"
+        ],
+        [
+          "NOC Technician",
+          "Toronto, ON"
+        ],
+        [
+          "Telecom Technician",
+          "Toronto, ON"
+        ],
+        [
+          "Network Security Specialist",
+          "Toronto, ON"
+        ]
+      ]
+    },
+    "cloud_cyber": {
+      "name": "Cloud & Cybersecurity",
+      "description": "Cloud Infrastructure (AWS/Azure), DevOps, Docker, Cybersecurity, SOC Analyst, Information Security",
+      "queries": [
+        [
+          "Cloud Infrastructure Specialist",
+          "Toronto, ON"
+        ],
+        [
+          "Cloud Engineer",
+          "Toronto, ON"
+        ],
+        [
+          "DevOps Engineer",
+          "Toronto, ON"
+        ],
+        [
+          "Cybersecurity Analyst",
+          "Toronto, ON"
+        ],
+        [
+          "Information Security Specialist",
+          "Toronto, ON"
+        ],
+        [
+          "SOC Analyst",
+          "Toronto, ON"
+        ]
+      ]
+    }
+  }
+}

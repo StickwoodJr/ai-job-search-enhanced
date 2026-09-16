@@ -127,3 +127,4 @@ documents/matrix_banner.gif
 
 # Local RAG experiment legacy directory (consolidated into rag/)
 RAG Experiment/
+rag/user_config.json
