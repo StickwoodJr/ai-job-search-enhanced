@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/mascot/pip_flight_loop.gif" alt="Pip, the courier bird" width="200">
-</p>
-
 # AI Job Search Enhanced 🚀
 
 *The autonomous, AI-powered job search operating system that runs entirely on your local machine.*
@@ -11,7 +7,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Supported Agents](https://img.shields.io/badge/Agents-Claude%20Code%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex-brightgreen.svg)](AGENTS.md)
 
-An intelligent, multi-agent framework built for **[Claude Code](https://claude.com/claude-code)** and **[Google Antigravity](https://github.com/google-deepmind)** (and compatible with Codex, Cursor, and Gemini CLI). It automates the entire job hunt: scrapes multiple job boards, evaluates posting fit, tailors verified LaTeX resumes and cover letters, grounds achievements in real educational coursework via live Curriculum RAG, prepares you for interviews, and deploys a live personal analytics dashboard.
+An intelligent, multi-agent framework built for **[Claude Code](https://claude.com/claude-code)** and **[Google Antigravity](https://github.com/google-deepmind)** (and compatible with Codex, Cursor, and Gemini CLI). It automates the entire job hunt: scrapes multiple job boards, evaluates posting fit, tailors verified LaTeX resumes and cover letters, grounds achievements in real career evidence (certifications, personal projects, past resumes, coursework) via live Career Evidence RAG, prepares you for interviews, and deploys a live personal analytics dashboard.
 
 ---
 
@@ -76,8 +72,8 @@ This repository builds on the excellent foundations of [MadsLorentzen/ai-job-sea
 | 🤖 **Native Antigravity & Claude Code Support** | Unified thin-pointer architecture (`.agents/skills/` and `.claude/commands/`) with full cross-runtime compatibility. Works identically in Antigravity and Claude Code. |
 | 🍁 **Canadian & North American Market Ready** | Out-of-the-box search skills for **Indeed Canada**, **Job Bank Canada**, **TechTO Jobs**, **Talent.com**, **Eluta.ca**, and **GC Jobs (Federal Government of Canada)**, alongside **LinkedIn** and **Freehire**. |
 | 📄 **1-Page Jake's Resume Template (`pdflatex`)** | Standard single-page, ATS-optimized North American resume template (`cv/jakes_resume_template.tex`) that compiles cleanly and fast with `pdflatex`. (European 2-page ModernCV still fully supported). |
-| 🐝 **Indeed Swarm Scraper** | High-performance multi-sector scraper (`/indeed-swarm-scraper`) that partitions search across Systems, Networking, and Cloud sectors with atomic deduplication and automatic tracker updates. |
-| 🎓 **Educational Curriculum RAG (NotebookLM)** | Live, zero-cache retrieval augmented generation (`/rag-apply`) querying primary course materials, lab submissions, and topologies via Google NotebookLM & ExtendLM MCP to back up resume claims with verified proof. |
+| 🐝 **Indeed Swarm Scraper** | High-performance multi-sector scraper (`/indeed-swarm-scraper`) that partitions search across customizable industry sectors (Software, Systems, Data, Operations, or Custom) with atomic deduplication and automatic tracker updates. |
+| 🎯 **Personal Knowledge & Evidence RAG (NotebookLM)** | Live, zero-cache retrieval augmented generation (`/rag-apply`) querying primary evidence from your personal notebook (certifications, personal projects, coursework, past resumes) via Google NotebookLM & ExtendLM MCP to back up resume claims with verified proof. |
 | 📊 **Interactive HTML Analytics Dashboard** | Standalone responsive dashboard with multi-board filtering (Indeed, Job Bank, LinkedIn, TechTO), pipeline funnel analytics, and one-click GitHub Pages deployment (`scripts/deploy_dashboard.sh`). |
 | 🔄 **Automated Scrape & Apply Loop** | Continuous background daemon (`auto_scrape_and_apply.py`) that periodically sweeps job boards, evaluates fit, and prepares tailored application drafts. |
 
@@ -102,7 +98,7 @@ flowchart TD
 
     subgraph Drafting ["3. Drafter-Reviewer Tailoring Engine"]
         F --> H["DRAFTER Agent"]
-        RAG["/rag-apply<br/>(NotebookLM Live Audit)"] -.->|Primary Lab Proof| H
+        RAG["/rag-apply<br/>(NotebookLM Live Audit)"] -.->|Primary Evidence Proof| H
         H --> I["Drafts 1-Page Resume + Cover Letter"]
         I --> J["REVIEWER Agent<br/>(Strict Factual Grounding Audit)"]
         J -->|Feedback & Critiques| H
@@ -126,27 +122,27 @@ You can control the entire framework by running slash commands in **Claude Code*
 | Workflow | Claude Code Slash Command | How to Ask Antigravity | What It Does |
 |---|---|---|---|
 | **Setup & Onboard** | `/setup` | *"Set everything up for me"* | Checks environment, installs search tools, and configures profile. |
-| **Indeed Scrape** | `/scrape-indeed` | *"Search Indeed Canada for IT and systems jobs"* | Sweeps Indeed, deduplicates, and evaluates candidate fit. |
-| **Swarm Scrape** | `/indeed-swarm-scraper` | *"Run the indeed swarm scraper"* | Partitions search across Systems, NOC, and Cloud sectors. |
+| **Indeed Scrape** | `/scrape-indeed` | *"Search Indeed Canada for postings matching my target role"* | Sweeps Indeed, deduplicates, and evaluates candidate fit against your profile. |
+| **Swarm Scrape** | `/indeed-swarm-scraper` | *"Run the indeed swarm scraper"* | Partitions search across sectors configured in `config/swarm_sectors.json`. |
 | **Multi-Portal Scrape** | `/scrape` | *"Find new job postings matching my profile"* | Searches across all configured job boards (Job Bank, LinkedIn, etc.). |
 | **Batch Triage** | `/rank` | *"Rank scraped jobs and make a shortlist"* | Scores new postings (0-100) and produces a prioritized application queue. |
 | **Standard Apply** | `/apply <url_or_text>` | *"Apply to this posting: <url>"* | Two-agent drafter-reviewer workflow generating tailored 1-page LaTeX CV & letter. |
-| **Curriculum RAG Apply** | `/rag-apply <url_or_text>` | *"Apply with RAG to: <url>"* | Evaluates job, queries Google NotebookLM for hands-on lab proof, and drafts verified resume. |
+| **Evidence RAG Apply** | `/rag-apply <url_or_text>` | *"Apply with RAG to: <url>"* | Evaluates job, queries Google NotebookLM for primary career evidence proof, and drafts verified resume. |
 | **Interview Prep** | `/interview <company>` | *"Prepare me for an interview at <company>"* | Generates company dossier, STAR stories, tough questions, and mock interview. |
 | **Record Outcome** | `/outcome <company>` | *"I got an interview at <company>"* | Updates application status, archives submitted materials, or prepares follow-ups. |
 | **Interactive Dashboard** | `/html-report` | *"Generate my job search dashboard"* | Builds responsive HTML report and deploys to GitHub Pages via `scripts/deploy_dashboard.sh`. |
 
 ---
 
-## 🎓 Educational Curriculum RAG with Google NotebookLM
+## 🎯 Personal Knowledge & Career Evidence RAG with Google NotebookLM
 
-This fork includes the **Curriculum RAG** pipeline (originally developed in `resume-rag-experiment`).
+This fork includes the **Career Evidence RAG** pipeline (originally developed in `resume-rag-experiment` and expanded to universal career grounding).
 
-When you apply to technical positions (especially junior, co-op, or career-transition roles), generic bullet points don't prove your capability. The RAG engine connects your local agent to your completed course notes, lab topologies, and command logs stored in **Google NotebookLM** via **ExtendLM MCP**:
+When applying to positions, generic bullet points fail to demonstrate real competence. The RAG engine connects your local agent to your primary career evidence—certifications, personal projects, coursework, past performance reviews, code repositories, and resumes stored in **Google NotebookLM** via **ExtendLM MCP**:
 
-1. **Zero Caching Policy**: Every query executes live against your educational notebook to ensure 100% data fidelity.
-2. **Primary Evidence Extraction**: Pulls exact course codes, lab numbers, command syntax (e.g. `bulk_users.ps1`, `New-ADUser`, Cisco 802.1Q trunking, `systemctl`), and hardware/virtual topologies.
-3. **Factual Grounding Audit**: Generates an `academic_evidence_pack.md` that proves every claim before it is added to your resume, guaranteeing zero AI hallucinations.
+1. **Zero Caching Policy**: Every query executes live against your evidence notebook to ensure 100% data fidelity.
+2. **Primary Evidence Extraction**: Pulls verified details, tools used, architecture decisions, certification IDs, and quantitative metrics directly from your source documents.
+3. **Factual Grounding Audit**: Generates a `career_evidence_pack.md` that proves every claim before it is added to your resume, guaranteeing zero AI hallucinations.
 
 See [`rag/README.md`](rag/README.md) for full setup and architecture details.
 
