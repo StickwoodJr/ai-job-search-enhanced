@@ -1,0 +1,14 @@
+# Core Python dependencies for AI Job Search
+# Python 3.10+ required
+
+# ATS verification & text layer extraction
+pypdf>=4.0.0
+
+# HTTP requests & API clients (RAG ExtendLM bridge, Indeed scrapers)
+requests>=2.31.0
+
+# HTML parsing & Dashboard updates
+beautifulsoup4>=4.12.0
+
+# YAML linting & Agent skills validation
+pyyaml>=6.0.1

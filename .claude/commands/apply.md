@@ -217,13 +217,13 @@ After all edits are applied, the two files on disk are the final drafts.
 Use `<CV_COMPILE>` and `<COVER_COMPILE>` resolved in Step 2 (the active template's declared compile command, or the stock defaults below if no custom template is active):
 
 ```bash
-cd cv && lualatex -interaction=nonstopmode main_<company>_<role>.tex
+cd cv && pdflatex -interaction=nonstopmode main_<company>_<role>.tex
 cd ../cover_letters && xelatex -interaction=nonstopmode cover_<company>_<role>.tex
 ```
 
-- **Stock CV** uses **lualatex** — pdflatex fails on modern MiKTeX with fontawesome5 font-expansion errors. lualatex handles the same sources cleanly.
+- **Stock CV** uses **pdflatex** — Jake's Resume Template (`resume_master.tex`, `article` class) compiles natively and cleanly with pdflatex.
 - **Stock cover letter** uses **xelatex** — cover.cls requires fontspec.
-- **Custom template active:** run its declared `<CV_COMPILE>`/`<COVER_COMPILE>` command instead, substituting the actual filename for `<file>`. Never fall back to lualatex/xelatex when a custom template's compile command is a different toolchain (e.g. `typst compile`) — that command is what the manifest actually verified in `/add-template` Step 4.
+- **Custom template active:** run its declared `<CV_COMPILE>`/`<COVER_COMPILE>` command instead, substituting the actual filename for `<file>`. Never fall back to pdflatex/xelatex when a custom template's compile command is a different toolchain (e.g. `typst compile`) — that command is what the manifest actually verified in `/add-template` Step 4.
 
 If either compile fails, fix the error and re-compile until clean.
 
@@ -232,10 +232,9 @@ If either compile fails, fix the error and re-compile until clean.
 Read both PDFs via the Read tool and verify:
 
 **CV (`cv/main_<company>_<role>.pdf`):**
-- [ ] Exactly 2 pages (not 1, not 3)
-- [ ] No orphaned `\cventry` titles — a job/education title line must never sit alone at the bottom of page 1 with its bullets on page 2. This is the most common failure.
-- [ ] Section headings are not isolated at the top of page 2 with only 1-2 lines below
-- [ ] No awkward whitespace gaps
+- [ ] Exactly 1 page (keep format, margins, and layout as close to `resume_master.tex` as possible)
+- [ ] No overflow onto page 2
+- [ ] Balanced spacing between sections
 
 **Cover letter (`cover_letters/cover_<company>_<role>.pdf`):**
 - [ ] Exactly 1 page
@@ -352,6 +351,7 @@ Do this before the optional offer below, and before ending the turn for any othe
 5. Never restructure the CSV, reorder rows, or touch other rows.
 6. **Do not modify `job_scraper/seen_jobs.json`.** Dedup runs off the tracker instead: `/rank` builds its exclusion set from company+role there regardless of status.
 7. **Archive the posting now.** Write the posting text you are holding from Step 0, verbatim and never a fresh fetch, to `documents/applications/<company>_<role>/job_posting.md`, creating the folder if absent. Derive `<company>_<role>` from the `company` and `role` values this tracker row ends up holding, by the same rule `/outcome` Step 1.4 uses. **If the file already exists, leave it** - the archived copy is what was actually submitted (a re-application to the same company and role collides here and keeps the older posting, as it does in `/outcome` today). **If you no longer hold the posting text, write nothing** - say so in the report and never reconstruct it from memory; `/outcome` Step 3.2 archives it later.
+8. **Automatically Update & Deploy Dashboard.** Run `python3 scripts/rebuild_tracker_and_dashboard_winter_only.py` (or `./scripts/deploy_dashboard.sh`) to recalculate distances, update `reports/application-dashboard.html`, and automatically publish the new application to GitHub Pages (`https://stickwoodjr.github.io/job-search/`).
 
 Name the tracker row in the "Files Created" report above, and the archived posting - saying explicitly when an existing `job_posting.md` was left in place rather than written.
 

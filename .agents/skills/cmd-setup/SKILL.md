@@ -6,7 +6,7 @@ description: >
   or walk through an interactive interview. This is a cross-runtime pointer skill
   that delegates to .claude/commands/setup.md. Triggers on: setup, set up profile,
   onboarding, configure profile, build profile, get started, initialize,
-  set up my profile, run setup
+  set up my profile, run setup, set everything up for me, set up everything, set everything up
 context: fork
 ---
 

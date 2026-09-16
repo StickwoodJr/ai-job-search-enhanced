@@ -1,0 +1,16 @@
+Position: Junior Systems & Network Administrator (Co-op / Internship)
+Location: Markham, ON
+Company: Enterprise Cloud Solutions Ltd.
+
+Responsibilities:
+- Configure and support Windows Server 2022 and Active Directory environments (user accounts, security groups, GPOs).
+- Assist in network infrastructure operations, including Cisco switch port configuration, VLANs, and 802.1Q trunking.
+- Perform routine Linux server administration and automate repetitive tasks using Bash or PowerShell scripting.
+- Troubleshoot IP connectivity issues (DHCP, DNS, IPv4 subnetting, and default gateways).
+- Document technical procedures, network changes, and infrastructure configurations.
+
+Qualifications:
+- Currently enrolled in a Computer Systems Technology or Network Engineering diploma/degree.
+- Hands-on experience with Cisco IOS, Packet Tracer, or physical lab equipment.
+- Familiarity with PowerShell cmdlets for Active Directory administration.
+- Strong problem-solving methodology and technical communication skills.

@@ -88,6 +88,7 @@ gmail_sync/
 
 # Generated reports (personal output from /html-report)
 reports/
+dist/
 
 # Upskill reports (personal output). Depth-independent like the job_scraper
 # rules above: the upskill skill resolves `upskill/` relative to its own
@@ -113,3 +114,16 @@ company_research/*.json
 
 # Brainstorm mockups (superpowers visual companion) - never ship
 .superpowers/
+
+# Personal application data, configs & local backups
+**/job_scraper/applications/
+**/job_scraper/google_sheets_config.json
+**/job_scraper/seen_jobs.lock
+academic_evidence_pack.md
+*.backup*
+resume_master.tex
+documents/github_profile_README.md
+documents/matrix_banner.gif
+
+# Local RAG experiment legacy directory (consolidated into rag/)
+RAG Experiment/

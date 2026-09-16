@@ -6,87 +6,115 @@ framework_version: 1.4.3
 
 <!-- SETUP: Profile statements and section ordering are personalized by running /setup -->
 
-## Template: LaTeX moderncv (Banking Style)
+## Active Template: Jake's Resume Template (resume_master.tex)
 
-All CVs use the moderncv LaTeX package with the "banking" style and "blue" color scheme.
+All tailored CVs use **Jake's Resume Template** (`article`, `letterpaper`, `10pt`) tuned for an exact 1-page ATS-optimized layout.
 
-**Output file:** `cv/main_<company>_<role>.tex`
-**Compile with:** **lualatex** on MiKTeX/TeX Live. pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors; lualatex handles the same sources cleanly.
-**Master reference:** `cv/main_example.tex` (comprehensive CV with all competencies, experience, and achievements - use as source when building targeted CVs)
+**Output file:** `cv/main_<company>_<role>.tex`  
+**Compile with:** **pdflatex** on TeX Live / MiKTeX (`pdflatex` handles the template natively and cleanly).  
+**Master reference:** `resume_master.tex` (and `cv/main_example.tex`)
 
 ### Compile command
 
 ```bash
-cd cv && lualatex -interaction=nonstopmode main_<company>_<role>.tex
+cd cv && pdflatex -interaction=nonstopmode main_<company>_<role>.tex
 ```
 
-Expected output: `Output written on main_<company>_<role>.pdf (2 pages, ...)`. Any page count other than 2 is a failure that must be fixed before presenting to the user.
+Expected output: `Output written on main_<company>_<role>.pdf (1 page, ...)`. Any page count other than 1 is a failure that must be fixed before presenting to the user.
 
-## Document Structure
+## Document Structure (Jake's Resume Template)
 
 ```latex
-\documentclass[11pt,a4paper,sans]{moderncv}
-\moderncvstyle{banking}
-\moderncvcolor{blue}
+\documentclass[letterpaper,10pt]{article}
 
-% Force the name and section headings to render in moderncv blue (color1).
-% Default banking leaves them black: moderncvstylebanking.sty's \colorlet
-% copies (not aliases) the pre-scheme accent colour, so the name colours are
-% frozen before \moderncvcolor runs. Re-let them after. \namefont is the hook
-% every name-style macro routes through, so this also works on moderncv 2.3.1
-% (Debian/Ubuntu apt), which has no \firstnamestyle/\lastnamestyle at all.
-\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
-\colorlet{firstnamecolor}{color1}
-\colorlet{lastnamecolor}{color1}
-\colorlet{namecolor}{color1}
-\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
 
-\usepackage[utf8]{inputenc}
-% moderncv loads hyperref itself in an \AtEndPreamble hook, so \hypersetup
-% must go in an \AtEndPreamble of our own: on moderncv < 2.4 a top-level
-% \usepackage{hyperref} clashes with the class's own
-% \RequirePackage[unicode]{hyperref}. From 2.4.0 the class passes its options
-% through \PassOptionsToPackage instead, which is what removes that clash.
-\AtEndPreamble{\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=blue,
-    pdftitle={[YOUR_NAME] - CV},
-    % Keep pdfpagemode=UseNone: this block runs after moderncv's own
-    % \AtEndPreamble (moderncv.cls sets pdfpagemode there), so a FullScreen
-    % value here would win and open every CV in fullscreen presentation mode.
-    pdfpagemode=UseNone,
-}}
-\usepackage[scale=0.77]{geometry}
-\usepackage{import}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\footskip}{4.1pt}
 
-% Personal data
-\name{[FIRST_NAME]}{[LAST_NAME]}
-% If you have no address to list, DELETE this whole line. \address{}{}{} fails
-% with "There's no line here to end" on every moderncv version.
-\address{[YOUR_ADDRESS]}{}{}
-\phone[mobile]{[YOUR_PHONE]}
-\email{[YOUR_EMAIL]}
-\extrainfo{\href{[YOUR_LINKEDIN_URL]}{LinkedIn}, \href{[YOUR_GITHUB_URL]}{GitHub}}
+% Adjust margins for perfect 1-page fit
+\addtolength{\oddsidemargin}{-0.55in}
+\addtolength{\evensidemargin}{-0.55in}
+\addtolength{\textwidth}{1.1in}
+\addtolength{\topmargin}{-.6in}
+\addtolength{\textheight}{1.2in}
+
+\hypersetup{
+    pdftitle={[YOUR_NAME] - Resume},
+    pdfauthor={[YOUR_NAME]},
+    pdfsubject={Resume - Computer Systems Technology, Systems Administration, Networking, Cloud and Security},
+    pdfkeywords={[YOUR_KEYWORDS]},
+    pdfcreator={LaTeX with hyperref},
+    pdfproducer={pdfTeX}
+}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-5pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-4pt}]
+
+\pdfgentounicode=1
+
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.98\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
 
 \begin{document}
-\makecvtitle
 
-% 1. Profile statement (1-3 sentences, tailored per role)
-% 2. Skills section
-% 3. Education section
-% 4. Professional Experience section
-% 5. Selected Publications (if applicable)
-% 6. Honors and Awards (if applicable)
-% 7. References
+% 1. Heading (Name, contact, links)
+% 2. Education section (\resumeSubHeadingListStart ... \resumeSubheading ... \resumeItemListStart ... \resumeItem ... )
+% 3. Technical Skills section (Categorized competencies)
+% 4. Technical Projects section (\resumeProjectHeading ... \resumeItemListStart ... \resumeItem ...)
+% 5. Professional Experience section (\resumeSubheading ... \resumeItemListStart ... \resumeItem ...)
 
 \end{document}
 ```
-
-### Color overrides
-
-The `\renewcommand*` on `\namefont` and the three `\colorlet` lines in the preamble are required on lualatex+MiKTeX. Without them the name and section headings render in black even though `\moderncvcolor{blue}` is set, which looks inconsistent with the rest of the blue accent scheme (links, bullet markers, contact icons). The cause: `moderncvstylebanking.sty` defines the name colours with `\colorlet`, which *copies* the accent colour as it is before the scheme is applied, so the name colours are frozen to the pre-scheme value; re-assigning them with `\colorlet` after `\moderncvcolor{blue}` (as the preamble does) re-pins them to `color1`. `\namefont` is the shared hook every name-style macro routes through, so the block is version-agnostic - including moderncv 2.3.1 from Debian/Ubuntu apt, which has no `\firstnamestyle`/`\lastnamestyle` at all. Both names render bold; if you prefer regular weight, change `\bfseries` to `\mdseries` in the `\namefont` line (the weight now lives there, so it applies to the whole name). Don't drop the overrides - on most modern installs the defaults render visibly wrong.
 
 ### Spacing inside itemize lists (important)
 
