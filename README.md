@@ -15,21 +15,32 @@ An intelligent, multi-agent framework built for **[Claude Code](https://claude.c
 
 You do **not** need to be a programmer or know how to configure complex environments. If you have an AI coding assistant such as **Google Antigravity** or **Claude Code**, getting started takes 30 seconds.
 
-### The 1-Step Prompt
+### Step 1 — Gather your documents
 
-Open your AI agent and send it this single prompt:
+Before anything else, collect any files that capture your experience and drop them somewhere easy to find (a folder on your Desktop works fine). These could be:
+
+- Your current resume or any past resumes
+- Certifications or credential PDFs
+- Course notes, syllabi, or lab write-ups
+- Personal project write-ups or READMEs
+- Publications, blog posts, or portfolio links saved as text/PDF
+
+> [!TIP]
+> The more context the agent has about you, the more accurate and personalized your resumes and cover letters will be. You can always add more documents later.
+
+### Step 2 — Tell your agent to set everything up
+
+Open **Google Antigravity** or **Claude Code**, and send this single prompt:
 
 ```text
 Clone https://github.com/StickwoodJr/ai-job-search-enhanced and set everything up for me
 ```
 
-**That's literally it.**
-
 Your agent will:
 1. Clone the repository to your machine.
 2. Run the automated setup wizard (`python3 tools/setup_wizard.py --doctor`).
 3. Check and install all necessary dependencies and portal search scrapers.
-4. **Drop any relevant documents into the `documents/` folder** — your current resume, past resumes, certifications, course notes, project write-ups, publications, blog posts, or anything else that captures your experience. The agent will use these to personalize your applications with real, verifiable evidence.
+4. Copy your documents into the project's `documents/` folder and register them as your career evidence sources.
 5. Ask you a few quick questions (name, location, target roles, primary skills).
 6. Choose your target market (North American 1-Page Jake's Resume vs European 2-Page ModernCV).
 7. Compile and verify your first test PDF resume!
