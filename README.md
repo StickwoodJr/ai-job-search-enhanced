@@ -29,9 +29,10 @@ Your agent will:
 1. Clone the repository to your machine.
 2. Run the automated setup wizard (`python3 tools/setup_wizard.py --doctor`).
 3. Check and install all necessary dependencies and portal search scrapers.
-4. Ask you a few quick questions (name, location, target roles, primary skills).
-5. Choose your target market (North American 1-Page Jake's Resume vs European 2-Page ModernCV).
-6. Compile and verify your first test PDF resume!
+4. **Drop any relevant documents into the `documents/` folder** — your current resume, past resumes, certifications, course notes, project write-ups, publications, blog posts, or anything else that captures your experience. The agent will use these to personalize your applications with real, verifiable evidence.
+5. Ask you a few quick questions (name, location, target roles, primary skills).
+6. Choose your target market (North American 1-Page Jake's Resume vs European 2-Page ModernCV).
+7. Compile and verify your first test PDF resume!
 
 ---
 
@@ -136,7 +137,7 @@ You can control the entire framework by running slash commands in **Claude Code*
 
 ## 🎯 Personal Knowledge & Career Evidence RAG with Google NotebookLM
 
-This fork includes the **Career Evidence RAG** pipeline (originally developed in `resume-rag-experiment` and expanded to universal career grounding).
+This fork includes the **Career Evidence RAG** pipeline.
 
 When applying to positions, generic bullet points fail to demonstrate real competence. The RAG engine connects your local agent to your primary career evidence—certifications, personal projects, coursework, past performance reviews, code repositories, and resumes stored in **Google NotebookLM** via **ExtendLM MCP**:
 
