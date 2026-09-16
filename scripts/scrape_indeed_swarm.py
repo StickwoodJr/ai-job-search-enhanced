@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Indeed Swarm Scraper Workflow Runner
-Coordinates 3 specialized sector scraper agents across Indeed Canada:
-1. systems_hardware: Linux, Systems Admin, Windows Server/AD, Service Desk, Desktop Support, Hardware & Datacenter
-2. networking_noc: Cisco, Network Admin, Routing/Switching, Telecom, NOC Operations, Network Security
-3. cloud_cyber: Cloud Infrastructure (AWS/Azure), DevOps, Cybersecurity, Information Security, SOC Analysis, TSA
+Coordinates parallel specialized sector scraper agents across Indeed Canada
+configured in config/swarm_sectors.json.
 """
 
 import argparse
+import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -19,9 +19,22 @@ from typing import List
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SECTOR_SCRIPT = REPO_ROOT / "scripts" / "scrape_indeed_sector_daemon.py"
-REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
+REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+SWARM_CONFIG_FILE = REPO_ROOT / "config" / "swarm_sectors.json"
 
-SECTORS = ["systems_hardware", "networking_noc", "cloud_cyber"]
+def load_sectors() -> List[str]:
+    if SWARM_CONFIG_FILE.exists():
+        try:
+            with open(SWARM_CONFIG_FILE, "r", encoding="utf-8") as f:
+                d = json.load(f)
+                secs = list(d.get("sectors", {}).keys())
+                if secs:
+                    return secs
+        except Exception:
+            pass
+    return ["systems_hardware", "networking_noc", "cloud_cyber"]
+
+SECTORS = load_sectors()
 procs: List[subprocess.Popen] = []
 
 def handle_exit(signum, frame):
@@ -119,8 +132,8 @@ def main():
                                     empty_streaks[s] += 1
                                     print(f"[SWARM MONITOR] Sector '{s}' completed Cycle #{cycle_num} (consecutive empty: {empty_streaks[s]})")
 
-                            # Pattern: Cycle #X complete: Found Y new Winter Co-op(s)!
-                            m_found = re.search(r"Cycle #(\d+) complete: Found (\d+) new Winter Co-op", line)
+                            # Pattern: Cycle #X complete: Found Y new posting(s)!
+                            m_found = re.search(r"Cycle #(\d+) complete: Found (\d+) new (?:posting|Winter Co-op|role|job)", line)
                             if m_found:
                                 cycle_num = int(m_found.group(1))
                                 count = int(m_found.group(2))
@@ -134,7 +147,7 @@ def main():
             # Check if max empty cycles reached across all sectors
             if args.max_empty_cycles:
                 if all(empty_streaks[s] >= args.max_empty_cycles for s in SECTORS):
-                    print(f"\n[SWARM] Target reached: All 3 sectors completed {args.max_empty_cycles} consecutive cycles with 0 new postings.")
+                    print(f"\n[SWARM] Target reached: All {len(SECTORS)} sectors completed {args.max_empty_cycles} consecutive cycles with 0 new postings.")
                     print(f"[SWARM] Shutting down swarm...")
                     break
 

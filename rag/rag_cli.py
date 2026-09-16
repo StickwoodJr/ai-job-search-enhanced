@@ -44,13 +44,13 @@ def cmd_test(args):
 
 
 def cmd_catalog(args):
-    """Displays the indexed curriculum sources grouped by course."""
+    """Displays the indexed sources grouped by category."""
     bridge = ExtendLMBridge()
     sources = bridge.list_sources(DEFAULT_NOTEBOOK_ID)
     catalog = SourceCatalog(sources)
 
     print(f"\n=======================================================")
-    print(f"   Curriculum Source Catalog: {DEFAULT_NOTEBOOK_TITLE}")
+    print(f"   Career Source Catalog: {DEFAULT_NOTEBOOK_TITLE}")
     print(f"   Total Sources: {len(sources)}")
     print(f"=======================================================\n")
 
@@ -123,7 +123,7 @@ def cmd_verify_job(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="RAG Experiment CLI: Query Seneca CTY NotebookLM via ExtendLM"
+        description="Career Evidence RAG CLI: Query NotebookLM via ExtendLM"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
 

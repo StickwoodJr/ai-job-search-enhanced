@@ -41,7 +41,7 @@ class BulletGenerator:
 
         # Extract Section 1
         sec1_match = re.search(
-            r"### 1\. Verified Core Competencies & Lab Proof(.*?)(?=### 2\.|\Z)",
+            r"### 1\. Verified Core Competencies & (?:Primary Evidence|Lab Proof)(.*?)(?=### 2\.|\Z)",
             raw_verification_answer,
             re.DOTALL,
         )
@@ -119,7 +119,7 @@ class BulletGenerator:
         verification_result: Dict[str, Any],
     ) -> str:
         """
-        Builds a comprehensive Markdown Academic Evidence Pack.
+        Builds a comprehensive Markdown Career Evidence Pack.
         This pack can be reviewed by the candidate and referenced directly
         by the DRAFTER agent during cmd-apply Step 1 and Step 2.
         """
@@ -127,15 +127,15 @@ class BulletGenerator:
         resume_bullets = self.synthesize_resume_bullets(raw_answer, max_bullets=5)
         resume_block = "\n".join(f"  {b}" for b in resume_bullets)
 
-        pack = f"""# Academic Evidence Pack (Verified School Skills)
+        pack = f"""# Career Evidence Pack (Verified Source Proof)
 
 **Target Role:** {target_role}  
-**Source Notebook:** Seneca CTY Semesters 1 and 2 (`{verification_result.get('notebook_id')}`)  
-**Data Fidelity:** 100% Live Verified against primary lab submissions, slides, and scripts (No cache)
+**Source Notebook:** {verification_result.get('notebook_title', 'Personal Knowledge Base')} (`{verification_result.get('notebook_id')}`)  
+**Data Fidelity:** 100% Live Verified against primary sources (certifications, projects, coursework, past resumes) (No cache)
 
 ---
 
-## 1. Verified Coursework & Hands-On Evidence
+## 1. Verified Evidence & Hands-On Proof
 
 {raw_answer}
 
@@ -143,7 +143,7 @@ class BulletGenerator:
 
 ## 2. High-Impact LaTeX Resume Bullets (Jake's Template)
 
-Insert these directly into `\\section{{Education}}` or `\\section{{Technical Projects}}` under `\\resumeItemListStart`:
+Insert these directly into `\\section{{Technical Projects}}` or `\\section{{Experience}}` under `\\resumeItemListStart`:
 
 ```latex
 \\resumeItemListStart
@@ -155,9 +155,12 @@ Insert these directly into `\\section{{Education}}` or `\\section{{Technical Pro
 
 ## 3. Staging for Factual Grounding Audit
 
-To ensure these verified facts pass the Step 3 Grounding Audit in `/apply`, copy the verified achievements into `.claude/skills/job-application-assistant/01-candidate-profile.md` under **Education -> Key Coursework & Competencies**:
+To ensure these verified facts pass the Step 3 Grounding Audit in `/apply`, copy the verified achievements into `.claude/skills/job-application-assistant/01-candidate-profile.md`:
 
 > [!TIP]
-> All bullets above originate directly from your completed coursework in OPS145/245, MST100/200, CSN115/205, and SEC220. Adding them to `01-candidate-profile.md` preserves audit compliance with zero risk of hallucination flags.
+> All bullets above originate directly from your verified source materials in Google NotebookLM. Adding them to `01-candidate-profile.md` preserves audit compliance with zero risk of hallucination flags.
 """
         return pack
+
+    # Alias for backward compatibility
+    generate_evidence_pack = generate_academic_evidence_pack

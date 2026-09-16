@@ -1,8 +1,8 @@
 {
   "enabled": true,
   "default_notebook_id": "YOUR_NOTEBOOK_ID_HERE",
-  "default_notebook_title": "My Degree Coursework & Technical Labs",
+  "default_notebook_title": "Personal Knowledge & Career Evidence",
   "additional_notebooks": {},
   "extendlm_mcp_url": "https://mcp.extendlm.com/mcp",
-  "source_directory": "documents/diplomas"
+  "source_directory": "documents"
 }

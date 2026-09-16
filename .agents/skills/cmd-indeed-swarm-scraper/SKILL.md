@@ -2,8 +2,8 @@
 name: cmd-indeed-swarm-scraper
 description: >
   Dedicated multi-sector Indeed Canada swarm scraper workflow. Partitions
-  search operations across 3 specialized sector agents (Systems & Hardware,
-  Networking & NOC, Cloud & Cyber) with atomic deduplication, curriculum filtering,
+  search operations across specialized sector agents defined in config/swarm_sectors.json
+  with atomic deduplication, candidate profile qualification filtering,
   and automatic tracker and dashboard rebuilding. This is a cross-runtime pointer
   skill delegating to .claude/commands/indeed-swarm-scraper.md. Triggers on:
   indeed swarm scraper, /indeed-swarm-scraper, swarm scrape indeed, indeed-swarm-scraper

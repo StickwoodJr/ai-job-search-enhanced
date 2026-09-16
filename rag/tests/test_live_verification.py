@@ -13,7 +13,7 @@ from bullet_generator import BulletGenerator
 
 
 def test_live_verification():
-    print("[*] Running live verification test against Seneca CTY materials...")
+    print("[*] Running live verification test against career evidence materials...")
     sample_requirements = """
     We are seeking a Junior Infrastructure Analyst with experience in:
     - Active Directory user provisioning and PowerShell automation

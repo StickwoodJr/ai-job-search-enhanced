@@ -53,9 +53,9 @@ In `~/.gemini/config/mcp_config.json`:
 {
   "mcpServers": {
     "indeed-mcp-server": {
-      "command": "/home/gstickwood/gemini-projects/AI Job Search/mcp-servers/indeed-mcp/.venv/bin/python",
+      "command": "<path-to-repo>/mcp-servers/indeed-mcp/.venv/bin/python",
       "args": [
-        "/home/gstickwood/gemini-projects/AI Job Search/mcp-servers/indeed-mcp/server.py"
+        "<path-to-repo>/mcp-servers/indeed-mcp/server.py"
       ]
     }
   }

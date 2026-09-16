@@ -1,6 +1,6 @@
 # /scrape-indeed - Dedicated Indeed Job Scraper
 
-You are executing a focused, dedicated job scrape pass exclusively on **Indeed Canada** (`ca.indeed.com`) for Golden Stickwood.
+You are executing a focused, dedicated job scrape pass exclusively on **Indeed Canada** (`ca.indeed.com`) for the candidate.
 
 Unlike the multi-portal `/scrape` command, `/scrape-indeed` targets Indeed's live listings directly via the local `indeed-search` skill / MCP backend. It discovers newly posted positions, checks them against `job_scraper/seen_jobs.json` and `job_search_tracker.csv`, fetches complete posting details, evaluates candidate fit (High / Medium / Low), persists new matches, and generates referral outreach links.
 
@@ -16,8 +16,8 @@ The user triggers this command by saying:
 - `find indeed jobs`
 
 `$ARGUMENTS` may contain:
-- A search term or role focus (e.g. `/scrape-indeed "Linux"`, `/scrape-indeed "Help Desk"`, `/scrape-indeed co-op`)
-- `--broad` to run all priority query categories across systems, cloud, and network engineering
+- A search term or role focus (e.g. `/scrape-indeed "Software Engineer"`, `/scrape-indeed "Systems Administrator"`, `/scrape-indeed co-op`)
+- `--broad` to run all configured query categories from `config/swarm_sectors.json`
 - `--jobage <days>` to filter by posting recency (1, 3, 7, 14 days; default: 14)
 - `--limit <n>` max results per query category (default: 10, max: 30)
 
@@ -29,25 +29,20 @@ Follow these steps **in order**.
 
 1. Read `job_scraper/seen_jobs.json` (create with `{"seen": {}}` if missing).
 2. Read `job_search_tracker.csv` to extract already-applied companies and roles into an exclusion set.
-3. Read candidate profile basics from `CLAUDE.md`:
-   - Name: Golden Stickwood
-   - Location: Newmarket/Toronto, ON (Commute: GTA & York Region; Open to On-site, Hybrid, Remote)
-   - Focus: Winter 2027 Co-op (Systems Administration, Linux, Active Directory, Cisco Networking, Zero-Trust Homelab)
+3. Read candidate profile basics from `CLAUDE.md` and `01-candidate-profile.md`:
+   - Name & Location
+   - Target Roles & Primary Skills
+   - Target Employment Status & Commute Constraints
 
 ---
 
 ## Step 1: Search Indeed
 
 Identify the queries to run:
-- **If user specified a focus keyword** (e.g. "Linux"):
-  Run that targeted query with location `"Toronto, ON"`.
+- **If user specified a focus keyword** (e.g. "Software Engineer"):
+  Run that targeted query with candidate's location.
 - **If `--broad` is specified or by default**:
-  Run the prioritized query set tailored for Golden Stickwood:
-  1. `"IT Co-op"` (Location: `"Toronto, ON"`)
-  2. `"Junior System Administrator"` (Location: `"Toronto, ON"`)
-  3. `"Linux Co-op"` (Location: `"Toronto, ON"`)
-  4. `"Network Administrator Co-op"` (Location: `"Toronto, ON"`)
-  5. `"IT Support Technician"` (Location: `"York Region, ON"`)
+  Run the prioritized query set loaded from `config/swarm_sectors.json` or candidate profile targets.
 
 Execute each search using the `indeed-search` CLI:
 ```bash
@@ -81,17 +76,16 @@ For each discovered posting:
 
 ## Step 3: Quick Fit Assessment
 
-Evaluate each new posting against Golden Stickwood's qualifications:
+Evaluate each new posting against candidate profile qualifications:
 - **High match**:
-  - Requires Linux system administration (RHEL/CentOS/Ubuntu), Windows Server / Active Directory, Cisco IOS networking, or IT Infrastructure Support.
-  - Aligns with student/co-op or junior level (0-2 years experience).
-  - Located within the GTA / York Region or Remote.
+  - Aligns closely with candidate's target roles and core skills.
+  - Aligns with target experience level (co-op, entry-level, or professional).
+  - Located within candidate's commute boundaries or remote.
 - **Medium match**:
-  - General IT helpdesk, technical support, hardware rollout, or software QA with relevant system exposure.
-  - Requires slightly adjacent skills (e.g. Azure, AWS, PowerShell) where candidate has fundamental transferability.
+  - Adjacent roles or technical domains where candidate has strong transferable competencies.
 - **Low match**:
-  - Senior roles requiring 5+ years of full-time experience.
-  - Requires skills not in candidate profile (e.g. senior software engineering, C++, SAP, proprietary mainframe).
+  - Seniority mismatch (e.g. senior/director roles requiring 7+ years when candidate seeks entry/co-op).
+  - Requires completely different technical domains outside candidate profile.
   - Out of geographic scope without remote option.
 
 ---

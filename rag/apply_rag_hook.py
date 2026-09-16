@@ -24,7 +24,7 @@ from bullet_generator import BulletGenerator
 
 def generate_evidence_for_job(
     job_text: str,
-    role: str = "IT Infrastructure Specialist",
+    role: str = "Target Role",
     notebook_id: str = DEFAULT_NOTEBOOK_ID,
     output_path: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -57,14 +57,14 @@ def generate_evidence_for_job(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="RAG Hook for cmd-apply: Extract grounded school achievements for a job posting"
+        description="RAG Hook for cmd-apply: Extract grounded achievements and proof for a job posting"
     )
     parser.add_argument("posting", help="Path to job posting file or inline text")
-    parser.add_argument("--role", default="Junior Systems & Network Administrator", help="Target job role")
+    parser.add_argument("--role", default="Candidate", help="Target job role")
     parser.add_argument(
         "--output",
-        default="academic_evidence_pack.md",
-        help="Path where the Academic Evidence Pack markdown should be saved",
+        default="career_evidence_pack.md",
+        help="Path where the Career Evidence Pack markdown should be saved",
     )
 
     args = parser.parse_args()
@@ -75,7 +75,7 @@ def main():
             content = f.read()
 
     print(f"[*] Running live RAG verification for role: '{args.role}'...")
-    print("    Querying Seneca CTY Semesters 1 & 2 notebook (zero caching)...")
+    print("    Querying NotebookLM knowledge base (zero caching)...")
 
     result = generate_evidence_for_job(
         job_text=content,

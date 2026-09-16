@@ -137,7 +137,7 @@ Then present:
 
 ### Automatic GitHub Pages Deployment
 
-If `scripts/deploy_dashboard.sh` exists and the output path is `reports/application-dashboard.html`, run `./scripts/deploy_dashboard.sh` to automatically publish the updated dashboard to GitHub Pages (`https://stickwoodjr.github.io/job-search/`).
+If `scripts/deploy_dashboard.sh` exists and `DASHBOARD_REPO` is configured in your environment, run `./scripts/deploy_dashboard.sh` to publish the updated dashboard to your own GitHub Pages repository.
 
 ---
 

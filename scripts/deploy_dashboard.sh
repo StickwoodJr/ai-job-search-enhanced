@@ -17,7 +17,12 @@ if [ -f "${REPO_ROOT}/reports/analytics.html" ]; then
 fi
 touch "${DIST_DIR}/.nojekyll"
 
-DASHBOARD_REPO="${DASHBOARD_REPO:-https://github.com/StickwoodJr/job-search.git}"
+if [ -z "${DASHBOARD_REPO:-}" ]; then
+  echo "Tip: To deploy your dashboard to GitHub Pages, set the DASHBOARD_REPO environment variable:"
+  echo "     export DASHBOARD_REPO=\"https://github.com/<your-username>/<your-repo>.git\""
+  echo "Dashboard HTML is saved locally at ${REPORT_FILE}"
+  exit 0
+fi
 
 if [ ! -d "${DIST_DIR}/.git" ]; then
   cd "${DIST_DIR}"
@@ -35,5 +40,3 @@ else
   git push origin main
   echo "✓ Successfully deployed updated dashboard to GitHub Pages!"
 fi
-
-echo "🌐 Live URL: https://stickwoodjr.github.io/job-search/"

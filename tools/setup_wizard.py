@@ -193,7 +193,7 @@ def configure_candidate_profile(interactive: bool = True, data: dict = None) -> 
         linkedin = input("LinkedIn Profile URL (optional): ").strip() or "[YOUR_LINKEDIN_URL]"
         github = input("GitHub Profile URL (optional): ").strip() or "[YOUR_GITHUB_URL]"
         status = input("Work Authorization / Status (e.g. Citizen, PR, Student): ").strip() or "[YOUR_EMPLOYMENT_STATUS]"
-        roles = input("Target Job Roles (e.g. Systems Admin, Help Desk, Co-op): ").strip() or "[YOUR_TARGET_ROLES]"
+        roles = input("Target Job Roles (e.g. Software Engineer, Systems Admin, Data Analyst, Product Specialist): ").strip() or "[YOUR_TARGET_ROLES]"
         skills = input("Primary Technical Skills (comma-separated): ").strip() or "[YOUR_PRIMARY_SKILLS]"
     else:
         d = data or {}
@@ -303,14 +303,79 @@ def configure_swarm_sectors(interactive: bool = True, location: str = None, cand
     except ValueError:
         max_dist = 50
 
-    print("\nDefault Swarm Sectors:")
-    print("  1. Systems & IT Support (Linux, Sysadmin, Active Directory, IT Support)")
-    print("  2. Networking & NOC (Cisco, Routing/Switching, NOC Analyst, Telecom)")
-    print("  3. Cloud & Cybersecurity (AWS, Azure, DevOps, SOC Analyst, Cyber)")
+    print("\nSelect Swarm Scraper Sector Focus:")
+    print("  [1] Systems & Infrastructure (Linux, Sysadmin, Networking, Cloud & Cyber)")
+    print("  [2] Software Engineering & Web (Full Stack, Backend, Frontend, DevOps)")
+    print("  [3] Data Science & Analytics (Data Analyst, Data Engineer, BI, Machine Learning)")
+    print("  [4] Custom Sectors (Define your own sectors and search queries)")
 
-    choice = input("\nKeep default tech sectors updated for your city? (Y/n / [C]ustom): ").strip().lower()
+    choice = input("\nEnter choice [1, 2, 3, or 4] (Default: 1): ").strip().lower()
 
-    if choice in ("c", "custom"):
+    if choice == "2":
+        default_config["sectors"] = {
+            "backend_software": {
+                "name": "Backend & Software Engineering",
+                "description": "Python, Java, Go, APIs, Distributed Systems, Microservices",
+                "queries": [
+                    ["Software Engineer", target_loc],
+                    ["Backend Developer", target_loc],
+                    ["Python Developer", target_loc],
+                    ["Junior Software Developer", target_loc],
+                    ["Software Engineering Intern", target_loc]
+                ]
+            },
+            "frontend_web": {
+                "name": "Frontend & Full Stack",
+                "description": "React, TypeScript, Next.js, Node.js, Web Applications",
+                "queries": [
+                    ["Full Stack Developer", target_loc],
+                    ["Frontend Developer", target_loc],
+                    ["Web Developer", target_loc],
+                    ["Software Developer", target_loc]
+                ]
+            },
+            "cloud_devops": {
+                "name": "Cloud & DevOps",
+                "description": "AWS, Azure, Docker, Kubernetes, CI/CD, Terraform",
+                "queries": [
+                    ["DevOps Engineer", target_loc],
+                    ["Cloud Engineer", target_loc],
+                    ["Site Reliability Engineer", target_loc]
+                ]
+            }
+        }
+    elif choice == "3":
+        default_config["sectors"] = {
+            "data_analytics": {
+                "name": "Data Analytics & BI",
+                "description": "SQL, Tableau, Power BI, Python, Business Intelligence",
+                "queries": [
+                    ["Data Analyst", target_loc],
+                    ["Business Intelligence Analyst", target_loc],
+                    ["Junior Data Analyst", target_loc],
+                    ["Analytics Specialist", target_loc]
+                ]
+            },
+            "data_engineering": {
+                "name": "Data Engineering",
+                "description": "ETL pipelines, Spark, SQL, Python, Snowflake, Databricks",
+                "queries": [
+                    ["Data Engineer", target_loc],
+                    ["Junior Data Engineer", target_loc],
+                    ["Database Developer", target_loc]
+                ]
+            },
+            "ml_data_science": {
+                "name": "Machine Learning & Data Science",
+                "description": "Machine Learning, Predictive Modeling, NLP, Python",
+                "queries": [
+                    ["Data Scientist", target_loc],
+                    ["Machine Learning Engineer", target_loc],
+                    ["AI Analyst", target_loc]
+                ]
+            }
+        }
+    elif choice in ("4", "c", "custom"):
         sectors = {}
         print("\nEnter custom sectors (1 to 4 sectors). Press Enter when done.")
         for idx in range(1, 5):
@@ -349,16 +414,16 @@ def configure_swarm_sectors(interactive: bool = True, location: str = None, cand
 
 
 def configure_rag_notebook(interactive: bool = True):
-    """Guide user through Educational Curriculum RAG with Google NotebookLM."""
-    print("--- Step 5: Educational Curriculum RAG Setup (NotebookLM) ---")
-    print("Curriculum RAG grounds your CV bullets in verifiable lab reports, course syllabi,")
-    print("and transcripts using Google NotebookLM with zero hallucination.\n")
+    """Guide user through Personal Knowledge & Evidence Grounding RAG with Google NotebookLM."""
+    print("--- Step 5: Personal Knowledge & Career Evidence RAG Setup (NotebookLM) ---")
+    print("RAG grounds your CV bullets and cover letters in verifiable lab reports, personal projects,")
+    print("certifications, past resumes, and coursework using Google NotebookLM with zero hallucination.\n")
 
     RAG_DIR.mkdir(parents=True, exist_ok=True)
     cfg = {
         "enabled": True,
-        "default_notebook_id": "e32153b2-e906-4762-a8c3-8b96fbf093b4",
-        "default_notebook_title": "Educational Coursework & Labs",
+        "default_notebook_id": "[YOUR_NOTEBOOKLM_NOTEBOOK_ID]",
+        "default_notebook_title": "Personal Knowledge & Career Evidence",
         "additional_notebooks": {}
     }
 
@@ -369,15 +434,15 @@ def configure_rag_notebook(interactive: bool = True):
             print(f"  ✓ Initialized default RAG config at {RAG_USER_CONFIG}")
         return cfg
 
-    ans = input("Would you like to configure NotebookLM Curriculum RAG now? (Y/n): ").strip().lower()
+    ans = input("Would you like to configure NotebookLM Career Evidence RAG now? (Y/n): ").strip().lower()
     if ans in ("n", "no"):
-        print("  Curriculum RAG setup skipped. You can configure it anytime with:")
+        print("  Career Evidence RAG setup skipped. You can configure it anytime with:")
         print("    python rag/notebook_manager.py\n")
         return cfg
 
     print("\nOptions for NotebookLM setup:")
     print("  [1] Enter an existing Google NotebookLM Notebook ID")
-    print("  [2] Scan documents/ folder for syllabi & labs to create a new notebook")
+    print("  [2] Scan documents/ folder (certs, projects, coursework & past resumes) to create a new notebook")
     print("  [3] Discover notebooks via ExtendLM MCP")
     print("  [4] Skip for now")
     rag_choice = input("Enter choice [1, 2, 3, or 4] (Default: 1): ").strip()
@@ -385,7 +450,7 @@ def configure_rag_notebook(interactive: bool = True):
     if rag_choice in ("", "1"):
         nb_id = input("Enter your NotebookLM Notebook ID (from URL notebooklm.google.com/notebook/<ID>): ").strip()
         if nb_id:
-            title = input("Notebook Title (Default: 'Educational Coursework & Labs'): ").strip() or "Educational Coursework & Labs"
+            title = input("Notebook Title (Default: 'Personal Knowledge & Career Evidence'): ").strip() or "Personal Knowledge & Career Evidence"
             cfg["default_notebook_id"] = nb_id
             cfg["default_notebook_title"] = title
             with open(RAG_USER_CONFIG, "w", encoding="utf-8") as f:
@@ -400,7 +465,7 @@ def configure_rag_notebook(interactive: bool = True):
             print(f"  [!] Scan error: {e}")
         nb_id = input("\nOnce created, enter your Notebook ID (or press Enter to configure later): ").strip()
         if nb_id:
-            title = input("Notebook Title (Default: 'Degree Coursework & Labs'): ").strip() or "Degree Coursework & Labs"
+            title = input("Notebook Title (Default: 'Personal Knowledge & Career Evidence'): ").strip() or "Personal Knowledge & Career Evidence"
             cfg["default_notebook_id"] = nb_id
             cfg["default_notebook_title"] = title
             with open(RAG_USER_CONFIG, "w", encoding="utf-8") as f:
@@ -415,7 +480,7 @@ def configure_rag_notebook(interactive: bool = True):
             print(f"  [!] ExtendLM discovery note: {e}")
         nb_id = input("\nEnter chosen Notebook ID (or press Enter to skip): ").strip()
         if nb_id:
-            title = input("Notebook Title: ").strip() or "Educational Coursework & Labs"
+            title = input("Notebook Title (Default: 'Personal Knowledge & Career Evidence'): ").strip() or "Personal Knowledge & Career Evidence"
             cfg["default_notebook_id"] = nb_id
             cfg["default_notebook_title"] = title
             with open(RAG_USER_CONFIG, "w", encoding="utf-8") as f:
@@ -460,7 +525,7 @@ def run_interactive_setup():
     print("Available Workflows:")
     print('  1. Multi-Sector Swarm:   Run /indeed-swarm-scraper for 3 parallel sector searches')
     print('  2. Targeted Indeed:      Run /scrape-indeed to search specific roles & deduplicate')
-    print('  3. Coursework RAG Apply: Run /rag-apply <job_url> for tailored CV with lab proof')
+    print('  3. Career Evidence RAG Apply: Run /rag-apply <job_url> for tailored CV with verified evidence')
     print('  4. Standard ATS Apply:   Run /apply <job_url> for standard resume & cover letter')
     print('  5. Interview Prep:       Run /interview <company> for STAR story prep & mock QA')
     print('  6. Visual Dashboard:     Run /html-report to review your pipeline offline')

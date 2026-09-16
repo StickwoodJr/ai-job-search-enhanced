@@ -69,32 +69,22 @@ def load_candidate_profile() -> dict:
     }
     if CANDIDATE_PROFILE_FILE.exists():
         content = CANDIDATE_PROFILE_FILE.read_text(encoding="utf-8")
+        field_patterns = {
+            "name": r"^-\s+\*\*Name:\*\*\s*(.*)",
+            "email": r"^-\s+\*\*Email:\*\*\s*(.*)",
+            "phone": r"^-\s+\*\*Phone:\*\*\s*(.*)",
+            "location": r"^-\s+\*\*Location:\*\*\s*(.*)",
+            "linkedin": r"^-\s+\*\*LinkedIn:\*\*\s*(.*)",
+            "github": r"^-\s+\*\*GitHub:\*\*\s*(.*)",
+        }
         for line in content.splitlines():
             line = line.strip()
-            if line.startswith("- **Name:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["name"] = v
-            elif line.startswith("- **Email:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["email"] = v
-            elif line.startswith("- **Phone:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["phone"] = v
-            elif line.startswith("- **LinkedIn:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["linkedin"] = v
-            elif line.startswith("- **GitHub:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["github"] = v
-            elif line.startswith("- **Location:**"):
-                v = line.split(":", 1)[1].strip()
-                if v and not v.startswith("["):
-                    info["location"] = v
+            for key, pat in field_patterns.items():
+                m = re.match(pat, line)
+                if m:
+                    val = m.group(1).strip()
+                    if val and not val.startswith("[") and not val.startswith("**"):
+                        info[key] = val
     return info
 
 CANDIDATE_DATA = load_candidate_profile()
@@ -410,9 +400,9 @@ class StateManager:
 # ==============================================================================
 
 class FitEvaluator:
-    """Evaluates job fit against Golden Stickwood's candidate profile."""
+    """Evaluates job fit against candidate profile."""
 
-    # Keywords that indicate high / strong match for Golden Stickwood
+    # Keywords that indicate high / strong match
     CORE_SYSTEMS_KEYWORDS = [
         "system administrator", "systems administrator", "sysadmin", "linux",
         "windows server", "active directory", "ad ds", "group policy", "gpo",
@@ -466,14 +456,14 @@ class FitEvaluator:
         score = 50  # baseline
 
         # Co-op / Student alignment bonus
-        if any(term in text for term in ["co-op", "intern", "student", "winter 2027", "2027"]):
+        if any(term in text for term in ["co-op", "intern", "student", "junior", "entry level"]):
             score += 15
 
         # Core competencies bonus
         score += min(len(core_hits) * 6, 30)
         score += min(len(adj_hits) * 3, 15)
 
-        # Proximity bonus (York Region / Newmarket / Markham / Richmond Hill)
+        # Proximity bonus
         if any(yr in loc_lower for yr in ["newmarket", "aurora", "markham", "richmond hill", "vaughan"]):
             score += 5
 
@@ -570,7 +560,7 @@ class ScraperEngine:
 
         active_portals = portals or ["linkedin-search", "indeed-search", "eluta-search", "jobbank-ca-search", "talent-com-search", "gcjobs-search", "freehire-search"]
 
-        # Default prioritized search queries for Golden Stickwood
+        # Default prioritized search queries
         active_queries = queries or [
             ("IT Co-op", "Toronto, ON"),
             ("Systems Administrator Co-op", "Toronto, ON"),
@@ -670,21 +660,23 @@ class ApplyEngine:
         return None
 
     def generate_cv_latex(self, company: str, role: str, description: str) -> str:
-        """Generate tailored moderncv banking LaTeX source grounded in Golden Stickwood's profile."""
+        """Generate tailored moderncv banking LaTeX source grounded in the candidate profile."""
         esc_company = escape_latex(company)
         esc_role = escape_latex(role)
+        name_parts = CANDIDATE_NAME.split(None, 1)
+        first_name = name_parts[0] if name_parts else "Candidate"
+        last_name = name_parts[1] if len(name_parts) > 1 else ""
 
         # Profile statement tailored to role
         profile_statement = (
-            f"High-achieving Computer Systems Technology student at Seneca Polytechnic (4.0 GPA, "
-            f"President's Honour List) seeking the \\textbf{{{esc_role}}} 4-month Co-op term at \\textbf{{{esc_company}}} "
-            f"starting January 2027. Practical background in Linux systems administration, Windows Server \\& Active Directory "
-            f"management, Cisco network routing/firewalls, and zero-trust virtualization. Proven track record of operational ownership, "
-            f"rapid troubleshooting under pressure, and client communication excellence."
+            f"Results-driven professional seeking the \\textbf{{{esc_role}}} role at \\textbf{{{esc_company}}}. "
+            f"Demonstrated background in modern technical workflows, structured problem solving under pressure, "
+            f"and cross-functional collaboration. Proven track record of operational ownership, "
+            f"rapid learning, and delivery excellence."
         )
 
         cv_content = rf"""%% Role-Tailored CV - {company} - {role}
-%% Candidate: Golden Stickwood
+%% Candidate: {CANDIDATE_NAME}
 %% Compile with: cd cv && lualatex -interaction=nonstopmode main_{sanitize_filename(company)}_{sanitize_filename(role)}.tex
 
 \documentclass[11pt,a4paper,sans]{{moderncv}}
@@ -703,7 +695,7 @@ class ApplyEngine:
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=blue,
-    pdftitle={{Golden Stickwood - CV - {esc_company}}},
+    pdftitle={{{CANDIDATE_NAME} - CV - {esc_company}}},
     pdfpagemode=UseNone,
 }}}}
 \usepackage[scale=0.82]{{geometry}}
@@ -711,9 +703,9 @@ class ApplyEngine:
 \usepackage{{needspace}}
 
 % Personal data
-\name{{Golden}}{{Stickwood}}
-\address{{Newmarket, ON, Canada -- Canadian Citizen (No Sponsorship Required)}}{{}}{{}}
-\phone[mobile]{{+1 647-649-8083}}
+\name{{{first_name}}}{{{last_name}}}
+\address{{{CANDIDATE_LOCATION}}}{{}}{{}}
+\phone[mobile]{{{CANDIDATE_PHONE}}}
 \email{{{CANDIDATE_EMAIL.replace('_', r'\_')}}}
 \extrainfo{{\href{{{CANDIDATE_LINKEDIN}}}{{LinkedIn}}, \href{{{CANDIDATE_GITHUB}}}{{GitHub}}}}
 
@@ -735,11 +727,10 @@ class ApplyEngine:
 \section{{Core Competencies}}
 \vspace{{1pt}}
 \begin{{itemize}}
-\item \textbf{{Systems Administration}}: Linux (Debian, Ubuntu, Kali Linux, CentOS/RHEL), Windows Server (2022/2019), Active Directory DS, Group Policy (GPO), DNS, DHCP, systemd, storage \& package management.
-\item \textbf{{Network Engineering \& Security}}: Cisco IOS, IPv4 Subnetting, Static Routing, VLAN segmentation, 802.1Q trunking, Cisco Zone-Based Policy Firewall (ZFW), dynamic NAT/PAT, WireGuard / Tailscale VPN mesh, Cloudflare Tunnels.
-\item \textbf{{Virtualization \& Containers}}: KVM/QEMU, \texttt{{libvirt}}/\texttt{{virsh}}, VMware Workstation, Docker containerization, container hardening (non-root execution, \texttt{{CAP\_DROP}}, AppArmor profiles).
-\item \textbf{{Scripting, Automation \& Tools}}: Bash shell scripting, PowerShell, automated disaster-recovery workflows (\texttt{{backupVMs.bash}}, \texttt{{restoreVM.bash}}), Git/GitHub, Cisco Packet Tracer, VS Code.
-\item \textbf{{Operational Discipline}}: Architecture Decision Records (ADRs), root-cause postmortem documentation, customer communication, consultative sales, conflict de-escalation.
+\item \textbf{{Technical Execution}}: Strong foundation in software tools, system administration, scripting, and modern developer workflows.
+\item \textbf{{Automation \& Efficiency}}: Experience developing automated scripts and workflows to streamline repetitive operations.
+\item \textbf{{Problem Solving}}: Analytical troubleshooting skills, root-cause analysis, and structured documentation.
+\item \textbf{{Communication \& Teamwork}}: Professional stakeholder communication, collaborative cross-functional execution, and operational discipline.
 \end{{itemize}}
 
 % ============================================================
@@ -751,35 +742,25 @@ class ApplyEngine:
 \begin{{itemize}}
 
 \needspace{{5\baselineskip}}
-\item{{\cventry{{Jan 2026 - Present}}{{Zero-Trust Homelab Infrastructure (``labhost'')}}{{Personal Project}}{{Newmarket, ON}}{{}}{{\vspace{{1pt}}
+\item{{\cventry{{Recent}}{{Technical Infrastructure \& Application Projects}}{{Personal Projects}}{{{CANDIDATE_LOCATION}}}{{}}{{\vspace{{1pt}}
 \begin{{itemize}}
-    \item Architected a 3-tier virtualized network (WAN, DMZ, Personal zones) using KVM/QEMU, isolated virtual bridges, and a virtualized Cisco router.
-    \item Configured Cisco Zone-Based Policy Firewall (ZFW) with stateful packet inspection, dynamic NAT/PAT, and explicit-deny inter-zone policies.
-    \item Deployed Docker containerized services via Cloudflare Tunnel and private services over a Tailscale WireGuard mesh with zero open inbound ports.
-    \item Authored automated Bash backup/recovery scripts for VM snapshot lifecycle and maintained formal Architecture Decision Records (ADRs) and postmortems.
+    \item Designed and deployed modern software and infrastructure environments utilizing structured configuration and version control.
+    \item Implemented automated CI/CD and script-driven workflows to ensure consistent deployments and operational stability.
+    \item Documented technical requirements, architecture decisions, and troubleshooting procedures.
 \end{{itemize}}}}
 
 \end{{itemize}}
 
 % ============================================================
-%     EDUCATION
+%     EDUCATION & CERTIFICATIONS
 % ============================================================
 
-\section{{Education}}
+\section{{Education \& Certifications}}
 \vspace{{1pt}}
 \begin{{itemize}}
 
-\needspace{{5\baselineskip}}
-\item{{\cventry{{Jan 2026 - Dec 2027 (Expected)}}{{Computer Systems Technology (Advanced Diploma)}}{{Seneca Polytechnic}}{{Toronto, ON}}{{}}{{\vspace{{1pt}}
-\begin{{itemize}}
-    \item \textbf{{Academic Standing}}: 4.0 / 4.0 GPA across completed coursework; named to \textbf{{President's Honour List}} (Winter 2026 \& Summer 2026).
-    \item \textbf{{Completed Coursework}}: Linux Admin (OPS 145 - A+, OPS 245 - A), Microsoft Server Admin \& AD (MST 100 - A+, MST 200 - A+), Cisco Networks \& Routing (CSN 115 - A+, CSN 205 - A), System Security (SEC 220 - A+), Strategic Problem Solving (SPS 120 - A+), Professional Communications (COM 101 - A+).
-\end{{itemize}}}}
-
-\vspace{{2pt}}
-
 \needspace{{3\baselineskip}}
-\item{{\cventry{{Sep 2020 - Jun 2024}}{{Ontario Secondary School Diploma (OSSD)}}{{Sacred Heart Catholic High School}}{{Newmarket, ON}}{{}}{{}}}}
+\item{{\cventry{{Completed / In Progress}}{{Relevant Degree / Diploma / Coursework}}{{Educational Institution}}{{{CANDIDATE_LOCATION}}}{{}}{{}}}}
 
 \end{{itemize}}
 
@@ -792,44 +773,13 @@ class ApplyEngine:
 \begin{{itemize}}
 
 \needspace{{5\baselineskip}}
-\item{{\cventry{{May 2022 - Aug 2025}}{{Founder \& Business Operator}}{{Newmarket Pressure Washing}}{{Newmarket, ON}}{{}}{{\vspace{{1pt}}
+\item{{\cventry{{Recent}}{{Technical Specialist / Project Contributor}}{{Organization}}{{{CANDIDATE_LOCATION}}}{{}}{{\vspace{{1pt}}
 \begin{{itemize}}
-    \item Founded and operated a commercial and residential exterior cleaning business, winning the York Region Summer Company youth entrepreneurship grant (2022).
-    \item Managed end-to-end business operations: client acquisition, digital marketing campaigns, estimating, customer communications, scheduling, and invoicing.
-    \item Performed routine diagnostics, mechanical maintenance, and repairs on high-pressure equipment to ensure continuous operational uptime.
-    \item Maintained a 100\% client satisfaction rating and generated steady repeat business through high service reliability.
+    \item Delivered high-impact contributions to core projects, ensuring reliability and quality deliverables.
+    \item Managed end-to-end task execution, communicated progress transparently, and resolved operational bottlenecks.
+    \item Maintained continuous focus on client satisfaction, teamwork, and technical excellence.
 \end{{itemize}}}}
 
-\vspace{{2pt}}
-
-\needspace{{5\baselineskip}}
-\item{{\cventry{{Oct 2025 - Dec 2025}}{{Sales Representative}}{{Brookstone Windows \& Doors}}{{Aurora, ON}}{{}}{{\vspace{{1pt}}
-\begin{{itemize}}
-    \item Conducted direct-to-consumer field sales, engaging prospective clients, presenting customized product solutions, and generating qualified pipeline leads.
-    \item Communicated technical specifications, energy ratings, and installation workflows clearly to homeowners.
-\end{{itemize}}}}
-
-\vspace{{2pt}}
-
-\needspace{{5\baselineskip}}
-\item{{\cventry{{Oct 2020 - Mar 2024}}{{Hockey Referee}}{{Newmarket Minor Hockey Association (NMHA)}}{{Newmarket, ON}}{{}}{{\vspace{{1pt}}
-\begin{{itemize}}
-    \item Officiated competitive youth and adult league games, enforcing Hockey Canada rules and ensuring participant safety.
-    \item Exercised decisive judgement under pressure and communicated clearly to de-escalate high-tension scenarios.
-\end{{itemize}}}}
-
-\end{{itemize}}
-
-% ============================================================
-%     HONOURS, AWARDS \& MEDIA
-% ============================================================
-
-\section{{Honours, Awards \& Media}}
-\vspace{{1pt}}
-\begin{{itemize}}
-\item \textbf{{President's Honour List}} -- Seneca Polytechnic (Summer 2026, Winter 2026).
-\item \textbf{{Summer Company Entrepreneurship Grant}} -- York Region Small Business Enterprise Centre (2022).
-\item \textbf{{Media Features}} -- Profiled in \textit{{York Region News}} (2023) and \textit{{Newmarket Today}} (2022) for youth entrepreneurship.
 \end{{itemize}}
 
 % ============================================================
@@ -881,27 +831,25 @@ class ApplyEngine:
 \currentdate{{\today}}
 \lettercontent{{Dear Hiring Team at {esc_company},}}
 
-\lettercontent{{I am writing to express my strong interest in the \textbf{{{esc_role}}} co-op position at \textbf{{{esc_company}}} for the Winter 2027 term. As a 3rd-semester Computer Systems Technology student at Seneca Polytechnic maintaining a 4.0 GPA, I combine rigorous hands-on systems administration, zero-trust network infrastructure engineering, and customer-facing problem solving to deliver resilient technical operations.}}
+\lettercontent{{I am writing to express my strong enthusiasm for the \textbf{{{esc_role}}} role at \textbf{{{esc_company}}}. With a solid background in technical problem solving, structured execution, and modern workflows, I am excited by the prospect of contributing directly to your team's ongoing initiatives and operational success.}}
 
-\lettercontent{{My technical coursework and independent projects directly align with the infrastructure reliability and operational standards at {esc_company}. Through designing and administering production-grade systems and utilizing agentic developer workflows with \textbf{{Claude Code}}, I have built deep competence in enterprise infrastructure, automation, and structured root-cause analysis:}}
+\lettercontent{{My skills and project experience directly align with the qualifications sought for this position at {esc_company}. Through developing solutions, automating workflows, and leveraging agentic developer environments with \textbf{{Claude Code}}, I have built deep competence in reliable delivery, root-cause troubleshooting, and continuous improvement:}}
 
 {{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{{Raleway-Medium}}\fontsize{{11pt}}{{13pt}}\selectfont
 \begin{{itemize}}
-    \item \textbf{{Enterprise Systems \& Directory Services:}} Configured and managed Windows Server 2022/2019 environments, Active Directory Domain Services (AD DS), Group Policy Objects (GPO), DNS, DHCP, and automated administrative tasks using PowerShell and Bash scripts.
-    \item \textbf{{Zero-Trust Network Infrastructure:}} Engineered a multi-tier virtualized network with KVM/QEMU and Cisco Zone-Based Policy Firewalls (ZFW), enforcing stateful packet inspection, dynamic NAT/PAT, and zero open inbound ports via Cloudflare Tunnels and Tailscale WireGuard mesh networks.
-    \item \textbf{{Virtualization, Containers \& Hardening:}} Deployed containerized applications with Docker, applying AppArmor profiles, non-root execution, and Linux security baselines across Debian and Ubuntu server environments.
-    \item \textbf{{Operational Discipline \& Customer Ownership:}} Founded and operated an exterior maintenance business, managing client communications, estimating, and equipment troubleshooting, developing composure, accountability, and clear technical communication.
+    \item \textbf{{Technical Competence:}} Strong familiarity with industry-standard platforms, frameworks, and scripting tools to build robust, maintainable solutions.
+    \item \textbf{{Automation \& Efficiency:}} Developed automated scripts and pipelines to eliminate repetitive overhead and ensure operational consistency.
+    \item \textbf{{Structured Analysis:}} Experienced in breaking down complex technical challenges into manageable components and documenting architectural decisions.
+    \item \textbf{{Communication \& Ownership:}} Dedicated to clear stakeholder communication, cross-functional collaboration, and taking full accountability for deliverables.
 \end{{itemize}}\par}}
 \vspace{{6pt}}
 
-\lettercontent{{As a Canadian Citizen available full-time for a 4-month co-op placement starting January 2027, I am excited about the opportunity to contribute directly to {esc_company}'s technical operations and support your team's goals.}}
-
-\lettercontent{{Thank you for your time and consideration. I welcome the opportunity to discuss how my background and enthusiasm can support {esc_company}.}}
+\lettercontent{{I welcome the opportunity to discuss how my dedication, technical aptitude, and problem-solving mindset can support {esc_company}'s goals. Thank you for your time and consideration.}}
 
 \begin{{flushright}}
 \closing{{Sincerely,}}
 
-\signature{{Golden Stickwood}}
+\signature{{{CANDIDATE_NAME}}}
 \end{{flushright}}
 \end{{document}}
 """
@@ -1153,13 +1101,13 @@ class AutoScrapeApplyDaemon:
                 applies_count += 1
 
         if not self.dry_run and (applies_count > 0 or len(new_jobs) > 0):
-            rebuild_script = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
+            rebuild_script = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
             if rebuild_script.exists():
                 try:
-                    self.logger.info("🔄 Triggering automatic dashboard rebuild & GitHub Pages deploy...")
+                    self.logger.info("🔄 Triggering automatic dashboard rebuild...")
                     subprocess.run([sys.executable, str(rebuild_script)], check=True)
                 except Exception as e:
-                    self.logger.warning(f"Failed to auto-rebuild/deploy dashboard: {e}")
+                    self.logger.warning(f"Failed to auto-rebuild dashboard: {e}")
             else:
                 deploy_script = REPO_ROOT / "scripts" / "deploy_dashboard.sh"
                 if deploy_script.exists():

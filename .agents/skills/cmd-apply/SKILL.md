@@ -47,4 +47,4 @@ from the user's conversational message.
   inline to the reviewer subagent. Run verification once at the end.
 - **PDF compilation is mandatory**: Step 5 compiles and visually inspects PDFs.
   Do not skip this step.
-- **Automatic Dashboard Deployment**: After Step 6b records the application to `job_search_tracker.csv`, execute `python3 scripts/rebuild_tracker_and_dashboard_winter_only.py` (or `./scripts/deploy_dashboard.sh`) to automatically update and publish the live dashboard to GitHub Pages.
+- **Automatic Dashboard Deployment**: After Step 6b records the application to `job_search_tracker.csv`, execute `python3 scripts/rebuild_dashboard.py` (or `./scripts/deploy_dashboard.sh` when `DASHBOARD_REPO` is configured) to update the dashboard report.

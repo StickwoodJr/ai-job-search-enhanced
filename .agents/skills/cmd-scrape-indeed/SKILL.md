@@ -32,6 +32,6 @@ This skill delegates to the canonical `/scrape-indeed` command specification.
 
 The user's message may include:
 - A specific query focus (e.g. `"scrape indeed for Linux roles"` or `"scrape indeed co-op"`)
-- `--broad` to run across all IT, Systems, Network, and Cloud categories
+- `--broad` to run across all configured search categories and sectors
 - `--jobage <days>` to filter by posting age (default: 14)
 - `--limit <n>` max results per query (default: 10)

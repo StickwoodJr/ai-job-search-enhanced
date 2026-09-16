@@ -35,37 +35,36 @@ class VerificationEngine:
     def build_verification_prompt(self, target_role: str, requirements_or_job_text: str) -> str:
         """
         Constructs a rigorous, factual verification prompt for NotebookLM.
-        Demands exact lab titles, commands, protocols, and environments.
+        Audits claims against candidate source materials (certs, projects, coursework, past resumes).
         """
-        prompt = f"""You are an elite Technical Systems Auditor reviewing the attached primary student coursework materials, lab submissions, PowerPoint decks, and practical assignments from Seneca Polytechnic's Computer Systems Technology (CTYC) curriculum.
+        prompt = f"""You are an objective Career Evidence & Verification Auditor reviewing the attached primary source documents (certifications, personal project write-ups, past resumes, code repositories, coursework, lab reports, performance reviews, or reference letters).
 
-The candidate is preparing an individual application for the following role:
+The candidate is preparing an application for the following role:
 TARGET ROLE: {target_role}
 
 TECHNICAL REQUIREMENTS / JOB DESCRIPTION:
 {requirements_or_job_text}
 
 INSTRUCTIONS FOR AUDITING & VERIFICATION:
-1. Grounding Rule: Rely ONLY on the attached source materials. If a skill, tool, or protocol is NOT explicitly mentioned or practiced in the sources, state clearly that it is not covered. DO NOT infer or assume tools that are not documented.
-2. For each requirement from the job that is supported by the course materials:
-   - Identify the exact Course Code (e.g., OPS145, OPS245, MST100, MST200, CSN115, CSN205, SEC220).
-   - Identify the specific Lab, Assignment, or Project name (e.g., "Lab 8 - Creating Users with PS", "CSN205 Assignment 2 OSPFv2", "wk10p1.txt").
-   - List the exact CLI commands, PowerShell cmdlets, configuration parameters, or protocols executed (e.g., `New-ADUser`, `Add-Computer`, 802.1Q trunking, single-area OSPFv2, systemd service units, LVM).
-   - Detail the execution environment (e.g., Physical Cisco rack, Packet Tracer, Azure DevTest Labs, local virtual machine, CentOS/RHEL, Windows Server 2022).
-3. Identify any clear gaps (technologies demanded by the job that are absent in these semesters).
+1. Grounding Rule: Rely ONLY on the attached source materials. If a skill, tool, certification, or project is NOT explicitly mentioned or documented in the sources, state clearly that it is not covered. DO NOT infer or assume background that is not documented.
+2. For each requirement from the job that is supported by the attached materials:
+   - Identify the specific source document (e.g. certification title, project name, past role, course/lab module).
+   - Extract verified outcomes, concrete tools/technologies used, metrics achieved, or responsibilities held.
+   - List specific artifacts, technical syntax, frameworks, or platforms demonstrated in the sources.
+3. Identify any clear gaps (requirements demanded by the job that are absent in the attached sources).
 
 Format your response strictly under these headers:
-### 1. Verified Core Competencies & Lab Proof
-(Bullet points linking each job requirement to specific course labs, environments, and outcomes)
+### 1. Verified Core Competencies & Primary Evidence
+(Bullet points linking each job requirement to specific sources, projects, certs, or outcomes)
 
-### 2. Concrete Commands, Cmdlets & Configuration Syntax Executed
-(Bullet points listing specific CLI commands, scripts, or configuration commands Golden ran in labs)
+### 2. Concrete Tools, Technologies & Work Products
+(Bullet points listing specific tools, frameworks, languages, commands, or project deliverables verified in the sources)
 
-### 3. Practical Infrastructure & Platforms Used
-(Details on whether work was done on physical hardware, virtualized topologies, or cloud environments)
+### 3. Execution Context & Environments
+(Details on whether work was completed in production, personal projects, enterprise environments, or coursework)
 
-### 4. Identified Curriculum Gaps
-(List of required skills from the job description that do not appear in Semesters 1 and 2 materials)
+### 4. Identified Skill Gaps
+(List of required skills from the job description that do not appear in the candidate's source documents)
 """
         return prompt
 

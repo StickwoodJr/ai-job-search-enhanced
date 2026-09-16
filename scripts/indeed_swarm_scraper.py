@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 """
 Indeed Swarm Scraper Orchestrator
-Coordinates 3 parallel continuous sector-scraping worker processes across Indeed Canada:
-1. Sector 1 (systems_hardware): Linux, Systems Admin, Windows Server/AD, Service Desk, Desktop Support, Hardware & Datacenter
-2. Sector 2 (networking_noc): Cisco Routing/Switching, Network Admin, Telecom, NOC Operations, Network Security
-3. Sector 3 (cloud_cyber): Cloud Infrastructure (AWS/Azure), DevOps, Cybersecurity, SOC Analysis, TSA
+Coordinates parallel continuous sector-scraping worker processes across Indeed Canada:
+Sectors and search queries are loaded dynamically from config/swarm_sectors.json.
 
 Enforces:
-- Seneca CTYC curriculum only
-- <= 70 km driving distance from Newmarket, ON
-- Explicit Winter 2027 Co-op term
+- Candidate qualification matching
+- Commute threshold from candidate's home location
 - Atomic deduplication in seen_jobs.json
 - Automatic rebuild of job_search_tracker.csv and application-dashboard.html
 """
 
 import argparse
+import json
 import os
 import signal
 import subprocess

@@ -15,11 +15,9 @@ CONFIG_DIR = Path(__file__).resolve().parent
 USER_CONFIG_FILE = CONFIG_DIR / "user_config.json"
 
 # Default Notebook ID & Title (can be overridden by user_config.json or ENV)
-DEFAULT_NOTEBOOK_ID = os.environ.get("NOTEBOOKLM_NOTEBOOK_ID", "e32153b2-e906-4762-a8c3-8b96fbf093b4")
-DEFAULT_NOTEBOOK_TITLE = os.environ.get("NOTEBOOKLM_NOTEBOOK_TITLE", "Educational Coursework & Labs")
-ADDITIONAL_NOTEBOOKS = {
-    "semester_3": "467dc467-d492-4d50-8b20-0a157bd444db",
-}
+DEFAULT_NOTEBOOK_ID = os.environ.get("NOTEBOOKLM_NOTEBOOK_ID", "[YOUR_NOTEBOOKLM_NOTEBOOK_ID]")
+DEFAULT_NOTEBOOK_TITLE = os.environ.get("NOTEBOOKLM_NOTEBOOK_TITLE", "Personal Knowledge & Career Evidence")
+ADDITIONAL_NOTEBOOKS = {}
 RAG_ENABLED = True
 
 # Load user-specific notebook configuration if present

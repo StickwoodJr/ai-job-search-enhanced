@@ -43,8 +43,8 @@ def get_current_config() -> Dict[str, Any]:
             pass
     return {
         "enabled": True,
-        "default_notebook_id": "e32153b2-e906-4762-a8c3-8b96fbf093b4",
-        "default_notebook_title": "Educational Coursework & Labs",
+        "default_notebook_id": "[YOUR_NOTEBOOKLM_NOTEBOOK_ID]",
+        "default_notebook_title": "Personal Knowledge & Career Evidence",
         "additional_notebooks": {},
     }
 
@@ -60,7 +60,7 @@ def cmd_status():
     """Display active RAG configuration."""
     cfg = get_current_config()
     print("=" * 60)
-    print(" 🎓 Educational Curriculum RAG Configuration")
+    print(" 📚 Personal Evidence & Career RAG Configuration")
     print("=" * 60)
     print(f"  Status:          {'Enabled' if cfg.get('enabled', True) else 'Disabled'}")
     print(f"  Active Notebook: {cfg.get('default_notebook_title', 'Untitled')}")
@@ -110,7 +110,7 @@ def cmd_sources(notebook_id: str = None):
     """List sources attached to the active or specified notebook."""
     cfg = get_current_config()
     target_id = notebook_id or cfg.get("default_notebook_id")
-    print(f"🔍 Fetching primary coursework sources for notebook {target_id}...")
+    print(f"🔍 Fetching primary sources for notebook {target_id}...")
     try:
         bridge = get_bridge()
         sources = bridge.list_sources(target_id)
@@ -118,7 +118,7 @@ def cmd_sources(notebook_id: str = None):
             print("  No sources returned.")
             return
 
-        print(f"\nAttached Coursework Sources ({len(sources)} total):")
+        print(f"\nAttached Evidence Sources ({len(sources)} total):")
         for s in sources[:25]:
             title = s.get("title") or s.get("name") or "Untitled source"
             s_type = s.get("type", "document")
@@ -131,10 +131,11 @@ def cmd_sources(notebook_id: str = None):
 
 
 def cmd_scan_documents():
-    """Scan documents/ directory for syllabi, lab guides, transcripts to add to NotebookLM."""
-    print(f"📂 Scanning {DOCUMENTS_DIR} for potential Curriculum RAG materials...")
+    """Scan documents/ directory for any career materials to add to NotebookLM."""
+    print(f"📂 Scanning {DOCUMENTS_DIR} for potential Career Evidence RAG materials...")
+    print("   (certifications, personal projects, past resumes, coursework, code, reference letters)")
     candidates = []
-    extensions = {".pdf", ".docx", ".doc", ".txt", ".md", ".pptx", ".py", ".sh", ".pkt"}
+    extensions = {".pdf", ".docx", ".doc", ".txt", ".md", ".pptx", ".py", ".sh", ".pkt", ".json", ".rs", ".ts", ".js"}
 
     for root, _, files in os.walk(DOCUMENTS_DIR):
         for f in files:
@@ -143,9 +144,9 @@ def cmd_scan_documents():
                 candidates.append(p)
 
     if not candidates:
-        print("  No educational documents found in documents/.")
-        print("  💡 Tip: Drop your course syllabi, lab reports, assignments, or code in:")
-        print("     documents/diplomas/ or documents/cv/")
+        print("  No documents found in documents/.")
+        print("  💡 Tip: Drop your past resumes, certifications, personal project notes, code,")
+        print("     course syllabi, or reference letters in documents/")
         return
 
     print(f"\nFound {len(candidates)} document(s) suitable for your NotebookLM knowledge base:")
@@ -156,16 +157,16 @@ def cmd_scan_documents():
     if len(candidates) > 20:
         print(f"  ... and {len(candidates) - 20} more files.")
 
-    print("\n💡 How to create your Curriculum Notebook in Google NotebookLM:")
+    print("\n💡 How to create your Evidence Notebook in Google NotebookLM:")
     print("  1. Go to https://notebooklm.google.com")
-    print("  2. Click 'New Notebook' and title it (e.g. 'Degree Coursework & Technical Labs')")
-    print("  3. Upload the documents listed above (drag & drop PDFs, docs, markdown)")
+    print("  2. Click 'New Notebook' and title it (e.g. 'Personal Knowledge & Career Evidence')")
+    print("  3. Upload the documents listed above (drag & drop PDFs, docs, markdown, text)")
     print("  4. Copy the Notebook ID from the browser URL: https://notebooklm.google.com/notebook/<NOTEBOOK_ID>")
     print("  5. Run: python rag/notebook_manager.py select <NOTEBOOK_ID> \"<NOTEBOOK_TITLE>\"\n")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="NotebookLM Manager for Educational Curriculum RAG")
+    parser = argparse.ArgumentParser(description="NotebookLM Manager for Personal Evidence & Career RAG")
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
     subparsers.add_parser("status", help="Show active RAG notebook configuration")

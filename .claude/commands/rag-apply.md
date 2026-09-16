@@ -1,12 +1,12 @@
-# /rag-apply - Curriculum-Grounded Drafter-Reviewer Job Application Workflow
+# /rag-apply - Source-Grounded Drafter-Reviewer Job Application Workflow
 
-You are orchestrating a two-agent job application workflow augmented with live curriculum retrieval from the candidate's Seneca Polytechnic educational materials. The job posting is provided below as `$ARGUMENTS` (either a URL or pasted text).
+You are orchestrating a two-agent job application workflow augmented with live retrieval from the candidate's personal Google NotebookLM knowledge base (certifications, personal projects, coursework, lab reports, past resumes, and reference letters). The job posting is provided below as `$ARGUMENTS` (either a URL or pasted text).
 
 Follow these steps **exactly in order**. Do not skip steps.
 
-**Standing rule — write new facts back to the profile.** If the user confirms, corrects or supplies a fact that is not already in `01-candidate-profile.md` — or if the RAG verification engine extracts verified hands-on lab achievements from completed coursework — update `01-candidate-profile.md` in the same turn under **Key Coursework & Competencies**. Do not leave it living only in the conversation or in a draft. Anything absent from the sources will be treated as unsupported by later audit passes.
+**Standing rule — write new facts back to the profile.** If the user confirms, corrects or supplies a fact that is not already in `01-candidate-profile.md` — or if the RAG verification engine extracts verified achievements from primary source materials — update `01-candidate-profile.md` in the same turn. Do not leave it living only in the conversation or in a draft. Anything absent from the sources will be treated as unsupported by later audit passes.
 
-**RAG Zero-Caching Rule:** Every run of `/rag-apply` executes live queries against Gemini NotebookLM via ExtendLM MCP. No RAG data or query responses are cached, guaranteeing fresh, high-fidelity grounding tailored to this specific job application.
+**RAG Zero-Caching Rule:** Every run of `/rag-apply` executes live queries against Google NotebookLM via ExtendLM MCP. No RAG data or query responses are cached, guaranteeing fresh, high-fidelity grounding tailored to this specific job application.
 
 **Token-efficiency rules for this workflow:**
 - Never re-Read a file whose contents are already in your context from an earlier step. If you read it in Step 1, it is still available in Step 2.
@@ -28,16 +28,16 @@ Follow these steps **exactly in order**. Do not skip steps.
 
 ---
 
-## Step 1: DRAFTER - Evaluate Fit + Live Curriculum RAG Verification
+## Step 1: DRAFTER - Evaluate Fit + Live RAG Verification
 
-### 1a. Run Live Curriculum RAG Verification
+### 1a. Run Live RAG Verification
 Execute the RAG bridge hook against the job posting content:
 
 ```bash
-python3 "rag/apply_rag_hook.py" "<PATH_OR_TEXT_OF_POSTING>" --role "<ROLE>" --output "academic_evidence_pack.md"
+python3 "rag/apply_rag_hook.py" "<PATH_OR_TEXT_OF_POSTING>" --role "<ROLE>" --output "career_evidence_pack.md"
 ```
 
-The hook queries the 133 curriculum sources in Gemini Notebook **"Semester 1 and 2 CTY"** (`e32153b2-e906-4762-a8c3-8b96fbf093b4`) live via ExtendLM MCP with **zero caching**.
+The hook queries the candidate's configured Google NotebookLM notebook live via ExtendLM MCP with **zero caching**.
 It extracts:
 - Exact course codes (`CSN205`, `MST200`, `OPS245`, `SEC220`, etc.)
 - Specific lab titles and assignments (`Lab 4 - User and Group Management`, `Lab 8 - Creating Users with PS`, `Group2_CSN205Assign1`, `LAB2-CSN`)
@@ -60,7 +60,7 @@ python salary_lookup.py "<Company Name>" --json
 
 Present the enriched evaluation to the user with:
 1. **Skills match** - required/preferred skills matched from profile + verified coursework labs
-2. **Verified Educational Proof Points** - specific Seneca CTY labs, commands, and platforms that directly prove the candidate's capabilities for this role
+2. **Verified Career Evidence Points** - specific labs, projects, certifications, tools, and platforms that directly prove the candidate's capabilities for this role
 3. **Experience match** - how work history and entrepreneurial experience map to the role
 4. **Behavioral/culture match** - how behavioral profile fits the role/company culture
 5. **Salary benchmark** - salary index for the company (if available)
@@ -211,9 +211,9 @@ Run the full verification checklist from `CLAUDE.md`.
 2. Archive the verbatim posting text to `documents/applications/<company>_<role>/job_posting.md`.
 3. **Automatically Rebuild & Deploy Live Dashboard**:
    ```bash
-   python3 scripts/rebuild_tracker_and_dashboard_winter_only.py
+   python3 scripts/rebuild_dashboard.py
    ```
-   (or `./scripts/deploy_dashboard.sh`) to publish updates to GitHub Pages (`https://stickwoodjr.github.io/job-search/`).
+   (or `./scripts/deploy_dashboard.sh` when `DASHBOARD_REPO` is configured).
 
 ### Next Steps
 - `/outcome <company>` when submitted.
