@@ -109,112 +109,199 @@ def load_tracker_exclusions() -> Tuple[Set[Tuple[str, str]], Set[str]]:
     return exclusions, url_exclusions
 
 
-PROFILE_FILE = REPO_ROOT / ".claude" / "skills" / "job-application-assistant" / "01-candidate-profile.md"
-SWARM_CONFIG_FILE = REPO_ROOT / "config" / "swarm_sectors.json"
+# Schooling filter: Exclusively keep roles aligned with Seneca Polytechnic Computer Systems Technology (CTYC)
+DISQUALIFIED_PATTERNS = [
+    # Software Engineering / Developer / Blockchain
+    r'\bsoftware\b', r'\bdeveloper\b', r'\bdevelopment\b', r'\bprogrammer\b', r'\bprogramming\b',
+    r'\bfull[- ]?stack\b', r'\bfrontend\b', r'\bfront-end\b', r'\bbackend\b', r'\bback-end\b',
+    r'\bblockchain\b', r'\bweb dev\b', r'\bmobile dev\b', r'\bapp dev\b', r'\bios dev\b',
+    r'\bandroid dev\b', r'\bqa automation\b', r'\bquality engineer\b', r'\btest automation\b',
+    r'\btest engineer\b', r'\bqa engineer\b', r'\bqa analyst\b', r'\bquality assurance\b',
+    r'\bdesign engineer\b',
 
-def get_candidate_keywords() -> Tuple[List[str], List[str]]:
-    """Extract candidate target roles and technical skills from profile/config."""
-    roles = []
-    skills = []
-    if SWARM_CONFIG_FILE.exists():
-        try:
-            with open(SWARM_CONFIG_FILE, "r", encoding="utf-8") as f:
-                d = json.load(f)
-                for sec in d.get("sectors", {}).values():
-                    if "name" in sec:
-                        roles.append(sec["name"].lower())
-                    for q in sec.get("queries", []):
-                        q_text = q[0] if isinstance(q, (list, tuple)) else str(q)
-                        roles.append(q_text.lower())
-        except Exception:
-            pass
-    if PROFILE_FILE.exists():
-        try:
-            content = PROFILE_FILE.read_text(encoding="utf-8")
-            for line in content.splitlines():
-                if "Target Job Roles" in line or "**Roles:**" in line:
-                    parts = re.split(r'[,;]', line)
-                    roles.extend([p.strip().lower() for p in parts if p.strip() and "[" not in p])
-                elif line.startswith("- **") and ":**" in line:
-                    m = re.match(r"^-\s+\*\*([^*]+)\*\*:\s*(.*)", line)
-                    if m and "[" not in m.group(2):
-                        skills.append(m.group(1).lower())
-        except Exception:
-            pass
-    return list(set(roles)), list(set(skills))
+    # AI / Machine Learning / Data Science / Analytics / BI / Analytics Engineering
+    r'\bai\b', r'\bml\b', r'\bai/ml\b', r'machine learning', r'deep learning',
+    r'artificial intelligence', r'data scientist', r'data science', r'data analytics',
+    r'data analyst', r'data engineer', r'data engineering', r'analytics engineer',
+    r'analytics engineering', r'business intelligence', r'\bbi\b', r'power bi', r'tableau',
+    r'insights', r'market research', r'reporting analyst', r'analytics', r'statistician',
+    r'quantitative', r'data governance', r'generative',
+
+    # Business Analysis / Process Analysis / Business Admin / General Commerce / Management
+    r'business analyst', r'business information analyst', r'business system analyst',
+    r'process analyst', r'process support', r'process and change', r'business admin',
+    r'business administration', r'general commerce', r'commerce', r'business management',
+    r'business planning', r'strategy', r'strategic', r'transformation', r'practice management',
+    r'project management', r'product management', r'project coordinator', r'product manager',
+    r'project manager', r'scrum', r'agile', r'delivery & execution', r'product delivery',
+    r'product information', r'proposal', r'change management', r'operations analyst',
+    r'administration and operations', r'internal administration', r'administration & support',
+    r'business technology', r'governance & control', r'governance co-op', r'corporate reliability',
+    r'enterprise architecture',
+
+    # Finance / Banking / Accounting / Audit / Risk / Insurance
+    r'accounting', r'accountant', r'audit', r'auditor', r'tax', r'payroll',
+    r'finance', r'financial', r'fund management', r'treasury', r'underwriting',
+    r'actuarial', r'derivative', r'credit', r'equity', r'capital markets',
+    r'transaction banking', r'commercial banking', r'banking', r'investing',
+    r'investment', r'investments', r'wealth', r'broker', r'trader', r'trading',
+    r'trade desk', r'product control', r'portfolio', r'm&a', r'mergers',
+    r'hedging', r'venture capital', r'risk', r'regulatory', r'compliance',
+    r'aml', r'control testing', r'liquidity', r'expense management', r'deposits',
+    r'money movement', r'compensation', r'shareholder', r'intra-group',
+    r'real estate', r'account manager', r'national accounts', r'working capital',
+    r'payments modernization', r'one td',
+
+    # Sales / Marketing / HR / Creative / Communications / UX
+    r'sales', r'marketing', r'communications', r'creative', r'content', r'copywriter',
+    r'social media', r'human resources', r'\bhr\b', r'talent acquisition', r'recruiter',
+    r'recruiting', r'public relations', r'shopper', r'merchandising', r'customer service',
+    r'contact center', r'client management', r'colleague', r'employee experience',
+    r'member experience', r'workforce', r'ux researcher', r'ux/product', r'product design',
+    r'campus programs', r'discovery', r'analyst relations', r'innovation partner',
+
+    # Supply Chain / Logistics / Non-IT Operations & Trades & Engineering
+    r'supply chain', r'procurement', r'buyer', r'sourcing', r'replenishment',
+    r'warehouse', r'logistics', r'production group leader', r'production supervisor',
+    r'production engineering', r'manufacturing', r'lean performance', r'operations delivery',
+    r'branch operations', r'esg', r'sustainability', r'network flow', r'civil',
+    r'construction', r'structural', r'mechatronic', r'mechanical', r'electrical engineering',
+    r'electrical/computer', r'power systems', r'cad design', r'paper mill',
+    r'battery degradation', r'design co-op', r'design technologist', r'product engineering',
+    r'water & wastewater', r'tailings', r'geotech', r'metallurg', r'piping',
+    r'architect', r'interior', r'environmental', r'agricultural', r'agriculture',
+    r'oncology', r'health & safety', r'safety assistant', r'qa inspector',
+    r'case mix', r'nurse', r'nursing', r'medical', r'dental', r'pharmacy',
+    r'quality engineering', r'engineering - durham',
+]
+
+IT_POSITIVE_PATTERNS = [
+    r'\bsystems?\b', r'\blinux\b', r'\bwindows\b', r'\bnetworks?\b', r'\bnetworking\b',
+    r'\binfrastructure\b', r'\bcloud\b', r'\bdevops\b', r'cyber', r'security',
+    r'\bservice desk\b', r'\bhelpdesk\b', r'\bhelp desk\b', r'\bdesktop\b', r'\btechnician\b',
+    r'\btechnical\b', r'\btechnology\b', r'\bit\b', r'\binformation technology\b',
+    r'\bcomputer\b', r'\bhardware\b', r'\bdatacenter\b', r'\bdata center\b',
+    r'\btelecom\b', r'\bsoc\b', r'\bnoc\b', r'\badmin\b', r'\badministrator\b',
+    r'\bdatabase\b', r'\basset management\b', r'\bmicrosoft 365\b', r'\bm365\b', r'\bcisco\b',
+]
+
+def is_schooling_fit(role_title: str) -> bool:
+    t = role_title.lower()
+    for pat in DISQUALIFIED_PATTERNS:
+        if re.search(pat, t, re.IGNORECASE):
+            if pat in ('risk', 'regulatory', 'compliance') and ('cyber' in t or 'security' in t):
+                continue
+            if pat in ('capital markets', 'banking', 'equity', 'wealth') and any(k in t for k in ['devops', 'cloud', 'cyber', 'security', 'systems', 'infrastructure']):
+                continue
+            return False
+    return any(re.search(pat, t, re.IGNORECASE) for pat in IT_POSITIVE_PATTERNS)
 
 
 def evaluate_fit(title: str, description: str, winter_focus: bool = True) -> Tuple[str, bool]:
     """
-    Candidate-focused triage fit rating:
-    - Evaluates role title and description against candidate target roles and skills
-    - Flags entry-level / co-op / internship term alignment
-    - Filters unrelated physical trades or senior executive mismatch
-    Returns: (fit_level, is_target_term)
+    Rapid triage fit rating for Golden Stickwood:
+    - Core skills: Linux (CentOS/RHEL/Ubuntu), Windows Server (AD DS, GPO), Cisco IOS (VLANs, Routing), Homelab/Zero-Trust
+    - Target: Winter 2027 Co-op / Junior Systems Administrator
+    Returns: (fit_level, is_winter_coop)
     """
+    # Strict schooling alignment check
+    if not is_schooling_fit(title):
+        return ("low", False)
+
     text = f"{title} {description}".lower()
 
-    # Target term identification (co-op, intern, student, or specific winter/summer terms)
-    term_keywords = [
-        "co-op", "coop", "intern", "internship", "student", "entry level",
-        "junior", "new grad", "associate", "stage", "hiver", "winter"
-    ]
-    is_target_term = any(term in text for term in term_keywords)
+    # Winter co-op identification
+    winter_terms = ["winter 2027", "winter 2026", "winter co-op", "winter coop", "winter internship", "winter term", "winter analyst", "january 2027", "january -", "jan - apr", "hiver 2027", "hiver"]
+    is_winter = any(term in text for term in winter_terms)
+    
+    # Check if purely summer-only (e.g. Summer 2027 only without 8-month or winter option)
+    summer_only = ("summer 2027" in text or "summer 2026" in text or "may - aug" in text) and not is_winter and "8 month" not in text and "12 month" not in text
 
     # Disqualifiers
     senior_patterns = [
-        r"\b(senior|sr\.|lead|principal|architect|director|vp|vice president)\b",
-        r"\b(7\+|8\+|10\+)\s*years\b",
+        r"\b(senior|sr\.|lead|principal|architect|director|vp|manager)\b",
+        r"\b(5\+|7\+|8\+|10\+)\s*years\b",
     ]
-    is_senior = any(re.search(p, text) for p in senior_patterns) and not is_target_term
+    is_senior = any(re.search(p, text) for p in senior_patterns) and "co-op" not in text and "intern" not in text
 
-    unrelated_trades = [
-        "registered nurse",
-        "licensed practical nurse",
-        "forklift operator",
-        "truck driver",
-        "dental assistant",
-        "dental hygienist",
-        "plumber",
-        "electrician",
-        "hvac technician",
+    unrelated = any(
+        kw in text
+        for kw in [
+            "registered nurse",
+            "licensed practical nurse",
+            "forklift operator",
+            "truck driver",
+            "accountant",
+            "dental",
+            "plumber",
+            "electrician",
+        ]
+    )
+
+    if unrelated or (is_senior and "student" not in text):
+        return ("low", is_winter)
+
+    if winter_focus and summer_only:
+        return ("low", False)
+
+    # High match criteria
+    high_keywords = [
+        "system administrator",
+        "systems administrator",
+        "linux administrator",
+        "systems technician",
+        "network administrator",
+        "network technician",
+        "network operations",
+        "noc technician",
+        "noc analyst",
+        "noc operator",
+        "noc",
+        "cloud operations",
+        "cloud infrastructure",
+        "it infrastructure",
+        "active directory",
+        "cisco",
+        "zero-trust",
+        "virtualization",
+        "vmware",
+        "cybersecurity",
+        "it security",
+        "security operations",
+        "soc analyst",
+        "security analyst",
+        "data center technician",
+        "service desk",
     ]
-    if any(kw in text for kw in unrelated_trades) or is_senior:
-        return ("low", is_target_term)
+    coop_match = any(term in text for term in ["co-op", "coop", "intern", "student"])
 
-    # Candidate profile match
-    cand_roles, cand_skills = get_candidate_keywords()
-    title_lower = title.lower()
-
-    if cand_roles or cand_skills:
-        role_hits = [r for r in cand_roles if r in title_lower or r in text]
-        skill_hits = [s for s in cand_skills if s in text]
-        if role_hits and (is_target_term or skill_hits):
-            return ("high", is_target_term)
-        if role_hits or len(skill_hits) >= 2:
-            return ("medium", is_target_term)
-
-    # Default technical keywords for fresh installs / unconfigured profiles
-    default_high_kw = [
-        "software engineer", "developer", "system administrator", "systems administrator",
-        "linux", "network administrator", "devops", "cloud engineer", "cybersecurity",
-        "soc analyst", "data analyst", "data engineer", "it support", "service desk",
-        "active directory", "cisco", "docker", "kubernetes"
-    ]
-    default_med_kw = [
-        "technical support", "help desk", "hardware technician", "systems analyst",
-        "operations technician", "network support", "it coordinator", "qa analyst"
-    ]
-
-    has_high = any(kw in text for kw in default_high_kw)
-    has_med = any(kw in text for kw in default_med_kw)
-
-    if has_high and is_target_term:
+    has_high_kw = any(kw in text for kw in high_keywords)
+    if is_winter and (has_high_kw or coop_match):
         return ("high", True)
-    if has_high or (has_med and is_target_term):
-        return ("medium", is_target_term)
-    if has_med or is_target_term:
-        return ("medium", is_target_term)
+    if has_high_kw and coop_match:
+        return ("high", is_winter)
+    if has_high_kw:
+        return ("high" if not winter_focus or is_winter else "medium", is_winter)
+
+    # Medium match criteria
+    medium_keywords = [
+        "it support",
+        "help desk",
+        "technical support",
+        "desktop support",
+        "it technician",
+        "hardware technician",
+        "systems analyst",
+        "operations technician",
+        "cloud support",
+        "network support",
+        "it coordinator",
+    ]
+    if any(kw in text for kw in medium_keywords):
+        return ("high" if is_winter else "medium", is_winter)
+
+    if is_winter:
+        return ("medium", True)
 
     return ("low", False)
 
@@ -265,37 +352,23 @@ def run_indeed_workflow(
     # Determine query list
     if query_override:
         queries = [(query_override, location)]
+    elif broad:
+        queries = [
+            ("IT Co-op", "Toronto, ON"),
+            ("Junior System Administrator", "Toronto, ON"),
+            ("Linux Co-op", "Toronto, ON"),
+            ("Network Administrator Co-op", "Toronto, ON"),
+            ("IT Support Technician", "York Region, ON"),
+            ("Cloud Infrastructure Intern", "Toronto, ON"),
+            ("Systems Analyst Student", "Ontario"),
+        ]
     else:
-        loaded_queries = []
-        if SWARM_CONFIG_FILE.exists():
-            try:
-                with open(SWARM_CONFIG_FILE, "r", encoding="utf-8") as f:
-                    s_data = json.load(f)
-                    default_loc = s_data.get("home_location", location)
-                    for sec in s_data.get("sectors", {}).values():
-                        for q in sec.get("queries", []):
-                            if isinstance(q, (list, tuple)) and len(q) >= 2:
-                                loaded_queries.append((str(q[0]), str(q[1])))
-                            elif isinstance(q, str):
-                                loaded_queries.append((q, default_loc))
-            except Exception:
-                pass
-        if loaded_queries:
-            queries = loaded_queries if broad else loaded_queries[:4]
-        elif broad:
-            queries = [
-                ("Software Engineer", location),
-                ("Junior System Administrator", location),
-                ("Data Analyst", location),
-                ("DevOps Engineer", location),
-                ("IT Support Specialist", location),
-            ]
-        else:
-            queries = [
-                ("Software Engineer", location),
-                ("Junior System Administrator", location),
-                ("IT Support", location),
-            ]
+        queries = [
+            ("IT Co-op", "Toronto, ON"),
+            ("Junior System Administrator", "Toronto, ON"),
+            ("Linux Co-op", "Toronto, ON"),
+            ("IT Support Technician", "York Region, ON"),
+        ]
 
     logger.info("Executing %d search query categories against Indeed Canada...", len(queries))
 
@@ -412,7 +485,7 @@ def run_indeed_workflow(
     print(f"{'FIT':<12} {'ROLE':<32} {'COMPANY':<22} {'LOCATION':<16} {'POSTED':<10}")
     print("-" * 94)
     for j in sorted(evaluated_jobs, key=lambda x: (not x.get("is_winter", False), ("high", "medium", "low").index(x["fit"]))):
-        term_tag = "[TARGET]" if j.get("is_winter") else ""
+        term_tag = "[WINTER]" if j.get("is_winter") else ""
         fit_badge = f"{j['fit'].upper()} {term_tag}".strip()
         role = (j["title"][:29] + "...") if len(j["title"]) > 32 else j["title"]
         comp = (j["company"][:19] + "...") if len(j["company"]) > 22 else j["company"]
@@ -425,17 +498,17 @@ def run_indeed_workflow(
         print("")
 
     print("=" * 94)
-    target_count = sum(1 for j in evaluated_jobs if j.get("is_winter"))
-    print(f"Summary: {len(evaluated_jobs)} new postings ({target_count} target matches). {skipped_count} skipped duplicates.")
+    winter_count = sum(1 for j in evaluated_jobs if j.get("is_winter"))
+    print(f"Summary: {len(evaluated_jobs)} new postings ({winter_count} explicit Winter Co-ops). {skipped_count} skipped duplicates.")
     if dry_run:
         print("[DRY RUN] No changes were written to seen_jobs.json.")
     else:
         print("To apply to any posting, run: /apply <URL>")
-        if target_count > 0:
-            rebuild_script = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+        if winter_count > 0:
+            rebuild_script = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
             if rebuild_script.exists():
                 try:
-                    logger.info("Triggering tracker & dashboard rebuild...")
+                    logger.info("Triggering tracker & dashboard rebuild and GitHub Pages deploy...")
                     subprocess.run([sys.executable, str(rebuild_script)], check=True)
                 except Exception as e:
                     logger.error("Error rebuilding dashboard: %s", e)
@@ -445,14 +518,14 @@ def run_indeed_workflow(
 
 def main():
     parser = argparse.ArgumentParser(description="Dedicated Indeed Job Scraper Workflow")
-    parser.add_argument("-q", "--query", help="Specific search query (e.g. 'Software Engineer', 'Systems Administrator')")
+    parser.add_argument("-q", "--query", help="Specific search query (e.g. 'Linux', 'Systems Administrator')")
     parser.add_argument("-l", "--location", default="Toronto, ON", help="City or region (default: 'Toronto, ON')")
     parser.add_argument("--jobage", type=int, default=14, help="Max posting age in days (default: 14)")
     parser.add_argument("--hours-old", type=int, default=None, help="Max posting age in hours (overrides --jobage)")
     parser.add_argument("-n", "--limit", type=int, default=10, help="Results limit per query (default: 10)")
-    parser.add_argument("--broad", action="store_true", help="Run broad query matrix across all configured sectors")
+    parser.add_argument("--broad", action="store_true", help="Run broad query matrix across IT, Network, and Cloud")
     parser.add_argument("--dry-run", action="store_true", help="Run without persisting new jobs to seen_jobs.json")
-    parser.add_argument("--winter", "--target-term", dest="winter", action="store_true", default=True, help="Prioritize target term postings (default: True)")
+    parser.add_argument("--winter", action="store_true", default=True, help="Prioritize Winter Co-op postings (default: True)")
     parser.add_argument("--format", choices=["table", "json"], default="table", help="Output format (default: table)")
     args = parser.parse_args()
 

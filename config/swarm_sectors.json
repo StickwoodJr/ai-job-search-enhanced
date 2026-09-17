@@ -1,103 +1,127 @@
 {
-  "target_candidate": "[YOUR_NAME]",
+  "target_candidate": "Golden Stickwood",
   "home_location": "Toronto, ON",
-  "max_distance_km": 50,
-  "target_term": "Co-op / Internship / Entry-level / Full-time",
+  "max_distance_km": 70,
+  "target_term": "Winter 2027 Co-op",
   "sectors": {
     "systems_hardware": {
       "name": "Systems & IT Support",
-      "description": "Linux, Systems Administration, Windows Server, Active Directory, Service Desk, Desktop Support",
+      "description": "Linux, Systems Administration, Windows Server, Active Directory, Service Desk, Desktop Support, Hardware & Datacenter",
       "queries": [
         [
-          "Linux Administrator",
+          "Linux Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Systems Administrator",
+          "Systems Administrator Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Windows Server Active Directory",
+          "Windows Server Active Directory Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "IT Support Specialist",
+          "IT Support Co-op Winter 2027",
+          "York Region, ON"
+        ],
+        [
+          "Desktop Support Co-op Winter 2027",
+          "Markham, ON"
+        ],
+        [
+          "Service Desk Technician Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Desktop Support",
+          "Hardware Technician Co-op Winter 2027",
+          "Mississauga, ON"
+        ],
+        [
+          "Datacenter Technician Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Service Desk Technician",
-          "Toronto, ON"
-        ],
-        [
-          "Datacenter Operations",
+          "IT Workplace Services Co-op Winter 2027",
           "Toronto, ON"
         ]
       ]
     },
     "networking_noc": {
       "name": "Networking & NOC",
-      "description": "Cisco Routing & Switching, Network Administration, NOC Operations, Network Security, Firewalls",
+      "description": "Cisco Routing & Switching, Network Administration, NOC Operations, Network Security, Telecom",
       "queries": [
         [
-          "Network Administrator",
+          "Network Administrator Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Network Support Specialist",
+          "Network Support Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Cisco Network Engineer",
+          "Cisco Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "NOC Analyst",
+          "NOC Analyst Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "NOC Technician",
+          "NOC Technician Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Telecom Technician",
-          "Toronto, ON"
+          "Telecom Technician Co-op Winter 2027",
+          "Mississauga, ON"
         ],
         [
-          "Network Security Specialist",
+          "Network Infrastructure Co-op Winter 2027",
+          "Markham, ON"
+        ],
+        [
+          "Network Security Co-op Winter 2027",
           "Toronto, ON"
         ]
       ]
     },
     "cloud_cyber": {
       "name": "Cloud & Cybersecurity",
-      "description": "Cloud Infrastructure (AWS/Azure), DevOps, Docker, Cybersecurity, SOC Analyst, Information Security",
+      "description": "Cloud Infrastructure (AWS/Azure), DevOps, Cybersecurity, Information Security, SOC Analysis, TSA",
       "queries": [
         [
-          "Cloud Infrastructure Specialist",
+          "Cloud Infrastructure Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Cloud Engineer",
+          "Cloud Engineer Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "DevOps Engineer",
+          "DevOps Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Cybersecurity Analyst",
+          "Cyber Security Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "Information Security Specialist",
+          "Information Security Co-op Winter 2027",
           "Toronto, ON"
         ],
         [
-          "SOC Analyst",
+          "SOC Analyst Co-op Winter 2027",
+          "Toronto, ON"
+        ],
+        [
+          "Vulnerability Analyst Co-op Winter 2027",
+          "Toronto, ON"
+        ],
+        [
+          "Technical Systems Analyst Co-op Winter 2027",
+          "Toronto, ON"
+        ],
+        [
+          "OT Cybersecurity Co-op Winter 2027",
           "Toronto, ON"
         ]
       ]

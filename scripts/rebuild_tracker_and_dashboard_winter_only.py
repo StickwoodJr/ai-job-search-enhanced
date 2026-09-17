@@ -349,6 +349,36 @@ def is_schooling_fit(role_title: str) -> bool:
     # Must have positive alignment with IT / Systems / Infrastructure / Cyber
     return any(re.search(pat, t, re.IGNORECASE) for pat in IT_POSITIVE_PATTERNS)
 
+SENIOR_PATTERNS = [
+    r"\b(senior|sr\.|lead|principal|architect|director|vp|manager)\b",
+    r"\b(5\+|7\+|8\+|10\+)\s*years\b",
+]
+
+def is_senior_disqualified(role: str) -> bool:
+    r = role.lower()
+    if "co-op" in r or "intern" in r or "student" in r:
+        return False
+    return any(re.search(p, r, re.IGNORECASE) for p in SENIOR_PATTERNS)
+
+def is_explicit_winter_coop(company: str, role: str, text_blob: str) -> bool:
+    combined = f"{company} {role} {text_blob}".lower()
+    winter_terms = [
+        "winter 2027", "2027 winter", "winter 2026", "2026 winter", "winter co-op", "winter coop",
+        "winter internship", "winter term", "winter student", "winter- student",
+        "winter technology", "winter intern", "co-op winter", "coop winter",
+        "internship winter", "hiver 2027", "2027 hiver", "stage hiver",
+        "january 2027", "janvier 2027", "jan 2027", "jan - apr",
+        "january - april"
+    ]
+    has_winter = any(w in combined for w in winter_terms)
+    is_summer_only = (
+        ("summer 2027" in combined or "summer 2026" in combined or "may - aug" in combined)
+        and not has_winter
+        and "8 month" not in combined
+        and "12 month" not in combined
+    )
+    return has_winter and not is_summer_only
+
 # 3. Read tracker
 seen_data = {}
 if SEEN_FILE.exists():
@@ -372,15 +402,27 @@ for r in tracker_rows:
     if seen_item.get("location"):
         loc = seen_item.get("location")
     full_desc = seen_item.get("description") or ""
-    dist, reg_id, prox_cls, dist_str, prox_lbl, loc_display = resolve_exact_location(comp, role, loc, f"{notes} {full_desc}")
-    fit, overall, chance, prestige, pay, pay_str = score_role(role, comp, f"{notes} {full_desc}")
 
-    # Hard cap: skip jobs further than 70 km from Newmarket
-    if dist > 70:
+    # Senior / Lead disqualifier
+    if is_senior_disqualified(role):
         continue
 
     # Schooling filter: skip jobs outside Seneca Computer Systems Technology schooling
     if not is_schooling_fit(role):
+        continue
+
+    clean_notes = notes.replace("Winter 2027 Co-op discovered via indeed-search.", "").strip()
+    check_text = f"{full_desc} {clean_notes}"
+
+    # Explicit winter co-op requirement
+    if not is_explicit_winter_coop(comp, role, check_text):
+        continue
+
+    dist, reg_id, prox_cls, dist_str, prox_lbl, loc_display = resolve_exact_location(comp, role, loc, check_text)
+    fit, overall, chance, prestige, pay, pay_str = score_role(role, comp, check_text)
+
+    # Hard cap: skip jobs further than 70 km from Newmarket
+    if dist > 70:
         continue
 
     raw_status = (r.get("Status") or "").strip()
@@ -435,25 +477,6 @@ print(f"Loaded {len(winter_entries)} winter co-ops from tracker.")
 seen_urls = {e["url"].lower(): e for e in winter_entries if e["url"] and e["url"].lower() != "#"}
 seen_titles = {(e["company"].lower(), e["role"].lower()) for e in winter_entries}
 
-def is_explicit_winter_coop(company: str, role: str, text_blob: str) -> bool:
-    combined = f"{company} {role} {text_blob}".lower()
-    winter_terms = [
-        "winter 2027", "2027 winter", "winter 2026", "2026 winter", "winter co-op", "winter coop",
-        "winter internship", "winter term", "winter student", "winter- student",
-        "winter technology", "winter intern", "co-op winter", "coop winter",
-        "internship winter", "hiver 2027", "2027 hiver", "stage hiver",
-        "january 2027", "janvier 2027", "jan 2027", "jan - apr",
-        "january - april"
-    ]
-    has_winter = any(w in combined for w in winter_terms)
-    is_summer_only = (
-        ("summer 2027" in combined or "summer 2026" in combined or "may - aug" in combined)
-        and not has_winter
-        and "8 month" not in combined
-        and "12 month" not in combined
-    )
-    return has_winter and not is_summer_only
-
 if SEEN_FILE.exists():
     try:
         with open(SEEN_FILE, "r", encoding="utf-8") as f:
@@ -475,7 +498,12 @@ if SEEN_FILE.exists():
             if not s_comp or not s_role:
                 continue
             s_desc = s_job.get("description") or ""
-            if not s_job.get("is_winter") and not is_explicit_winter_coop(s_comp, s_role, s_desc):
+
+            # Senior / Lead disqualifier
+            if is_senior_disqualified(s_role):
+                continue
+
+            if not is_explicit_winter_coop(s_comp, s_role, s_desc):
                 continue
             
             norm_key = (s_comp.lower(), s_role.lower())

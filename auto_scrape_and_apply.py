@@ -1101,10 +1101,10 @@ class AutoScrapeApplyDaemon:
                 applies_count += 1
 
         if not self.dry_run and (applies_count > 0 or len(new_jobs) > 0):
-            rebuild_script = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+            rebuild_script = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
             if rebuild_script.exists():
                 try:
-                    self.logger.info("🔄 Triggering automatic dashboard rebuild...")
+                    self.logger.info("🔄 Triggering automatic dashboard rebuild & GitHub Pages deploy...")
                     subprocess.run([sys.executable, str(rebuild_script)], check=True)
                 except Exception as e:
                     self.logger.warning(f"Failed to auto-rebuild dashboard: {e}")
