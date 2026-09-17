@@ -18,6 +18,12 @@ fi
 touch "${DIST_DIR}/.nojekyll"
 
 if [ -z "${DASHBOARD_REPO:-}" ]; then
+  if [ -d "${DIST_DIR}/.git" ]; then
+    DASHBOARD_REPO="$(git -C "${DIST_DIR}" remote get-url origin 2>/dev/null || true)"
+  fi
+fi
+
+if [ -z "${DASHBOARD_REPO:-}" ]; then
   echo "Tip: To deploy your dashboard to GitHub Pages, set the DASHBOARD_REPO environment variable:"
   echo "     export DASHBOARD_REPO=\"https://github.com/<your-username>/<your-repo>.git\""
   echo "Dashboard HTML is saved locally at ${REPORT_FILE}"

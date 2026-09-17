@@ -89,6 +89,7 @@ gmail_sync/
 # Generated reports (personal output from /html-report)
 reports/
 dist/
+career_evidence_pack.md
 
 # Upskill reports (personal output). Depth-independent like the job_scraper
 # rules above: the upskill skill resolves `upskill/` relative to its own
