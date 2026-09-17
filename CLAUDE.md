@@ -1,10 +1,7 @@
-# Job Application Assistant for [YOUR_NAME]
-
-<!-- SETUP: This file is populated by running /setup -->
-<!-- After running /setup, all [PLACEHOLDER] tokens will be replaced with your actual information -->
+# Job Application Assistant for Golden Stickwood
 
 ## Role
-This repo is a job application workspace. Claude acts as a career advisor and application assistant for [YOUR_NAME], helping with:
+This repo is a job application workspace. Claude acts as a career advisor and application assistant for Golden Stickwood, helping with:
 1. **Job fit evaluation** - Assess job postings against your profile (skills, experience, behavioral traits)
 2. **CV tailoring** - Adapt existing CV templates (LaTeX/moderncv) to target specific roles
 3. **Cover letter writing** - Draft targeted cover letters using existing templates (LaTeX)
@@ -16,76 +13,63 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 <!-- This section is auto-populated by /setup. You can also fill it in manually. -->
 
 ### Identity
-- **Name:** [YOUR_NAME]
-- **Location:** [YOUR_CITY], [YOUR_COUNTRY] ([YOUR_COMMUTE_CONSTRAINTS])
+- **Name:** Golden Stickwood
+- **Location:** Newmarket, ON, Canada (Commute across GTA: Newmarket, Aurora, Markham, Vaughan, Woodbridge, Toronto)
 - **Languages:**
   | Language | Level |
   |----------|-------|
-  | [LANGUAGE] | [LEVEL] |
-  <!-- Every language you work in professionally, with your level (CEFR, "native," "professional
-  working proficiency," whatever your CV/LinkedIn use - no need to force it into one scale). An
-  undeclared language is a hard deal-breaker if a posting requires it; a declared language at a
-  lower level than a posting wants is flagged for your own judgment, not auto-rejected. See
-  04-job-evaluation.md's Language Gate. -->
-- **CV language:** [YOUR_CV_LANGUAGE] <!-- English unless your market expects otherwise; /setup asks -->
-
-- **Status:** [YOUR_EMPLOYMENT_STATUS]
-- **LinkedIn headline:** "[YOUR_LINKEDIN_HEADLINE]"
+  | English | Native / C2 Fluent |
+- **CV language:** English
+- **Status:** 3rd-semester student enrolled in Seneca Polytechnic Computer Systems Technology (CTY/CTYC) Co-op program; seeking Winter 2027 work term (Jan-Apr 2027). Canadian Citizen (authorized to work in Canada, no sponsorship needed).
+- **LinkedIn headline:** "Computer Systems Technology Student at Seneca Polytechnic | 4.0 GPA | IT Operations, Systems Administration & Cloud Infrastructure"
 
 ### Education
-<!-- List your degrees, most recent first -->
-- **[DEGREE_LEVEL] in [FIELD]** ([YEAR_START]-[YEAR_END]) - [INSTITUTION]
-  - Thesis: "[THESIS_TITLE]"
-  - Topics: [KEY_TOPICS]
+- **Ontario College Advanced Diploma in Computer Systems Technology (CTY)** (Jan. 2026 - Expected 2028) - Seneca Polytechnic
+  - Academic Standing: 4.0 / 4.0 GPA, President's Honour List (Semesters 1 & 2 Completed)
+  - Key Topics: Windows Server Administration, Active Directory DS, Group Policy, Linux Server Administration, Cisco Routing & Switching, TCP/IP, System Security, Azure Cloud Infrastructure
 
 ### Professional Experience
-<!-- List your roles, most recent first -->
-- **[JOB_TITLE]** ([START_DATE] - [END_DATE]) - **[COMPANY]** ([LOCATION])
-  - [KEY_RESPONSIBILITY_1]
-  - [KEY_RESPONSIBILITY_2]
-  - [KEY_ACHIEVEMENT]
+- **Founder & Lead Operator** (May 2022 - Aug. 2025) - **Newmarket Pressure Washing** (Newmarket, ON)
+  - Won competitive York Region Summer Company Entrepreneurship Grant; generated >$20,000 lifetime revenue
+  - Managed end-to-end customer service operations across phone and in-person channels with 100% customer satisfaction
+  - Conducted hardware diagnostics, preventative maintenance, and mechanical/electrical troubleshooting on pump systems
+- **Sales & Technical Solutions Representative** (Oct. 2025 - Dec. 2025) - **Brookstone Windows & Doors** (Aurora, ON)
+  - Conducted technical requirements discovery, translating engineering specifications clearly for clients
+- **Ice Hockey Referee & Official** (Oct. 2020 - Mar. 2024) - **Newmarket Minor Hockey Association** (Newmarket, ON)
+  - Officiated 60+ competitive games under Hockey Canada rules; rapid decision-making under high pressure
 
 ### Technical Skills
-- **Primary:** [YOUR_PRIMARY_SKILLS]
-- **Secondary:** [YOUR_SECONDARY_SKILLS]
-- **Domain:** [YOUR_DOMAIN_EXPERTISE]
-- **Software:** [YOUR_TOOLS_AND_SOFTWARE]
+- **Primary:** Windows 10/11 Desktop Support, Active Directory Domain Services (AD DS), Group Policy (GPOs), Windows Server (2016/2019/2022), User & Group Management (ADUC, AGDLP)
+- **Secondary:** Cisco IOS (VLANs, 802.1Q trunking, routing, OSPFv2), Linux (Debian, Bash, systemctl, sudoers), VMware Workstation Pro, KVM/virsh virtualization
+- **Domain:** IT Operations & Service Desk, Network Diagnostics, DHCP & Dynamic DNS, Peripheral & Network Printing Management
+- **Software:** PowerShell, RSAT, Windows Admin Center, Microsoft Azure Portal, Microsoft Office 365, Teams, Claude Code, Wireshark, Nmap
 
 ### Certifications
-<!-- List relevant certifications with dates -->
-- **[CERTIFICATION_NAME]** - [HOURS]h - completed [DATE]
-
-### Publications
-<!-- List peer-reviewed publications, if any -->
-- [AUTHOR_LIST] ([YEAR]). [TITLE]. [JOURNAL].
+- Currently enrolled in Cisco CCNA and CompTIA Security+ prep via Seneca CTY coursework
 
 ### Awards
-<!-- List relevant awards, hackathons, competitions -->
-- [AWARD_NAME] - [EVENT] ([YEAR])
+- President's Honour List (Seneca Polytechnic, 4.0 GPA)
+- York Region Summer Company Entrepreneurship Grant Winner
 
 ### Behavioral Profile
-<!-- Your behavioral assessment results (PI, DISC, Myers-Briggs, or self-assessment) -->
-- **[TRAIT_1]** - [DESCRIPTION]
-- **[TRAIT_2]** - [DESCRIPTION]
-- **Strengths:** [YOUR_STRENGTHS]
-- **Growth areas:** [YOUR_GROWTH_AREAS]
-- **Thrives in:** [YOUR_IDEAL_ENVIRONMENT]
+- **High Conscientiousness & Problem-Solving** - Detail-oriented, disciplined with documentation and SOPs
+- **Calm Communication Under Pressure** - Honed through 4 seasons of officiating and direct customer service
+- **Strengths:** Rapid troubleshooting, structured root-cause analysis, operational reliability, eager to learn
+- **Growth areas:** Enterprise PLM/CAE manufacturing software, production enterprise multi-host ESXi clusters
+- **Thrives in:** Collaborative IT teams, fast-paced technical environments with structured operational processes
 
 ### What Excites You
-<!-- What motivates you professionally -->
-- [PASSION_1]
-- [PASSION_2]
+- Resolving complex infrastructure and hardware issues to maximize user productivity
+- Automating repetitive administrative tasks with PowerShell and modern AI tools like Claude Code
 
 ### Target Sectors
-<!-- Industries and companies you're targeting -->
-- [SECTOR_1]: [EXAMPLE_COMPANIES]
-- [SECTOR_2]: [EXAMPLE_COMPANIES]
+- Automotive / Advanced Manufacturing: Magna International, Linamar, Martinrea
+- Financial Services & Technology: TD Bank, 1Password, QuadReal, RBC
+- Public Sector & Healthcare: Hospital IT, Regional Municipalities
 
 ### Deal-breakers
-<!-- Hard constraints on job search. Language requirements are handled separately and
-automatically from your Languages table above - don't duplicate them here. -->
-- [DEALBREAKER_1]
-- [DEALBREAKER_2]
+- Roles requiring full relocation outside the Greater Toronto Area (GTA)
+- Unpaid internships or non-co-op eligible roles
 
 ## Repo Structure
 - `cv/` - LaTeX CV variants (moderncv template, banking style)
