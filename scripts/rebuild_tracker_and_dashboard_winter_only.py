@@ -875,37 +875,37 @@ offer_count = sum(1 for e in sorted_entries if e["status"].lower() == "offer")
 closed_count = sum(1 for e in sorted_entries if e["status"].lower() in ("rejected", "no_response", "closed"))
 
 # 7. Update header stat cards
-card_total = soup.find("div", class_="stat-card total")
+card_total = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("total" in t.get("class", []) or "Total" in t.get_text()))
 if card_total:
     num_el = card_total.find("div", class_="stat-num")
     if num_el: num_el.string = str(total_count)
 
-card_scraped = soup.find("div", class_="stat-card scraped")
+card_scraped = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("scraped" in t.get("class", []) or "To Apply" in t.get_text() or "Scraped" in t.get_text()))
 if card_scraped:
     num_el = card_scraped.find("div", class_="stat-num")
     if num_el: num_el.string = str(scraped_count)
 
-card_drafted = soup.find("div", class_="stat-card drafted")
+card_drafted = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("drafted" in t.get("class", []) or "Drafted" in t.get_text()))
 if card_drafted:
     num_el = card_drafted.find("div", class_="stat-num")
     if num_el: num_el.string = str(drafted_count)
 
-card_active = soup.find("div", class_="stat-card active")
+card_active = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("active" in t.get("class", []) or "Active" in t.get_text()))
 if card_active:
     num_el = card_active.find("div", class_="stat-num")
     if num_el: num_el.string = str(active_count)
 
-card_interview = soup.find("div", class_="stat-card interview")
+card_interview = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("interview" in t.get("class", []) or "Interview" in t.get_text()))
 if card_interview:
     num_el = card_interview.find("div", class_="stat-num")
     if num_el: num_el.string = str(interview_count)
 
-card_offer = soup.find("div", class_="stat-card offer")
+card_offer = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("offer" in t.get("class", []) or "Offer" in t.get_text()))
 if card_offer:
     num_el = card_offer.find("div", class_="stat-num")
     if num_el: num_el.string = str(offer_count)
 
-card_rejected = soup.find("div", class_="stat-card rejected")
+card_rejected = soup.find(lambda t: t.name == "div" and "stat-card" in t.get("class", []) and ("rejected" in t.get("class", []) or "Rejected" in t.get_text() or "Closed" in t.get_text()))
 if card_rejected:
     num_el = card_rejected.find("div", class_="stat-num")
     if num_el: num_el.string = str(closed_count)
@@ -932,6 +932,12 @@ if status_filter:
     if opt_off: opt_off.string = f"Offers ({offer_count})"
     opt_rej = status_filter.find("option", value="Rejected/Closed")
     if opt_rej: opt_rej.string = f"Closed / Rejected ({closed_count})"
+
+# Update region dropdown
+region_filter = soup.find("select", id="region-filter")
+if region_filter:
+    opt_all_reg = region_filter.find("option", value="ALL")
+    if opt_all_reg: opt_all_reg.string = f"All Proximity Zones ({total_count})"
 
 # Update board counts in dropdown menu
 for b_id, count in board_counts.items():
