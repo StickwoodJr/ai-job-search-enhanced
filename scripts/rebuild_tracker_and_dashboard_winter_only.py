@@ -45,6 +45,28 @@ def resolve_exact_location(company: str, role: str, raw_loc: str, text_blob: str
             return 68, "durham region", "prox-gta", "~68 km", "Durham Region", "Oshawa, ON (GM Oshawa Operations - ~68 km from Newmarket)"
         return 28, "york region", "prox-york", "~28 km", "York Region", "Markham, ON (Canadian Technical Centre - ~28 km from Newmarket)"
 
+    # City of Vaughan
+    if "city of vaughan" in c or ("vaughan" in c and "client support" in r):
+        return 25, "york region", "prox-york", "~25 km", "York Region", "Vaughan, ON (2141 Major Mackenzie Dr - ~25 km from Newmarket)"
+
+    # Magna International Inc
+    if "magna" in c:
+        return 35, "york region", "prox-york", "~35 km", "York Region", "Woodbridge / GTA, ON (390 Hanlan Rd & Aurora/Markham/Vaughan - ~35 km from Newmarket)"
+
+    # FGF Brands
+    if "fgf" in c:
+        if "vaughan" in l or "vaughan" in r or "vaughan" in t:
+            return 25, "york region", "prox-york", "~25 km", "York Region", "Vaughan, ON (FGF Campus - ~25 km from Newmarket)"
+        return 35, "toronto north", "prox-gta", "~35 km", "Toronto North", "North York, ON (1295 Ormont Dr - ~35 km from Newmarket)"
+
+    # Havergal College
+    if "havergal" in c:
+        return 45, "gta core", "prox-gta", "~45 km", "Midtown", "Midtown Toronto, ON (1451 Avenue Rd - ~45 km from Newmarket)"
+
+    # Extendicare
+    if "extendicare" in c:
+        return 28, "york region", "prox-york", "~28 km", "York Region", "Markham, ON (3000 Steeles Ave E - ~28 km from Newmarket)"
+
     # IBM Canada Software Lab in Markham
     if "ibm" in c:
         return 26, "york region", "prox-york", "~26 km", "York Region", "Markham, ON (IBM Software Lab - ~26 km from Newmarket)"
@@ -199,9 +221,16 @@ def resolve_exact_location(company: str, role: str, raw_loc: str, text_blob: str
 
     return 50, "gta core", "prox-gta", "~50 km", "GTA Core", "Toronto, ON (~50 km from Newmarket)"
 
-def get_board_info(url: str):
-    u = url.lower()
-    if "indeed" in u:
+def get_board_info(url: str, ref: str = "", notes: str = "", role: str = ""):
+    u = (url or "").lower()
+    r = (ref or "").lower()
+    n = (notes or "").lower()
+    ro = (role or "").lower()
+
+    # Seneca Works detection
+    if r.startswith("seneca") or "senecaworks" in u or "posting id: 220" in ro or ("seneca works" in n and not ("indeed" in u or "linkedin" in u)):
+        return "seneca", "Seneca Works", "badge-seneca"
+    elif "indeed" in u:
         return "indeed", "Indeed", "badge-indeed"
     elif "jobbank" in u or "guichet" in u:
         return "jobbank", "Jobs Canada", "badge-jobbank"
@@ -333,6 +362,8 @@ IT_POSITIVE_PATTERNS = [
     r'\bcomputer\b', r'\bhardware\b', r'\bdatacenter\b', r'\bdata center\b',
     r'\btelecom\b', r'\bsoc\b', r'\bnoc\b', r'\badmin\b', r'\badministrator\b',
     r'\bdatabase\b', r'\basset management\b', r'\bmicrosoft 365\b', r'\bm365\b', r'\bcisco\b',
+    r'\bsupport\b', r'\boperations\b', r'\banalyst\b', r'\bclient support\b',
+    r'\bapplication support\b', r'\bproduct support\b', r'\bit operations\b',
 ]
 
 def is_schooling_fit(role_title: str) -> bool:
@@ -345,8 +376,14 @@ def is_schooling_fit(role_title: str) -> bool:
             # Exception 2: DevOps, Cloud, or Systems roles in capital markets or banking divisions
             if pat in ('capital markets', 'banking', 'equity', 'wealth') and any(k in t for k in ['devops', 'cloud', 'cyber', 'security', 'systems', 'infrastructure']):
                 continue
+            # Exception 3: IT Operations / Technical Operations / Support roles
+            if pat == 'operations analyst' and any(k in t for k in ['it', 'tech', 'technology', 'systems', 'network', 'infrastructure']):
+                continue
+            # Exception 4: Support / Automation / Operations roles with AI
+            if pat in (r'\bai\b', 'artificial intelligence') and any(k in t for k in ['support', 'analyst', 'automation', 'it', 'operations']):
+                continue
             return False
-    # Must have positive alignment with IT / Systems / Infrastructure / Cyber
+    # Must have positive alignment with IT / Systems / Infrastructure / Cyber / Support
     return any(re.search(pat, t, re.IGNORECASE) for pat in IT_POSITIVE_PATTERNS)
 
 SENIOR_PATTERNS = [
@@ -403,34 +440,54 @@ for r in tracker_rows:
         loc = seen_item.get("location")
     full_desc = seen_item.get("description") or ""
 
-    # Senior / Lead disqualifier
-    if is_senior_disqualified(role):
-        continue
+    raw_status = (r.get("Status") or "").strip()
+    cv_file = (r.get("CV File") or "").strip()
+    cl_file = (r.get("Cover Letter File") or "").strip()
+    ref_code = (r.get("Reference Code") or "").strip()
 
-    # Schooling filter: skip jobs outside Seneca Computer Systems Technology schooling
-    if not is_schooling_fit(role):
-        continue
+    has_real_cv = bool(cv_file and (REPO_ROOT / cv_file).exists())
+    has_real_cl = bool(cl_file and (REPO_ROOT / cl_file).exists())
+
+    is_tracked = bool(
+        has_real_cv or
+        has_real_cl or
+        ref_code.lower().startswith("seneca") or
+        "seneca" in ref_code.lower() or
+        "seneca" in url.lower() or
+        "senecaworks" in url.lower() or
+        "seneca works" in notes.lower() or
+        "posting id: 220" in role.lower() or
+        "posting id: 220" in notes.lower() or
+        raw_status.lower() in ("drafted", "applied", "interview", "offer", "rejected")
+    )
 
     clean_notes = notes.replace("Winter 2027 Co-op discovered via indeed-search.", "").strip()
     check_text = f"{full_desc} {clean_notes}"
 
-    # Explicit winter co-op requirement
-    if not is_explicit_winter_coop(comp, role, check_text):
-        continue
+    if not is_tracked:
+        # Senior / Lead disqualifier
+        if is_senior_disqualified(role):
+            continue
+
+        # Schooling filter: skip jobs outside Seneca Computer Systems Technology schooling
+        if not is_schooling_fit(role):
+            continue
+
+        # Explicit winter co-op requirement
+        if not is_explicit_winter_coop(comp, role, check_text):
+            continue
 
     dist, reg_id, prox_cls, dist_str, prox_lbl, loc_display = resolve_exact_location(comp, role, loc, check_text)
     fit, overall, chance, prestige, pay, pay_str = score_role(role, comp, check_text)
 
-    # Hard cap: skip jobs further than 70 km from Newmarket
-    if dist > 70:
+    # For tracked jobs, preserve the existing fit score from tracker if valid
+    raw_fit = r.get("Fit Score")
+    if raw_fit and raw_fit.isdigit():
+        fit = int(raw_fit)
+
+    # Hard cap: skip jobs further than 70 km from Newmarket (unless explicitly tracked)
+    if dist > 70 and not is_tracked:
         continue
-
-    raw_status = (r.get("Status") or "").strip()
-    cv_file = (r.get("CV File") or "").strip()
-    cl_file = (r.get("Cover Letter File") or "").strip()
-
-    has_real_cv = bool(cv_file and (REPO_ROOT / cv_file).exists())
-    has_real_cl = bool(cl_file and (REPO_ROOT / cl_file).exists())
 
     if has_real_cv and has_real_cl:
         status = raw_status if raw_status and raw_status.lower() != "scraped" else "Drafted"
@@ -604,7 +661,7 @@ if not tbody:
 tbody.clear()
 
 board_counts = {
-    "indeed": 0, "jobbank": 0, "linkedin": 0, "talent": 0, "eluta": 0, "gcjobs": 0, "direct": 0
+    "seneca": 0, "indeed": 0, "jobbank": 0, "linkedin": 0, "talent": 0, "eluta": 0, "gcjobs": 0, "direct": 0
 }
 
 for idx, e in enumerate(sorted_entries):
@@ -616,7 +673,7 @@ for idx, e in enumerate(sorted_entries):
     status_str = e["status"]
     deadline_str = e["deadline"]
     
-    board_id, board_name, board_badge_class = get_board_info(url)
+    board_id, board_name, board_badge_class = get_board_info(url, e.get("ref", ""), e.get("notes", ""), e.get("role", ""))
     board_counts[board_id] = board_counts.get(board_id, 0) + 1
     
     dist = e["distance"]
@@ -645,6 +702,8 @@ for idx, e in enumerate(sorted_entries):
     tr["data-distance"] = str(dist)
     tr["data-region"] = region_id
     tr["data-board"] = board_id
+    tr["data-location"] = loc.lower()
+    tr["data-deadline"] = deadline_str
 
     # 1. Date
     td_date = soup.new_tag("td", **{"class": "cell-date"})
