@@ -19,7 +19,7 @@ from typing import List
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SECTOR_SCRIPT = REPO_ROOT / "scripts" / "scrape_indeed_sector_daemon.py"
-REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
 SWARM_CONFIG_FILE = REPO_ROOT / "config" / "swarm_sectors.json"
 
 def load_sectors() -> List[str]:

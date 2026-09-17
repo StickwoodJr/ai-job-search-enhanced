@@ -35,7 +35,7 @@ except ImportError as e:
 SEEN_JOBS_FILE = REPO_ROOT / "job_scraper" / "seen_jobs.json"
 TRACKER_FILE = REPO_ROOT / "job_search_tracker.csv"
 SWARM_CONFIG_FILE = REPO_ROOT / "config" / "swarm_sectors.json"
-REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_dashboard.py"
+REBUILD_SCRIPT = REPO_ROOT / "scripts" / "rebuild_tracker_and_dashboard_winter_only.py"
 
 DEFAULT_SECTOR_QUERIES: Dict[str, List[Tuple[str, str]]] = {
     "systems_hardware": [
