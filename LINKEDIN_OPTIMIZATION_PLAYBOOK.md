@@ -95,21 +95,21 @@ LinkedIn connection requests sent with a personalized note have a **3x higher ac
 
 ### Blueprint 1: Target Role Applied (Campus Recruiter)
 ```text
-Hi [Name], I recently applied for the [Job Title] Co-op role at [Company]. As a Seneca CTY student (4.0 GPA) with hands-on Active Directory and Cisco infrastructure lab experience, I would love to connect and follow [Company]’s updates. Thanks! Golden
+Hi [Name], I recently applied for the [Job Title] Co-op role at [Company]. As a Seneca CTY student (4.0 GPA) with hands-on Active Directory and Cisco infrastructure lab experience, I would love to connect and follow [Company]’s updates. Thanks! [Your Name]
 ```
-*(257 / 300 characters)*
+*(260 / 300 characters)*
 
 ### Blueprint 2: Seneca Polytechnic Alumni Outreach
 ```text
-Hi [Name], I’m a fellow Seneca student in the Computer Systems Technology (CTY) program (4.0 GPA). I noticed your impressive career path at [Company] and would love to connect and follow your journey in enterprise IT infrastructure. Best, Golden
+Hi [Name], I’m a fellow Seneca student in the Computer Systems Technology (CTY) program (4.0 GPA). I noticed your impressive career path at [Company] and would love to connect and follow your journey in enterprise IT infrastructure. Best, [Your Name]
 ```
-*(249 / 300 characters)*
+*(252 / 300 characters)*
 
 ### Blueprint 3: IT Hiring Manager (Infrastructure / Systems Admin)
 ```text
-Hi [Name], I follow your team’s infrastructure work at [Company]. I’m a Seneca CTY co-op student with a multi-zone virtualized homelab (Cisco ZFW, Cloudflare Zero Trust, Debian/Azure). I would welcome the chance to connect with your team. Best, Golden
+Hi [Name], I follow your team’s infrastructure work at [Company]. I’m a Seneca CTY co-op student with a multi-zone virtualized homelab (Cisco ZFW, Cloudflare Zero Trust, Debian/Azure). I would welcome the chance to connect with your team. Best, [Your Name]
 ```
-*(247 / 300 characters)*
+*(250 / 300 characters)*
 
 ---
 

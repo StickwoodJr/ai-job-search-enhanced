@@ -126,6 +126,13 @@ company_research/*.json
 academic_evidence_pack.md
 *.backup*
 resume_master.tex
+resume_master.md
+resume_master.*
+linkedin_profile_master.md
+LINKEDIN_PROFILE_MASTER.md
+linkedin_profile_master.*
+linkedin/
+tools/generate_master_docx.py
 documents/github_profile_README.md
 documents/matrix_banner.gif
 
