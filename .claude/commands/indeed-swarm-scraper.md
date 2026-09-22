@@ -9,28 +9,47 @@ The swarm scraper partitions the search space across **specialized sector subage
 ## Sector Architecture & Division of Responsibility
 
 ```mermaid
-graph TD
-    subgraph "Indeed Swarm Fleet"
-        S1["<b>Sector 1: Sector A</b><br/>Primary domain queries and specializations"]
-        S2["<b>Sector 2: Sector B</b><br/>Secondary domain queries and specializations"]
-        S3["<b>Sector 3: Sector C</b><br/>Tertiary domain queries and specializations"]
+flowchart TD
+    subgraph Config ["1. Swarm Fleet Configuration"]
+        CFG["config/swarm_sectors.json<br/>Sector Queries & Target Location"]
+        CandProf["01-candidate-profile.md<br/>Target Term, Skills & Commute Limits"]
     end
 
-    subgraph "Deduplication & Synchronization"
-        Lock["seen_jobs.json (Atomic flock)"]
+    subgraph Fleet ["2. Concurrent Sector Worker Fleet"]
+        CFG --> S1["<b>Sector 1: Systems & IT Infrastructure</b><br/>Linux, AD DS, SysAdmin, Support"]
+        CFG --> S2["<b>Sector 2: Networking & Security</b><br/>Cisco, Firewalls, NOC, Security"]
+        CFG --> S3["<b>Sector 3: Cloud & Virtualization</b><br/>Azure/AWS, KVM, VMware, Docker"]
+        CFG --> S4["<b>Sector 4: Data & Systems Analytics</b><br/>Analytics, Databases, Python, SQL"]
     end
 
-    subgraph "Tracker & Reporting"
-        Tracker["job_search_tracker.csv"]
-        Dashboard["application-dashboard.html (Pre-sorted by Recency)"]
+    subgraph Ingestion ["3. Query Execution & Rate Limiting"]
+        S1 --> API["Indeed Canada API / Search Engine<br/>(Rotational Queries & Jitter)"]
+        S2 --> API
+        S3 --> API
+        S4 --> API
+        API --> RawStream["Raw Postings Stream"]
     end
 
-    S1 -->|Continuous Loop| Lock
-    S2 -->|Continuous Loop| Lock
-    S3 -->|Continuous Loop| Lock
+    subgraph SyncGate ["4. Atomic Synchronization & Deduplication"]
+        RawStream --> LockCheck{"POSIX fcntl.flock<br/>Mutex Lock"}
+        LockCheck --> SeenFile[("seen_jobs.json<br/>Atomic SHA Deduplication")]
+    end
 
-    Lock -->|New Qualified Posting| Tracker
-    Lock -->|Rebuild Pipeline| Dashboard
+    subgraph QualFilter ["5. Multi-Layer Qualification & Commute Engine"]
+        SeenFile -->|New Unseen Job| FilterTerm{"Target Term Match?<br/>(e.g., Winter 2027 Co-op/Intern)"}
+        FilterTerm -- "Yes" --> FilterCommute{"Commute & Transit Radius?<br/>(Max Drive / Transit Score)"}
+        FilterTerm -- "No" --> DropJob["Filtered Out / Discarded"]
+        FilterCommute -- "Yes" --> FilterSkills{"Profile Qualification Match?<br/>(No Trades / Negative Match)"}
+        FilterCommute -- "No" --> DropJob
+        FilterSkills -- "No" --> DropJob
+    end
+
+    subgraph AutoRebuild ["6. Pipeline Rebuild & Reporting"]
+        FilterSkills -- "Qualified Match" --> AppendTracker["Append to job_search_tracker.csv"]
+        AppendTracker --> TagSeneca["Seneca Works / Co-op Tagger"]
+        TagSeneca --> RebuildDash["scripts/rebuild_dashboard.py"]
+        RebuildDash --> HTMLDash["reports/application-dashboard.html<br/>(Pre-sorted by Recency & Commute)"]
+    end
 ```
 
 ### Configurable Sector Fleet:

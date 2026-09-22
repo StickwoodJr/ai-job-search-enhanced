@@ -98,7 +98,7 @@ This repository builds on the excellent foundations of [MadsLorentzen/ai-job-sea
 flowchart TD
     subgraph Discovery ["1. Job Discovery & Ingestion"]
         A["/scrape or /scrape-indeed"] --> B["Multi-Portal Search CLIs<br/>(Indeed, Job Bank, TechTO, LinkedIn, Eluta)"]
-        S["/indeed-swarm-scraper"] --> B
+        S["/indeed-swarm-scraper<br/>(Multi-Sector Daemon Fleet)"] --> B
         B --> C["Atomic Deduplication<br/>(seen_jobs.json + tracker)"]
     end
 
@@ -109,20 +109,37 @@ flowchart TD
         E -->|Poor Fit / Dealbreaker| G["Archived / Skipped"]
     end
 
-    subgraph Drafting ["3. Drafter-Reviewer Tailoring Engine"]
-        F --> H["DRAFTER Agent"]
-        RAG["/rag-apply<br/>(NotebookLM Live Audit)"] -.->|Primary Evidence Proof| H
-        H --> I["Drafts 1-Page Resume + Cover Letter"]
-        I --> J["REVIEWER Agent<br/>(Strict Factual Grounding Audit)"]
-        J -->|Feedback & Critiques| H
-        H --> K["Final Compile (pdflatex / xelatex)"]
+    subgraph Grounding ["3. Personal Knowledge Base & RAG Engine"]
+        KB[("Google NotebookLM<br/>Personal Evidence Vault")]
+        ExtLM["ExtendLM MCP Bridge<br/>(Pre-flight Check & OAuth)"] <-->|Live Query SSE| KB
+        F --> RAGApp["/rag-apply<br/>(Job Bullet Verification)"]
+        ExtLM -->|Zero-Cache Live Query| RAGApp
+        ExtLM -->|Adaptive Domain RAG| LIOpt["/linkedin-optimizer<br/>(Profile Engine)"]
     end
 
-    subgraph Operations ["4. Tracking & Presentation"]
-        K --> L["job_search_tracker.csv"]
-        L --> M["Interactive HTML Dashboard<br/>(reports/application-dashboard.html)"]
-        M --> N["Deploy to GitHub Pages<br/>(scripts/deploy_dashboard.sh)"]
-        L --> O["/interview Coaching & STAR Stories"]
+    subgraph Tailoring ["4. Multi-Agent Generation & Verification"]
+        RAGApp --> EvPack["career_evidence_pack.md"]
+        EvPack --> DraftA["DRAFTER Agent<br/>(1-Page Resume & Cover Letter)"]
+        DraftA --> RevA["REVIEWER Agent<br/>(Strict Factual Grounding Audit)"]
+        RevA -->|Audit Pass| Comp["LaTeX Compile Engine<br/>(pdflatex / xelatex)"]
+        RevA -->|Feedback / Revisions| DraftA
+
+        LIOpt --> EvPackLI["linkedin_evidence_pack.md"]
+        EvPackLI --> DraftLI["DRAFTER Agent<br/>(Headline, About, 50 Skills)"]
+        DraftLI --> RevLI["RECRUITER REVIEWER Agent<br/>(Boolean SEO & Mobile Folds)"]
+        RevLI --> LintLI["verify_linkedin.py<br/>(100/100 Algorithmic Linter)"]
+        LintLI --> MasterLI["Turnkey Profile Spec<br/>& Review Report"]
+    end
+
+    subgraph Operations ["5. Pipeline Operations & Lifecycle"]
+        Comp --> Tracker["job_search_tracker.csv"]
+        MasterLI -.->|Sync Verified Facts| Profile["01-candidate-profile.md"]
+        Comp -.->|Sync New Facts| Profile
+        Tracker --> Dash["Interactive HTML Dashboard<br/>(reports/application-dashboard.html)"]
+        Dash --> Pages["Deploy to GitHub Pages<br/>(scripts/deploy_dashboard.sh)"]
+        Tracker --> Outcomes["/outcome (Status, Archives & Follow-ups)"]
+        Tracker --> Interview["/interview (Prep Packs & STAR Stories)"]
+        Tracker --> Upskill["/upskill (Gap Analysis & Learning Plan)"]
     end
 ```
 

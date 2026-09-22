@@ -21,42 +21,42 @@ The flowchart below illustrates the end-to-end verification and tailoring lifecy
 
 ```mermaid
 flowchart TD
-    subgraph Input ["1. Target Job Intake"]
-        A["Job Posting (URL or Raw Text)"]
-        B["Role Requirements & Core Qualifications"]
+    subgraph Intake ["1. Multi-Workflow Intake & Diagnostics"]
+        InA["Target Job Posting<br/>(URL or Raw Text)"]
+        InB["Candidate Profile Context<br/>(01-candidate-profile.md)"]
+        PreFlight["Pre-Flight Health Check<br/>(check-extendlm / auth-extendlm)"]
+        InA --> PreFlight
+        InB --> PreFlight
     end
 
-    subgraph Engine ["2. Live Verification Engine (Zero Caching)"]
-        C["verification_engine.py<br/>Formulates Objective Audit Prompt"]
-        D["extendlm_bridge.py<br/>HTTP SSE JSON-RPC Client"]
+    subgraph Bridge ["2. ExtendLM MCP & Knowledge Vault"]
+        PreFlight --> ExtBridge["extendlm_bridge.py<br/>(HTTP SSE JSON-RPC Client)"]
+        ExtBridge <-->|tools/call ask_notebook| NBLM[("Google NotebookLM<br/>Personal Evidence Vault")]
+        NBLM --- Sources["Primary Grounding Sources:<br/>• Academic Coursework & Labs (CSN, MST, OPS, SEC)<br/>• Virtualized Homelab Topologies & ADRs<br/>• Corporate Experience & Certifications<br/>• Code Repositories & Transcripts"]
     end
 
-    subgraph NotebookLM ["3. Personal Knowledge Base"]
-        E[("Google NotebookLM<br/>Personal Evidence Notebook")]
-        F["Primary Sources:<br/>• Certifications & Credentials<br/>• Project Writeups & Code<br/>• Past Experience & Resumes<br/>• Coursework, Syllabi & Labs"]
+    subgraph Workflows ["3. Dual RAG Execution Engines"]
+        ExtBridge -->|Live Query / Zero Caching| HookApply["apply_rag_hook.py<br/>(Job Bullet Verification Engine)"]
+        InA --> HookApply
+        HookApply --> PackApply["career_evidence_pack.md<br/>Verified Source Citations & Tools"]
+
+        ExtBridge -->|Source Fingerprint Query| HookLI["linkedin_rag_hook.py<br/>(Adaptive Domain Introspector)"]
+        HookLI --> CacheCheck{"SHA-256 Hash<br/>Matches Cache?"}
+        CacheCheck -- "Cache Hit (0.05s)" --> ReadCache["rag/cache/notebook_domain_cache.json"]
+        CacheCheck -- "Cache Miss / Delta" --> ReIntrospect["Dynamic Domain Categorization<br/>(Academic / Corporate / Homelab / Certs)"]
+        ReadCache --> PackLI["linkedin_evidence_pack.md<br/>Comprehensive Knowledge Matrix"]
+        ReIntrospect --> PackLI
     end
 
-    subgraph Synthesis ["4. Evidence & Bullet Synthesis"]
-        G["Live Auditor Response<br/>(Exact Sources, Tools, Syntax, Metrics)"]
-        H["bullet_generator.py<br/>Synthesizes ATS Resume Bullets & Evidence Pack"]
-    end
+    subgraph Artifacts ["4. Tailored Artifacts & Profile Staging"]
+        PackApply --> Resume["Tailored ATS Resume (Jake's Template)<br/>pdflatex • Exactly 1 Page"]
+        PackApply --> Cover["Tailored Cover Letter (cover.cls)<br/>xelatex • fontspec"]
+        PackLI --> MasterLI["Turnkey LinkedIn Specification<br/>(100/100 Recruiter Score)"]
+        PackLI --> ReviewReport["linkedin/profile_review_report.md<br/>(Before/After Upgrades)"]
 
-    subgraph Output ["5. Application Artifacts & Audit Staging"]
-        I["career_evidence_pack.md<br/>Verified Source Proof & Citations"]
-        J["Tailored ATS Resume (Jake's Template)<br/>pdflatex • Exactly 1 Page"]
-        K["01-candidate-profile.md<br/>Staged Facts (Zero-Fabrication Audit Pass)"]
+        PackApply -.->|Sync Verified Facts| Profile["01-candidate-profile.md<br/>(Zero-Fabrication Audit Pass)"]
+        PackLI -.->|Sync Verified Facts| Profile
     end
-
-    A --> C
-    B --> C
-    C --> D
-    D <-->|tools/call ask_notebook<br/>Live query / No caching| E
-    E --- F
-    E -->|Extract primary evidence proof| G
-    G --> H
-    H --> I
-    H --> J
-    I --> K
 ```
 
 ---

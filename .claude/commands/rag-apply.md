@@ -16,6 +16,56 @@ Follow these steps **exactly in order**. Do not skip steps.
 
 ---
 
+## Architecture & Verification Lifecycle
+
+```mermaid
+flowchart TD
+    subgraph Intake ["Step 0: Input & Web Research"]
+        PostURL["Target Job URL / Pasted Text"] --> Fetch["WebFetch / Curl Escalation<br/>(Extract Role, Company, Location, Language)"]
+    end
+
+    subgraph PreFlightCheck ["Step 1a: Pre-Flight Health Check"]
+        Fetch --> PreFlight["check-extendlm / auth-extendlm<br/>(Zero Silent Failure Guard)"]
+        PreFlight --> ValidAuth{"ExtendLM MCP<br/>Active & Valid?"}
+        ValidAuth -- "Expired / Missing" --> AutoOAuth["Display OAuth Browser Link<br/>Listen on Port 63483"]
+        AutoOAuth --> ReCheck{"Authenticated?"}
+        ReCheck -- "No" --> Halt["Halt Workflow (Exit 1)"]
+    end
+
+    subgraph RAGGrounding ["Step 1b: Live RAG Verification Engine"]
+        ValidAuth -- "Yes" --> RAGHook["apply_rag_hook.py<br/>(Live SSE Query / Zero Caching)"]
+        ReCheck -- "Yes" --> RAGHook
+        RAGHook <-->|Query Requirements| NBLM[("Google NotebookLM<br/>Primary Evidence Vault")]
+        NBLM --> EvPack["career_evidence_pack.md<br/>• Exact Course Codes & Labs<br/>• Real Tools, Cmdlets & Configs<br/>• Network & VM Topologies<br/>• Curriculum Gaps Identified"]
+    end
+
+    subgraph FitEval ["Step 1c: Fit Evaluation"]
+        EvPack --> Eval{"Fit Evaluation<br/>(04-job-evaluation.md)"}
+        Eval --> UserGate{"User Confirmation:<br/>Proceed to Draft?"}
+        UserGate -- "No" --> StopProc["Stop Workflow"]
+    end
+
+    subgraph DualAgent ["Steps 2-4: Drafter-Reviewer Tailoring Cycle"]
+        UserGate -- "Yes" --> Drafter["<b>DRAFTER Agent</b><br/>• Jake's 1-Page Resume<br/>• Custom Cover Letter (cover.cls)<br/>• Tailored to Job Keywords"]
+        Drafter --> Reviewer["<b>REVIEWER Agent</b><br/>• Strict Factual Grounding Audit<br/>• Every Bullet Cross-Referenced<br/>• Flags Weak Action Verbs & Fluff"]
+        Reviewer --> RevCritique{"Audit Passed?"}
+        RevCritique -- "Revisions Needed" --> Drafter
+    end
+
+    subgraph Compilation ["Step 5: PDF Engine & Inspection"]
+        RevCritique -- "Pass" --> Compile["LaTeX Compilation<br/>(pdflatex resume / xelatex letter)"]
+        Compile --> VerifyPDF["pdftotext Page Count Audit<br/>(Strict 1-Page Hard Constraint)"]
+    end
+
+    subgraph Staging ["Step 6: Archival & Sync"]
+        VerifyPDF --> Archive["documents/applications/COMPANY_ROLE/<br/>• resume.pdf & cover_letter.pdf<br/>• job_posting.md & career_evidence_pack.md"]
+        Archive --> SyncTracker["job_search_tracker.csv<br/>(Record Status = applied / drafted)"]
+        Archive --> SyncProfile["01-candidate-profile.md<br/>(Writeback Newly Verified Facts)"]
+    end
+```
+
+---
+
 ## Step 0: Parse Input
 
 - If `$ARGUMENTS` looks like a URL, use `WebFetch` to retrieve the job posting content.

@@ -18,6 +18,45 @@ This rule is the input side of the Step 3 Factual Grounding Audit, not a competi
 
 ---
 
+## Architecture & Application Lifecycle
+
+```mermaid
+flowchart TD
+    subgraph Intake ["Step 0: Input Parsing & Extraction"]
+        PostURL["Target Job URL / Pasted Text"] --> Fetch["WebFetch / Curl Escalation<br/>(Extract Company, Role, Location, Language)"]
+    end
+
+    subgraph Evaluation ["Step 1: Fit & Salary Evaluation"]
+        Fetch --> EvalFit["Evaluate Match against Candidate Profile<br/>(Skills, Experience, Culture & Salary Benchmark)"]
+        EvalFit --> UserConfirm{"User Approval:<br/>Proceed with Draft?"}
+        UserConfirm -- "No" --> Stop["Workflow Halted"]
+    end
+
+    subgraph Research ["Step 2: Company Intelligence"]
+        UserConfirm -- "Yes" --> WebRes["Company & Culture Research<br/>(Cache: company_research/COMPANY.json)"]
+    end
+
+    subgraph DualAgentCycle ["Steps 3-4: Drafter-Reviewer Tailoring Engine"]
+        WebRes --> Drafter["<b>DRAFTER Agent</b><br/>• Selects Template (Jake's 1-Page / ModernCV)<br/>• Tailors LaTeX Resume & Cover Letter<br/>• Runs Internal Factual Grounding Audit"]
+        Drafter --> Reviewer["<b>REVIEWER Agent</b><br/>• Reviews Against Critique Rubric<br/>• Audits Action Verbs & Narrative Flow<br/>• Checks Specificity & ATS Compatibility"]
+        Reviewer --> CritiqueLoop{"Critique Revisions<br/>Required?"}
+        CritiqueLoop -- "Yes" --> Drafter
+    end
+
+    subgraph Compilation ["Step 5: PDF Compilation & Verification"]
+        CritiqueLoop -- "Pass" --> Compile["LaTeX Engine<br/>(pdflatex / xelatex / lualatex)"]
+        Compile --> InspectPDF["Page Count & Layout Audit<br/>(Strict 1-Page Resume Constraint)"]
+    end
+
+    subgraph Archival ["Step 6: Archival & Tracking"]
+        InspectPDF --> Archive["documents/applications/COMPANY_ROLE/<br/>• resume.pdf & cover_letter.pdf<br/>• job_posting.md verbatim"]
+        Archive --> UpdateTracker["job_search_tracker.csv<br/>(Status = applied / drafted)"]
+        Archive --> SyncFacts["01-candidate-profile.md<br/>(Sync Newly Confirmed Facts)"]
+    end
+```
+
+---
+
 ## Step 0: Parse Input
 
 - If `$ARGUMENTS` looks like a URL, use `WebFetch` to retrieve the job posting content.

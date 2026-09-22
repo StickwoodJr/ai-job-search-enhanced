@@ -19,6 +19,39 @@ In 2026, LinkedIn's recruiter search algorithm functions as an **AI-powered Sema
 
 | **Tier 3** | **Dwell Time & "See More" Click-Through** | **2x Weight** | LinkedIn measures user dwell time on your profile. A compelling first 300 characters in the About section drives click-throughs and signals high profile value. |
 
+### Recruiter Search & Indexing Funnel
+
+```mermaid
+flowchart TD
+    subgraph RecruiterQuery ["1. Recruiter Boolean Search Query"]
+        RawSearch["Recruiter Enters Boolean Query<br/>('Systems Administrator' AND 'Active Directory' AND 'Co-op')"]
+    end
+
+    subgraph AlgoFilter ["2. Semantic Skill Graph & Algorithmic Indexing"]
+        RawSearch --> AllStar{"Profile All-Star?<br/>(Binary Filter)"}
+        AllStar -- "No" --> Deprioritized["Suppressed to Page 15+"]
+        AllStar -- "Yes" --> HeadlineWeight["Headline Match (5x Weight)<br/>(Target Title in First 70 Chars)"]
+        HeadlineWeight --> SkillMatch["50-Skill Taxonomy Match (5x Weight)<br/>(Exact & Semantic Alignment)"]
+    end
+
+    subgraph Spotlights ["3. Recruiter Spotlight Filtering (5-10% Talent Pool)"]
+        SkillMatch --> SpotTab["Recruiter Clicks Spotlight Filters"]
+        SpotTab --> S1["'Open to Work' Filter<br/>(Target Title & Date Set)"]
+        SpotTab --> S2["'More Likely to Respond'<br/>(Prompt InMail Reply History)"]
+        SpotTab --> S3["'Active Talent'<br/>(Recent Updates & Homelab Posts)"]
+        SpotTab --> S4["'Company Connections'<br/>(Follows & Alumni Network)"]
+    end
+
+    subgraph Conversion ["4. Profile Conversion & InMail Outreach"]
+        S1 --> HookView["Mobile Fold Preview Click<br/>(First 300 Chars of About Hook)"]
+        S2 --> HookView
+        S3 --> HookView
+        S4 --> HookView
+        HookView --> ProofEvidence["Primary Evidence & Homelab ADRs<br/>(Zero-Trust, Cisco, Active Directory, Azure)"]
+        ProofEvidence --> InMail(["Recruiter InMail / Interview Invitation"])
+    end
+```
+
 ---
 
 ## 2. Recruiter Boolean Search Archetypes
