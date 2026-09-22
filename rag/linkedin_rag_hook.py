@@ -145,23 +145,23 @@ def query_profile_evidence(
     profile_evidence_prompt = f"""
 Target Role: {target_role}
 
-Please extract verified primary evidence from the notebook to populate an optimized LinkedIn profile.
+Please extract verified primary evidence from the notebook to populate an optimized LinkedIn profile for this target role.
 Extract the following exact details:
 
-1. TOP 50 TECHNICAL SKILLS & KEYWORDS:
-List all specific tools, OS platforms, networking protocols, security mechanisms, virtualization hypervisors, and scripting languages documented in the sources. Include exact cmdlet syntax (e.g., New-ADUser, Add-Printer).
+1. TOP 50 DOMAIN SKILLS & KEYWORDS:
+List all specific tools, platforms, frameworks, methodologies, software, regulations, protocols, and competencies documented in the sources (relevant to {target_role}). Include exact tool names, platforms, industry standards, and technical/domain terminology.
 
 2. ACCOMPLISHMENT & EXPERIENCE BULLETS (CAR/STAR FORMAT):
-For every role or major lab project, extract:
-- Context & Challenge: The environment, scope, or problem.
-- Action: Exact technical configurations, commands, policies, or architectures applied.
-- Result / Metric: Quantifiable outcomes, revenue, uptime, grades, or problem resolutions.
+For every role, project, or major deliverable, extract:
+- Context & Challenge: The environment, scope, budget, scale, team, or problem addressed.
+- Action: Exact methodologies, software, tools, strategies, configurations, or leadership applied.
+- Result / Metric: Quantifiable outcomes, efficiency gains, revenue, project outcomes, grades, uptime, or KPI achievements.
 
-3. PROJECTS & ARCHITECTURAL RIGOR:
-Extract details of any infrastructure deployments, lab topologies, Architecture Decision Records (ADRs), post-mortems, or disaster recovery scripts.
+3. PROJECTS & STRATEGIC DELIVERABLES:
+Extract details of major project deliveries, architecture decisions, research reports, case studies, portfolios, client accounts, or technical setups.
 
-4. COURSEWORK & CERTIFICATIONS:
-Extract exact course codes (e.g., MST100, MST200, OPS145, CSN205, SEC220), course titles, academic honors, and certification preparation tracks.
+4. CREDENTIALS, EDUCATION & CERTIFICATIONS:
+Extract verified degrees, licenses, certifications, coursework, academic honors, or regulatory credentials.
 """
     print(f"[*] Executing live evidence extraction for role: '{target_role}' (zero caching)...")
     return bridge.ask_notebook(notebook_id=notebook_id, question=profile_evidence_prompt)

@@ -106,12 +106,12 @@ Draft the complete turnkey profile specification:
 Spawn a reviewer agent using the `Agent` tool (`invoke_subagent` in Antigravity). Pass the draft content inline:
 
 ```
-You are a Senior Technical Talent Acquisition Partner and Enterprise IT Hiring Manager reviewing a LinkedIn profile optimization draft.
+You are a Senior Talent Acquisition Partner and Hiring Manager reviewing a LinkedIn profile optimization draft for the candidate's target role and domain.
 
 ## Your Tasks
 1. Audit Against Recruiter Boolean Search Filters:
-   - Does the profile hit high-frequency recruiter search terms (Systems Administrator, Active Directory, AD DS, Group Policy, GPO, DHCP, DNS, Linux, Cisco, Co-op, Internship)?
-   - Are full terms and acronyms paired together?
+   - Does the profile hit high-frequency recruiter search terms for the candidate's target role and industry (core job titles, domain tools, regulatory/methodology standards, and seniority level)?
+   - Are full terms and industry acronyms paired together across the candidate's domain (e.g. Tech: API/AWS/VLAN, Finance: GAAP/EBITDA/ROI, Healthcare: EMR/HIPAA/BLS, Marketing: SEO/CTR/CRM, Operations: PMP/KPI/SLA)?
 2. Audit Visible Folds:
    - Headline: Does the primary target title fit in the first 65–70 characters?
    - About: Does the first 280–300 characters provide an irresistible hook before truncation?

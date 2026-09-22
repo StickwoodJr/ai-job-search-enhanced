@@ -87,7 +87,7 @@ This repository builds on the excellent foundations of [MadsLorentzen/ai-job-sea
 | 🐝 **Indeed Swarm Scraper** | High-performance multi-sector scraper (`/indeed-swarm-scraper`) that partitions search across customizable industry sectors (Software, Systems, Data, Operations, or Custom) with atomic deduplication and automatic tracker updates. |
 | 🎯 **Personal Knowledge & Evidence RAG (NotebookLM)** | Live, zero-cache retrieval augmented generation (`/rag-apply`) querying primary evidence from your personal notebook (certifications, personal projects, coursework, past resumes) via Google NotebookLM & ExtendLM MCP to back up resume claims with verified proof. |
 | 📊 **Interactive HTML Analytics Dashboard** | Standalone responsive dashboard with multi-board filtering (Indeed, Job Bank, LinkedIn, TechTO), pipeline funnel analytics, and one-click GitHub Pages deployment (`scripts/deploy_dashboard.sh`). |
-| 💼 **LinkedIn Profile Optimizer** | Dual-agent recruiter optimization engine (`/linkedin-optimizer`) combining 2026 algorithmic SEO linting (fold preview, Boolean acronym pairing, 50-skill taxonomy) with adaptive NotebookLM RAG grounding and turnkey profile generation. |
+| 💼 **LinkedIn Profile Optimizer** | Dual-agent recruiter optimization engine (`/linkedin-optimizer`) combining 2026 algorithmic SEO linting (fold preview, multi-industry Boolean acronym pairing, 50-skill taxonomy) with adaptive NotebookLM RAG grounding and turnkey profile generation across any profession or field. |
 | 🔄 **Automated Scrape & Apply Loop** | Continuous background daemon (`auto_scrape_and_apply.py`) that periodically sweeps job boards, evaluates fit, and prepares tailored application drafts. |
 
 ---
@@ -181,21 +181,21 @@ See [`rag/README.md`](rag/README.md) for full setup and architecture details.
 
 ## 💼 LinkedIn Profile Optimizer (Dual-Agent & 2026 Algorithmic SEO)
 
-This workspace features an enterprise-grade **LinkedIn Profile Optimization Engine** (`/linkedin-optimizer` or `/cmd-linkedin-optimizer`) designed to turn your LinkedIn profile into an inbound recruiter magnet.
+This workspace features an enterprise-grade **LinkedIn Profile Optimization Engine** (`/linkedin-optimizer` or `/cmd-linkedin-optimizer`) designed to turn your LinkedIn profile into an inbound recruiter magnet. The engine is completely multi-disciplinary: whether you are in Systems & Cloud, Software Engineering, Corporate Finance, Healthcare & Nursing, Marketing, Operations, or Project Management, it dynamically adapts to your target domain.
 
 In 2026, LinkedIn operates as an AI-powered Semantic Skill Graph. Profiles optimized purely for human eyes often get filtered out by algorithmic Boolean queries, while keyword-stuffed profiles fail human hiring manager scrutiny. The LinkedIn Optimizer solves this through a dual-agent architecture, algorithmic linting, and primary-evidence grounding:
 
 ### Key Highlights
 1. **Dual-Agent Review & Drafting Cycle**:
    - **Lead Profile Drafter**: Analyzes your profile, extracts verified accomplishments from your NotebookLM grounding notebook, and crafts high-conversion copy.
-   - **Senior Technical Recruiter Proxy**: Reviews drafts against actual corporate talent acquisition heuristics (Boolean indexability, metric density, mobile-fold truncation, and tone).
+   - **Senior Recruiter Proxy**: Reviews drafts against actual corporate talent acquisition heuristics (Boolean indexability, metric density, mobile-fold truncation, and tone).
 2. **2026 Algorithmic Ranking Gates**:
    - **Fold-Aware Formatting**: Guarantees core target job titles and value hooks stay within the first 65–70 characters of your headline and 300 characters of your About section.
-   - **Boolean Acronym Pairing**: Pairs full technical terms with industry acronyms (`Active Directory (AD DS)`, `Group Policy Objects (GPOs)`, `Dynamic Host Configuration Protocol (DHCP)`) to clear ATS search strings.
+   - **Universal Boolean Acronym Pairing**: Pairs full professional terms with industry-recognized acronyms across any field (e.g., Tech: `API`, `VLAN`, `CI/CD`, `AWS`; Finance: `GAAP`, `EBITDA`, `ROI`, `CPA`; Healthcare: `EMR`, `HIPAA`, `BLS`; Marketing: `SEO`, `CTR`, `CRM`; Operations: `PMP`, `KPI`, `SLA`) to clear ATS and recruiter Boolean search strings.
    - **50-Skill Categorized Taxonomy**: Populates all 50 skill slots categorized by domain with top 3 pinned spotlights.
-   - **Dual Co-op & Internship Terminology**: Captures both Canadian co-op and global internship recruiter searches.
+   - **Target Seniority & Role Alignment**: Dynamically tunes keyword density for early-career dual terms (Co-op/Internship) as well as professional seniority levels (Senior, Lead, Specialist, Manager).
 3. **Adaptive NotebookLM RAG Grounding**:
-   - Introspects attached notebook sources to adapt dynamically whether your background is academic, corporate, or homelab/project-heavy.
+   - Introspects attached notebook sources to adapt dynamically whether your background is academic, corporate, clinical, technical, or project-heavy.
    - Computes SHA-256 source fingerprints to cache domain categories while instantly invalidating when new sources are uploaded.
 4. **Resilient Pre-Flight Diagnostic Checks**:
    - Integrated `check-extendlm` and `auth-extendlm` utilities prevent silent workflow failures. If your session is expired, it displays a direct browser authorization link.

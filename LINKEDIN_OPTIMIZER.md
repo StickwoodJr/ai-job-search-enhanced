@@ -169,8 +169,8 @@ sequenceDiagram
     end
 ```
 
-* **Drafter Agent Objectives:** Highlight technical depth, production homelab architectures, enterprise tooling (Active Directory, Cisco, Linux, Azure), and operational soft skills.
-* **Reviewer Agent Objectives:** Evaluate candidate from the perspective of an Enterprise Hiring Manager or Senior Talent Partner at a top firm. Eliminate fluff, ensure acronym pairing, and maximize Boolean keyword density.
+* **Drafter Agent Objectives:** Highlight domain mastery, verified project deliverables, core methodologies and toolchains, quantifiable achievements, and operational soft skills.
+* **Reviewer Agent Objectives:** Evaluate candidate from the perspective of an Enterprise Hiring Manager or Senior Talent Partner in the target industry. Eliminate fluff, ensure domain acronym pairing, test mobile folds, and maximize Boolean keyword density.
 
 ---
 
@@ -180,13 +180,13 @@ LinkedIn's Recruiter Search algorithm ranks candidate profiles against specific 
 
 | Gate | Algorithm Target | Optimization Rule |
 | :--- | :--- | :--- |
-| **Visible Headline Fold** | **First 65–70 characters** | Mobile search results truncate headlines early. The primary target title (`IT Systems Administrator Co-op / Intern`) must appear before character 70. |
-| **Headline Hard Limit** | **Max 220 characters** | Must include target title, secondary competencies, GPA/honours, and institution. |
-| **Visible About Fold** | **First 280–300 characters** | Mobile apps and search summaries hide everything after 300 characters behind `"…see more"`. The first block must contain target title, work term availability, GPA/academic standing, and core keywords. |
-| **About Hard Limit** | **Max 2,600 characters** | Packed with high-density bullet points, enterprise lab achievements, and contact information. |
-| **Boolean Acronym Pairing** | **ATS Query Compatibility** | Recruiters alternate between abbreviations and full terms in Boolean queries. Both must appear: `Active Directory (AD DS)`, `Group Policy (GPO)`, `Virtual Local Area Network (VLAN)`, etc. |
-| **Dual Co-op / Intern** | **Regional Filter Coverage** | Canadian employers search "Co-op", while multinational and US employers search "Internship". Both terms are strategically integrated. |
-| **50-Skill Taxonomy** | **Skill Graph Coverage** | The profile must fill all 50 skill slots across Systems, Networking, Cloud, Security, Scripting, and Operations. |
+| **Visible Headline Fold** | **First 65–70 characters** | Mobile search results truncate headlines early. The primary target title (e.g. `Systems Administrator Co-op / Intern`, `Senior Financial Analyst`, `Registered Nurse`) must appear before character 70. |
+| **Headline Hard Limit** | **Max 220 characters** | Must include primary title, secondary domain competencies, honors/certifications, and institution/organization. |
+| **Visible About Fold** | **First 280–300 characters** | Mobile apps and search summaries hide everything after 300 characters behind `"…see more"`. The first block must contain target title, availability, core domain expertise, and high-priority search keywords. |
+| **About Hard Limit** | **Max 2,600 characters** | Packed with high-density bullet points, verified project deliverables, and direct contact details. |
+| **Universal Boolean Acronym Pairing** | **ATS Query Compatibility** | Recruiters alternate between abbreviations and full terms in Boolean queries across every field. Both must appear in context: Tech (`API`, `VLAN`, `CI/CD`, `AWS`), Finance (`GAAP`, `EBITDA`, `ROI`), Healthcare (`EMR`, `HIPAA`, `BLS`), Marketing (`SEO`, `CTR`, `CRM`), Operations (`PMP`, `KPI`, `SLA`). |
+| **Seniority & Search Alignment** | **Filter Coverage** | Strategically aligns terminology with recruiter habits (e.g., dual "Co-op / Internship" for early careers, or "Senior / Lead / Specialist" for experienced roles). |
+| **50-Skill Taxonomy** | **Skill Graph Coverage** | The profile must fill all 50 skill slots across core competencies, software/tools, industry standards, and leadership. |
 | **Spotlight Triggers** | **Priority Search Tabs** | Triggers "Open to Work", "More Likely to Respond", "Active Talent", and "Have Company Connections". |
 
 ---
@@ -202,7 +202,7 @@ python3 tools/verify_linkedin.py "LINKEDIN_PROFILE_MASTER.md"
 The linter enforces strict programmatic pass/fail checks:
 * **Character limits:** Headline (≤ 220), About (≤ 2,600), Experience (≤ 2,000).
 * **Fold previews:** Displays exactly what a recruiter sees on a smartphone screen before clicking "…see more".
-* **Acronym audit:** Confirms that 8/8 core acronyms have their matching full-form terms present.
+* **Multi-Industry Acronym audit:** Cross-references profile against universal multi-industry dictionary (covering Tech, Finance, Healthcare, Marketing, Operations, and Compliance) and auto-detects inline `Full Term (ACRONYM)` pairs.
 * **50-skill taxonomy audit:** Categorizes and counts all technical skills.
 * **Recruiter Readiness Score:** Calculates a transparent 0–100 score based on Boolean indexability and metric density.
 

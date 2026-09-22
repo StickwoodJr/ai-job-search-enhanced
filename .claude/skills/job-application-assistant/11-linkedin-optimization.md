@@ -1,10 +1,10 @@
 ---
-framework_version: 1.2.7
+framework_version: 1.2.8
 ---
 
 # 11. LinkedIn Profile Optimization Methodology (2026 Edition)
 
-This guide provides the canonical methodology for evaluating, auditing, and authoring recruiter-optimized LinkedIn profiles for technical infrastructure, systems administration, and engineering candidates.
+This guide provides the canonical methodology for evaluating, auditing, and authoring recruiter-optimized LinkedIn profiles for candidates across all disciplines (Systems & IT, Software, Finance, Healthcare, Operations, and Business).
 
 ---
 
@@ -27,21 +27,35 @@ In 2026, LinkedIn's recruiter search algorithm functions as an **AI-powered Sema
 
 ## 2. Recruiter Boolean Search Archetypes
 
-Recruiters at target organizations run strict Boolean queries on LinkedIn Recruiter.
+Recruiters across every industry run strict Boolean queries on LinkedIn Recruiter. Below are representative archetypes across different domains:
 
-### Standard Canadian IT Co-op / Junior Systems Administrator Search String:
+### Archetype A: Systems & IT Infrastructure
 ```text
-("Systems Administrator" OR "System Administrator" OR "IT Administrator" OR "Junior Systems Administrator" OR "IT Support" OR "Desktop Support" OR "IT Operations" OR "Service Desk Analyst") 
+("Systems Administrator" OR "IT Administrator" OR "Desktop Support" OR "IT Operations") 
 AND ("Active Directory" OR "AD" OR "Group Policy" OR "GPO" OR "DHCP" OR "DNS") 
-AND ("Co-op" OR "Internship" OR "Intern" OR "Work Term" OR "Student")
-AND ("Linux" OR "Debian" OR "Ubuntu" OR "Cisco" OR "Azure")
-NOT ("Senior" OR "Lead" OR "Principal" OR "Manager" OR "Director")
+AND ("Co-op" OR "Internship" OR "Junior")
+AND ("Linux" OR "Debian" OR "Cisco" OR "Azure")
+NOT ("Senior" OR "Lead" OR "Director")
 ```
 
-### Strategic Implications:
-1. **Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text (e.g., `Active Directory (AD DS)`, `Group Policy Objects (GPOs)`, `Dynamic Host Configuration Protocol (DHCP)`, `Domain Name System (DNS)`, `Virtual Local Area Networks (VLANs)`).
-2. **Dual Terminology (Co-op vs. Internship):** Canadian employers alternate between "Co-op" and "Internship/Work Term". Both terms must appear in your headline and summary.
-3. **Location Radius Optimization:** Setting your LinkedIn location to `Greater Toronto Area, Canada` ensures you appear in searches centered anywhere across Toronto, Mississauga, Markham, Vaughan, or York Region, avoiding narrow 25-km radius exclusions.
+### Archetype B: Corporate Finance & Accounting
+```text
+("Financial Analyst" OR "Senior Financial Analyst" OR "FP&A Analyst" OR "Accountant") 
+AND ("GAAP" OR "Generally Accepted Accounting Principles" OR "EBITDA" OR "Financial Modeling") 
+AND ("Excel" OR "SAP" OR "Oracle" OR "SQL")
+```
+
+### Archetype C: Healthcare & Clinical Nursing
+```text
+("Registered Nurse" OR "Staff Nurse" OR "Critical Care Nurse" OR "Emergency Nurse") 
+AND ("BLS" OR "ACLS" OR "Basic Life Support" OR "CPR") 
+AND ("EMR" OR "EHR" OR "Epic" OR "Cerner")
+```
+
+### Strategic Implications (Universal Across All Fields):
+1. **Universal Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text across any domain (e.g. Tech: `Virtual Local Area Network (VLAN)`, `Application Programming Interface (API)`; Finance: `Generally Accepted Accounting Principles (GAAP)`, `Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA)`; Healthcare: `Electronic Medical Records (EMR)`, `Basic Life Support (BLS)`; Marketing: `Search Engine Optimization (SEO)`, `Click-Through Rate (CTR)`).
+2. **Dual Terminology & Seniority Alignment:** Align search terms with recruiter query variations (e.g., dual "Co-op / Internship" for students, or "Senior / Lead / Specialist" for professional roles).
+3. **Location Radius Optimization:** Setting your LinkedIn location to your primary economic metropolitan area (e.g. Greater Toronto Area, Greater London Area, San Francisco Bay Area, Chicago Metropolitan Area) ensures you appear in searches centered anywhere across the region, avoiding narrow 25-km radius exclusions.
 
 ---
 
