@@ -15,11 +15,19 @@ import argparse
 from typing import Dict, Any, Optional
 
 # Ensure local directory is in Python path
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(REPO_ROOT, "tools"))
 
 from config import DEFAULT_NOTEBOOK_ID
 from verification_engine import VerificationEngine
 from bullet_generator import BulletGenerator
+
+try:
+    from check_extendlm import ensure_extendlm_ready
+except ImportError:
+    def ensure_extendlm_ready(halt_on_error: bool = True) -> bool:
+        return True
 
 
 def generate_evidence_for_job(
@@ -27,11 +35,18 @@ def generate_evidence_for_job(
     role: str = "Target Role",
     notebook_id: str = DEFAULT_NOTEBOOK_ID,
     output_path: Optional[str] = None,
+    allow_fallback: bool = False,
 ) -> Dict[str, Any]:
     """
     Core programmatic API for the cmd-apply workflow.
     Executes live verification against NotebookLM and generates the evidence pack.
     """
+    if not allow_fallback:
+        try:
+            ensure_extendlm_ready(halt_on_error=True)
+        except Exception:
+            sys.exit(1)
+
     engine = VerificationEngine(notebook_id=notebook_id)
     verification_result = engine.verify_job_requirements(
         target_role=role,
@@ -66,6 +81,11 @@ def main():
         default="career_evidence_pack.md",
         help="Path where the Career Evidence Pack markdown should be saved",
     )
+    parser.add_argument(
+        "--allow-fallback",
+        action="store_true",
+        help="Allow proceeding with local fallback evidence if ExtendLM MCP is not available",
+    )
 
     args = parser.parse_args()
 
@@ -81,6 +101,7 @@ def main():
         job_text=content,
         role=args.role,
         output_path=args.output,
+        allow_fallback=args.allow_fallback,
     )
 
     print(f"[+] Successfully generated Academic Evidence Pack -> {args.output}")

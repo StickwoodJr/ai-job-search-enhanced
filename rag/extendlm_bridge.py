@@ -115,12 +115,23 @@ class ExtendLMBridge:
             return self._connection, self._user_id
 
         res = self.call_tool("list_notebook_users", {})
+        if "error" in res:
+            err_msg = str(res["error"])
+            if "401" in err_msg or "Unauthorized" in err_msg:
+                raise RuntimeError(
+                    f"ExtendLM authentication failed (HTTP 401 Unauthorized). "
+                    "Your OAuth Bearer token in ~/.gemini/config/extendlm_token.json is expired or invalid. "
+                    "Please re-authenticate ExtendLM."
+                )
+            raise RuntimeError(f"ExtendLM API error: {err_msg}")
+
         conns = res.get("connections", [])
         if not conns:
             raise RuntimeError(
                 "No active ExtendLM browser extension connection found. "
                 "Ensure Chrome is running with ExtendLM extension active."
             )
+
         self._connection = conns[0]["extension_connection"]
         users = conns[0].get("users", [])
         for u in users:

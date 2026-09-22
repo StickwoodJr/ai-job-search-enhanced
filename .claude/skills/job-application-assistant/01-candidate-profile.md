@@ -1,17 +1,17 @@
 ---
-framework_version: 1.2.6
+framework_version: 1.2.7
 ---
 
 # Candidate Profile
 
 ## Identity
-- **Name:** Golden Stickwood
+- **Name:** Golden Q. Stickwood
 - **Location:** Newmarket, ON, Canada (Greater Toronto Area)
 - **Phone:** +1 647-649-8083
 - **Email:** stickwood_jr@hotmail.com
 - **LinkedIn:** https://www.linkedin.com/in/golden-q-stickwood-8404aa23b/
 - **GitHub:** https://github.com/StickwoodJr
-- **Status:** 3rd-semester student enrolled in Seneca Polytechnic's Computer Systems Technology (CTY/CTYC) Co-op program; eligible for Winter 2027 co-op work term (Jan - Apr 2027). Canadian Citizen (authorized to work in Canada; no sponsorship required).
+- **Status:** 3rd-semester student enrolled in Seneca Polytechnic's Computer Systems Technology (CTY/CTYC) Co-op program; eligible for Winter 2027 co-op / internship work term (Jan - Apr 2027). Canadian Citizen (authorized to work in Canada; no sponsorship required).
 - **Driver's License & Mobility:** Valid Ontario G driver's license with access to a reliable vehicle. Able and willing to commute and travel across York Region and the GTA (Newmarket, Aurora, Markham, Vaughan, Woodbridge, Toronto).
 - **Constraints:** Available for full-time 4-month co-op work term (Jan. 11, 2027 - Apr. 23, 2027); returning to studies upon completion.
 
@@ -53,12 +53,12 @@ framework_version: 1.2.6
 
 ## Independent Technical Projects
 
-### Multi-Zone Virtualized Infrastructure & Cisco Network Lab (2025 - 2026)
+### Multi-Zone Virtualized Infrastructure & Cisco Network Lab (Aug. 2026 - Present)
 - **Repository:** https://github.com/StickwoodJr/Home-Lab
 - Architected a 3-tier virtualized infrastructure on headless Debian 13 (`labhost`), isolating WAN, DMZ (`192.168.50.0/24`), and LAN zones with least-privilege default-deny security.
 - Configured a virtualized 3-legged Cisco IOSv appliance running Zone-Based Policy Firewall (ZFW), dynamic NAT overload (PAT), and stateful packet inspection policies.
 - Deployed zero-trust outbound ingress and remote management via Cloudflare Tunnels and Tailscale (WireGuard mesh), eliminating public port forwarding.
-- Engineered automated disaster recovery shell scripts (`virsh managedsave`, `backupVMs.bash`, `restoreVM.bash`) safely quiescing running VMs and generating scheduled, compressed backups.
+- Engineered automated disaster recovery shell scripts (`virsh managedsave`, `backupVMs.bash`, `restoreVM.bash`) safely stopping running VMs and generating scheduled, compressed backups.
 - Authored production-grade engineering documentation including 5 Architecture Decision Records (ADRs) and 7 incident response post-mortems.
 
 ## Professional Experience
@@ -66,20 +66,20 @@ framework_version: 1.2.6
 ### Founder & Lead Operator — Newmarket Pressure Washing (Newmarket, ON)
 *May 2022 - Aug. 2025*
 - Founded and operated an exterior surface cleaning business, winning the competitive York Region Summer Company Entrepreneurship Grant.
-- Managed end-to-end customer service operations across phone and in-person channels: incident intake, technical problem diagnosis, scheduling, and invoicing, maintaining a 100% satisfaction rating.
-- Performed routine hardware diagnostics, preventative maintenance, and mechanical/electrical troubleshooting on high-pressure pump systems to maximize uptime.
-- Achieved profitability within first month of operation, generating over $20,000 in lifetime revenue across 100+ clients with high-retention repeat business.
+- Managed end-to-end business operations including client acquisition, technical service estimating, scheduling, invoicing, and high-retention customer service with over a 97% satisfaction rating.
+- Performed routine hardware troubleshooting, preventative maintenance, and component repairs on commercial high-pressure equipment.
+- Achieved profitability within first month of operation, generating more than $10,000 in lifetime revenue across dozens of commercial and residential clients.
 - Featured in regional publications by YorkRegion.com and NewmarketToday for youth entrepreneurship and business leadership.
 
 ### Sales & Technical Solutions Representative — Brookstone Windows & Doors (Aurora, ON)
 *Oct. 2025 - Dec. 2025*
-- Conducted technical requirements discovery with property owners, translating complex engineering specifications and energy efficiency ratings clearly for non-technical clients.
-- Analyzed structural specifications, resolved customer technical inquiries, and scheduled qualified technical consultations in a high-pace quota environment.
+- Completed a week of intensive sales training at the head office in London, ON, combining in classroom training with supervised field canvassing.
+- Executed high volume residential canvassing, knocking on 200+ doors daily while maintaining professionalism and resilience in a high rejection environment.
 
 ### Ice Hockey Referee & Official — Newmarket Minor Hockey Association (NMHA) (Newmarket, ON)
 *Oct. 2020 - Mar. 2024*
-- Officiated 60+ competitive youth and adult league games over 4 seasons under Hockey Canada rules, making rapid, high-pressure decisions under close scrutiny.
-- De-escalated contentious on-ice disputes through clear, calm communication with coaches and team officials, ensuring player safety.
+- Officiated 300+ competitive youth and adult league games over 4 seasons under Hockey Canada rules, making rapid, high-pressure decisions under close scrutiny.
+- De-escalated contentious on ice disputes through clear, calm communication with coaches and team officials, ensuring player safety.
 
 ## Technical Skills Summary
 - **IT Operations & Endpoint Support:** Windows 10/11 desktop troubleshooting, PC hardware/component diagnostics, peripherals, meeting room AV, network print queues (`Add-Printer`), remote management (RSAT, RDP, Windows Admin Center).

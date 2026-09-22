@@ -87,6 +87,7 @@ This repository builds on the excellent foundations of [MadsLorentzen/ai-job-sea
 | 🐝 **Indeed Swarm Scraper** | High-performance multi-sector scraper (`/indeed-swarm-scraper`) that partitions search across customizable industry sectors (Software, Systems, Data, Operations, or Custom) with atomic deduplication and automatic tracker updates. |
 | 🎯 **Personal Knowledge & Evidence RAG (NotebookLM)** | Live, zero-cache retrieval augmented generation (`/rag-apply`) querying primary evidence from your personal notebook (certifications, personal projects, coursework, past resumes) via Google NotebookLM & ExtendLM MCP to back up resume claims with verified proof. |
 | 📊 **Interactive HTML Analytics Dashboard** | Standalone responsive dashboard with multi-board filtering (Indeed, Job Bank, LinkedIn, TechTO), pipeline funnel analytics, and one-click GitHub Pages deployment (`scripts/deploy_dashboard.sh`). |
+| 💼 **LinkedIn Profile Optimizer** | Dual-agent recruiter optimization engine (`/linkedin-optimizer`) combining 2026 algorithmic SEO linting (fold preview, Boolean acronym pairing, 50-skill taxonomy) with adaptive NotebookLM RAG grounding and turnkey profile generation. |
 | 🔄 **Automated Scrape & Apply Loop** | Continuous background daemon (`auto_scrape_and_apply.py`) that periodically sweeps job boards, evaluates fit, and prepares tailored application drafts. |
 
 ---
@@ -142,6 +143,7 @@ You can control the entire framework by running slash commands in **Claude Code*
 | **Evidence RAG Apply** | `/rag-apply <url_or_text>` | *"Apply with RAG to: <url>"* | Evaluates job, queries Google NotebookLM for primary career evidence proof, and drafts verified resume. |
 | **Interview Prep** | `/interview <company>` | *"Prepare me for an interview at <company>"* | Generates company dossier, STAR stories, tough questions, and mock interview. |
 | **Record Outcome** | `/outcome <company>` | *"I got an interview at <company>"* | Updates application status, archives submitted materials, or prepares follow-ups. |
+| **LinkedIn Optimizer** | `/linkedin-optimizer [review/generate]` | *"Optimize my LinkedIn profile"* or *"Generate a turnkey LinkedIn profile"* | Audits existing profiles against 2026 recruiter search algorithms or generates a 100-score turnkey profile grounded via NotebookLM. |
 | **Interactive Dashboard** | `/html-report` | *"Generate my job search dashboard"* | Builds responsive HTML report and deploys to GitHub Pages via `scripts/deploy_dashboard.sh`. |
 
 ---

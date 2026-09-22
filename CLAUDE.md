@@ -7,13 +7,14 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 3. **Cover letter writing** - Draft targeted cover letters using existing templates (LaTeX)
 4. **Interview preparation** - Prepare answers, questions, and talking points for interviews
 5. **Career strategy** - Advise on positioning and personal branding
+6. **LinkedIn optimization** - Audit and generate 2026 recruiter-optimized LinkedIn profiles (`/linkedin-optimizer`)
 
 ## Candidate Profile
 
 <!-- This section is auto-populated by /setup. You can also fill it in manually. -->
 
 ### Identity
-- **Name:** Golden Stickwood
+- **Name:** Golden Q. Stickwood
 - **Location:** Newmarket, ON, Canada (Commute across GTA: Newmarket, Aurora, Markham, Vaughan, Woodbridge, Toronto)
 - **Languages:**
   | Language | Level |
@@ -30,13 +31,14 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 
 ### Professional Experience
 - **Founder & Lead Operator** (May 2022 - Aug. 2025) - **Newmarket Pressure Washing** (Newmarket, ON)
-  - Won competitive York Region Summer Company Entrepreneurship Grant; generated >$20,000 lifetime revenue
-  - Managed end-to-end customer service operations across phone and in-person channels with 100% customer satisfaction
-  - Conducted hardware diagnostics, preventative maintenance, and mechanical/electrical troubleshooting on pump systems
+  - Won competitive York Region Summer Company Entrepreneurship Grant; generated >$10,000 lifetime revenue
+  - Managed end-to-end customer service operations across phone and in-person channels with over a 97% satisfaction rating
+  - Conducted hardware diagnostics, preventative maintenance, and component repairs on commercial high-pressure equipment
 - **Sales & Technical Solutions Representative** (Oct. 2025 - Dec. 2025) - **Brookstone Windows & Doors** (Aurora, ON)
-  - Conducted technical requirements discovery, translating engineering specifications clearly for clients
+  - Completed a week of intensive sales training at the head office in London, ON, combining in classroom training with supervised field canvassing
+  - Executed high volume residential canvassing, knocking on 200+ doors daily while maintaining professionalism and resilience in a high rejection environment
 - **Ice Hockey Referee & Official** (Oct. 2020 - Mar. 2024) - **Newmarket Minor Hockey Association** (Newmarket, ON)
-  - Officiated 60+ competitive games under Hockey Canada rules; rapid decision-making under high pressure
+  - Officiated 300+ competitive youth and adult league games over 4 seasons under Hockey Canada rules, making rapid, high-pressure decisions under close scrutiny
 
 ### Technical Skills
 - **Primary:** Windows 10/11 Desktop Support, Active Directory Domain Services (AD DS), Group Policy (GPOs), Windows Server (2016/2019/2022), User & Group Management (ADUC, AGDLP)

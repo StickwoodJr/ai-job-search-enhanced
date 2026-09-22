@@ -17,6 +17,7 @@ venv/
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+*.docx
 
 # Personal data (never commit these)
 salary_data.json
@@ -90,6 +91,8 @@ gmail_sync/
 reports/
 dist/
 career_evidence_pack.md
+linkedin_evidence_pack.md
+rag/cache/
 
 # Upskill reports (personal output). Depth-independent like the job_scraper
 # rules above: the upskill skill resolves `upskill/` relative to its own

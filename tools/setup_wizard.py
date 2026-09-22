@@ -35,6 +35,10 @@ SWARM_CONFIG_FILE = CONFIG_DIR / "swarm_sectors.json"
 RAG_DIR = REPO_ROOT / "rag"
 RAG_USER_CONFIG = RAG_DIR / "user_config.json"
 DOCUMENTS_DIR = REPO_ROOT / "documents"
+TOOLS_DIR = REPO_ROOT / "tools"
+
+sys.path.insert(0, str(TOOLS_DIR))
+sys.path.insert(0, str(RAG_DIR))
 
 
 def print_banner():
@@ -99,6 +103,21 @@ def run_doctor() -> dict:
     results["gh"] = has_gh
     print(f"  [{'✓' if has_git else '!'}] Git ({shutil.which('git') or 'missing'})")
     print(f"  [{'✓' if has_gh else '!'}] GitHub CLI ({shutil.which('gh') or 'optional, recommended'})")
+
+    # ExtendLM & NotebookLM Grounding RAG
+    try:
+        from check_extendlm import diagnose_extendlm
+        diag = diagnose_extendlm(verbose=False)
+        results["extendlm"] = diag.get("ready", False)
+        if diag.get("ready"):
+            print("  [✓] ExtendLM MCP & Browser Bridge (Operational)")
+        else:
+            status = diag.get("status", "NOT_CONFIGURED")
+            print(f"  [!] ExtendLM MCP & Browser Bridge ({status}: {diag.get('error', 'Not connected')})")
+            print("      Run `auth-extendlm` to authenticate or refresh your token.")
+    except Exception as e:
+        results["extendlm"] = False
+        print(f"  [!] ExtendLM MCP Bridge: {e}")
 
     print()
     return results
@@ -434,6 +453,18 @@ def configure_rag_notebook(interactive: bool = True):
             print(f"  ✓ Initialized default RAG config at {RAG_USER_CONFIG}")
         return cfg
 
+    # ExtendLM Pre-flight check
+    try:
+        from check_extendlm import diagnose_extendlm
+        diag = diagnose_extendlm(verbose=False)
+        if diag.get("ready"):
+            print("  [✓] ExtendLM MCP & Browser Connection: OPERATIONAL\n")
+        else:
+            print(f"  [!] ExtendLM Status: {diag.get('status')} - {diag.get('error')}")
+            print("      Run `auth-extendlm` or select option 4 below to authenticate.\n")
+    except Exception:
+        pass
+
     ans = input("Would you like to configure NotebookLM Career Evidence RAG now? (Y/n): ").strip().lower()
     if ans in ("n", "no"):
         print("  Career Evidence RAG setup skipped. You can configure it anytime with:")
@@ -444,8 +475,9 @@ def configure_rag_notebook(interactive: bool = True):
     print("  [1] Enter an existing Google NotebookLM Notebook ID")
     print("  [2] Scan documents/ folder (certs, projects, coursework & past resumes) to create a new notebook")
     print("  [3] Discover notebooks via ExtendLM MCP")
-    print("  [4] Skip for now")
-    rag_choice = input("Enter choice [1, 2, 3, or 4] (Default: 1): ").strip()
+    print("  [4] Authenticate / Refresh ExtendLM OAuth Token (`auth-extendlm`)")
+    print("  [5] Skip for now")
+    rag_choice = input("Enter choice [1, 2, 3, 4, or 5] (Default: 1): ").strip()
 
     if rag_choice in ("", "1"):
         nb_id = input("Enter your NotebookLM Notebook ID (from URL notebooklm.google.com/notebook/<ID>): ").strip()
@@ -486,6 +518,11 @@ def configure_rag_notebook(interactive: bool = True):
             with open(RAG_USER_CONFIG, "w", encoding="utf-8") as f:
                 json.dump(cfg, f, indent=2)
             print(f"  ✓ Active RAG notebook configured: '{title}' ({nb_id})\n")
+    elif rag_choice == "4":
+        try:
+            subprocess.run([sys.executable, str(TOOLS_DIR / "auth_extendlm.py")])
+        except Exception as e:
+            print(f"  [!] Authentication launcher error: {e}")
 
     return cfg
 
