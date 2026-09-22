@@ -87,7 +87,7 @@ This repository builds on the excellent foundations of [MadsLorentzen/ai-job-sea
 | 🐝 **Indeed Swarm Scraper** | High-performance multi-sector scraper (`/indeed-swarm-scraper`) that partitions search across customizable industry sectors (Software, Systems, Data, Operations, or Custom) with atomic deduplication and automatic tracker updates. |
 | 🎯 **Personal Knowledge & Evidence RAG (NotebookLM)** | Live, zero-cache retrieval augmented generation (`/rag-apply`) querying primary evidence from your personal notebook (certifications, personal projects, coursework, past resumes) via Google NotebookLM & ExtendLM MCP to back up resume claims with verified proof. |
 | 📊 **Interactive HTML Analytics Dashboard** | Standalone responsive dashboard with multi-board filtering (Indeed, Job Bank, LinkedIn, TechTO), pipeline funnel analytics, and one-click GitHub Pages deployment (`scripts/deploy_dashboard.sh`). |
-| 💼 **LinkedIn Profile Optimizer** | Dual-agent recruiter optimization engine (`/linkedin-optimizer`) combining 2026 algorithmic SEO linting (fold preview, multi-industry Boolean acronym pairing, 50-skill taxonomy) with adaptive NotebookLM RAG grounding and turnkey profile generation across any profession or field. |
+| 💼 **LinkedIn Profile Optimizer** | Dual-agent recruiter optimization engine (`/linkedin-optimizer`) combining 2026 algorithmic SEO linting (fold preview, dynamic agentic acronym pairing, 50-skill taxonomy) with adaptive NotebookLM RAG grounding and turnkey profile generation across any profession or field. |
 | 🔄 **Automated Scrape & Apply Loop** | Continuous background daemon (`auto_scrape_and_apply.py`) that periodically sweeps job boards, evaluates fit, and prepares tailored application drafts. |
 
 ---
@@ -191,7 +191,7 @@ In 2026, LinkedIn operates as an AI-powered Semantic Skill Graph. Profiles optim
    - **Senior Recruiter Proxy**: Reviews drafts against actual corporate talent acquisition heuristics (Boolean indexability, metric density, mobile-fold truncation, and tone).
 2. **2026 Algorithmic Ranking Gates**:
    - **Fold-Aware Formatting**: Guarantees core target job titles and value hooks stay within the first 65–70 characters of your headline and 300 characters of your About section.
-   - **Universal Boolean Acronym Pairing**: Pairs full professional terms with industry-recognized acronyms across any field (e.g., Tech: `API`, `VLAN`, `CI/CD`, `AWS`; Finance: `GAAP`, `EBITDA`, `ROI`, `CPA`; Healthcare: `EMR`, `HIPAA`, `BLS`; Marketing: `SEO`, `CTR`, `CRM`; Operations: `PMP`, `KPI`, `SLA`) to clear ATS and recruiter Boolean search strings.
+   - **Agentic Dynamic Acronym Pairing**: Because this is an agentic pipeline, the system dynamically identifies and pairs full professional terms with industry-recognized acronyms on the fly as needed based on the user's specific field and target role (e.g. inline `Full Term (ACRONYM)` format), maximizing Boolean recruiter search hits with zero static dictionary limits.
    - **50-Skill Categorized Taxonomy**: Populates all 50 skill slots categorized by domain with top 3 pinned spotlights.
    - **Target Seniority & Role Alignment**: Dynamically tunes keyword density for early-career dual terms (Co-op/Internship) as well as professional seniority levels (Senior, Lead, Specialist, Manager).
 3. **Adaptive NotebookLM RAG Grounding**:

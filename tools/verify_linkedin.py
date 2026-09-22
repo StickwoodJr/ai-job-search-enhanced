@@ -23,60 +23,50 @@ LIMIT_EXP_DESCRIPTION = 2000
 LIMIT_SKILL_NAME = 80
 MAX_SKILLS = 50
 
-# Universal Multi-Industry Acronym Dictionary for Boolean ATS Indexing
-# Covers Technology, Cloud, Finance, Healthcare, Marketing, Operations & Compliance
-MULTI_INDUSTRY_ACRONYM_PAIRS = [
-    # Systems, Cloud & Infrastructure
-    (r"\bActive Directory\b", r"\b(AD|AD DS)\b", "Active Directory / AD DS"),
-    (r"\bGroup Policy\b", r"\b(GPO|GPOs)\b", "Group Policy / GPOs"),
-    (r"\bDynamic Host Configuration Protocol\b", r"\bDHCP\b", "Dynamic Host Configuration Protocol / DHCP"),
-    (r"\bDomain Name System\b", r"\bDNS\b", "Domain Name System / DNS"),
-    (r"\bVirtual Local Area Network(s)?\b", r"\bVLAN(s)?\b", "Virtual Local Area Network / VLANs"),
-    (r"\bZone-Based Policy Firewall(s)?\b", r"\bZFW\b", "Zone-Based Policy Firewall / ZFW"),
-    (r"\bNetwork Address Translation\b", r"\bNAT\b", "Network Address Translation / NAT"),
-    (r"\bAccess Control List(s)?\b", r"\bACLs?\b", "Access Control Lists / ACLs"),
-    (r"\bArchitecture Decision Record(s)?\b", r"\bADR(s)?\b", "Architecture Decision Records / ADRs"),
-    # Software Engineering & Cloud Architecture
-    (r"\bApplication Programming Interface(s)?\b", r"\bAPI(s)?\b", "Application Programming Interface / APIs"),
-    (r"\bContinuous Integration\b", r"\bCI\b", "Continuous Integration / CI"),
-    (r"\bContinuous Deployment\b", r"\bCD\b", "Continuous Deployment / CD"),
-    (r"\bAmazon Web Services\b", r"\bAWS\b", "Amazon Web Services / AWS"),
-    (r"\bSoftware Development Life Cycle\b", r"\bSDLC\b", "Software Development Life Cycle / SDLC"),
-    (r"\bSingle Sign-On\b", r"\bSSO\b", "Single Sign-On / SSO"),
-    (r"\bRetrieval-Augmented Generation\b", r"\bRAG\b", "Retrieval-Augmented Generation / RAG"),
-    (r"\bLarge Language Model(s)?\b", r"\bLLM(s)?\b", "Large Language Models / LLMs"),
-    # Finance, Accounting & Business
-    (r"\bGenerally Accepted Accounting Principles\b", r"\bGAAP\b", "Generally Accepted Accounting Principles / GAAP"),
-    (r"\bEarnings Before Interest, Taxes, Depreciation, and Amortization\b", r"\bEBITDA\b", "EBITDA"),
-    (r"\bReturn on Investment\b", r"\bROI\b", "Return on Investment / ROI"),
-    (r"\bDiscounted Cash Flow\b", r"\bDCF\b", "Discounted Cash Flow / DCF"),
-    (r"\bCertified Public Accountant\b", r"\bCPA\b", "Certified Public Accountant / CPA"),
-    (r"\bFinancial Planning and Analysis\b", r"\bFP&A\b", "Financial Planning and Analysis / FP&A"),
-    # Healthcare, Clinical & Life Sciences
-    (r"\bElectronic Medical Record(s)?\b", r"\bEMR(s)?\b", "Electronic Medical Records / EMRs"),
-    (r"\bElectronic Health Record(s)?\b", r"\bEHR(s)?\b", "Electronic Health Records / EHRs"),
-    (r"\bHealth Insurance Portability and Accountability Act\b", r"\bHIPAA\b", "HIPAA"),
-    (r"\bBasic Life Support\b", r"\bBLS\b", "Basic Life Support / BLS"),
-    (r"\bAdvanced Cardiovascular Life Support\b", r"\bACLS(?!s)\b", "Advanced Cardiovascular Life Support / ACLS"),
-    # Marketing, Sales & Product
-    (r"\bSearch Engine Optimization\b", r"\bSEO\b", "Search Engine Optimization / SEO"),
-    (r"\bClick-Through Rate\b", r"\bCTR\b", "Click-Through Rate / CTR"),
-    (r"\bCost Per Click\b", r"\bCPC\b", "Cost Per Click / CPC"),
-    (r"\bCustomer Relationship Management\b", r"\bCRM\b", "Customer Relationship Management / CRM"),
-    (r"\bCost Per Acquisition\b", r"\bCPA\b", "Cost Per Acquisition / CPA"),
-    # Operations, Project Management & Compliance
-    (r"\bProject Management Professional\b", r"\bPMP\b", "Project Management Professional / PMP"),
-    (r"\bKey Performance Indicator(s)?\b", r"\bKPI(s)?\b", "Key Performance Indicators / KPIs"),
-    (r"\bService Level Agreement(s)?\b", r"\bSLA(s)?\b", "Service Level Agreement / SLAs"),
-    (r"\bObjectives and Key Results\b", r"\bOKRs?\b", "Objectives and Key Results / OKRs"),
-    (r"\bStatement of Work\b", r"\bSOW\b", "Statement of Work / SOW"),
-    (r"\bAnti-Money Laundering\b", r"\bAML\b", "Anti-Money Laundering / AML"),
-    (r"\bKnow Your Customer\b", r"\bKYC\b", "Know Your Customer / KYC"),
-    (r"\bGeneral Data Protection Regulation\b", r"\bGDPR\b", "General Data Protection Regulation / GDPR"),
-]
+# Agentic Pipeline Dynamic Acronym & Term Parser
+# Rather than maintaining a rigid static dictionary of predetermined sectors,
+# this agentic system dynamically extracts inline acronym definitions,
+# verifies expanded phrases across document text, and supports agent-generated
+# domain terms on the fly based on the user's specific target role and field.
 
-# Legacy alias for backward compatibility
-ACRONYM_PAIRS = MULTI_INDUSTRY_ACRONYM_PAIRS
+STOPWORDS_ACRONYM = {
+    "THE", "AND", "FOR", "NOT", "ARE", "WITH", "THAT", "THIS", "FROM", "THEY",
+    "HAVE", "BEEN", "WILL", "GPA", "FAIL", "PASS", "WARN", "NONE", "NULL", "TRUE", "FALSE"
+}
+
+
+def extract_inline_acronym_pairs(content: str) -> List[Tuple[str, str]]:
+    """
+    Dynamically extracts inline acronym definitions:
+    e.g. 'Active Directory Domain Services (AD DS)', 'Return on Investment (ROI)',
+         'Generally Accepted Accounting Principles (GAAP)', 'Basic Life Support (BLS)'.
+    """
+    matches = re.findall(
+        r"((?:[A-Z][a-zA-Z0-9\-]*(?:\s+(?:and|of|for|the|in|to|on|with|by|DS)\b)?\s*){1,6})\s*\(([A-Z0-9]{1,6}(?:\s+[A-Z0-9]{1,4})?)\)",
+        content,
+    )
+    pairs = []
+    seen = set()
+    for full_cand, acr in matches:
+        full_clean = full_cand.strip()
+        if len(full_clean) > 2 and full_clean.lower() != acr.lower():
+            key = (full_clean.lower(), acr)
+            if key not in seen:
+                seen.add(key)
+                pairs.append((full_clean, acr))
+    return pairs
+
+
+def check_acronym_initials_in_text(acr: str, text: str) -> bool:
+    """
+    Checks if an acronym's letters match consecutive words spelled out anywhere in the document text.
+    Allows standard prepositions/conjunctions (and, of, for, the, in, to, on, with).
+    """
+    if len(acr) < 2 or not acr.isalpha():
+        return False
+    pattern = r"\b" + r"\s+(?:and\s+|of\s+|for\s+|the\s+|in\s+|to\s+|on\s+|with\s+)?".join([re.escape(c) + r"[a-zA-Z0-9\-]+" for c in acr]) + r"\b"
+    return bool(re.search(pattern, text, re.IGNORECASE))
+
 
 
 
@@ -174,53 +164,63 @@ def audit_skills(content: str) -> Dict[str, Any]:
     }
 
 
-def audit_acronym_pairing(content: str) -> Dict[str, Any]:
+def audit_acronym_pairing(content: str, domain_terms: List[Dict[str, str]] = None) -> Dict[str, Any]:
     """
-    Verifies that both acronyms and full terms appear to maximize Boolean search hits across any domain.
-    1. Detects inline paired definitions: 'Full Term (ACRONYM)'.
-    2. Cross-references against multi-industry dictionary of standard domain pairs.
+    Verifies that acronyms and full terms are paired to maximize Boolean ATS search hits.
+    In this agentic pipeline, acronyms and terms are evaluated dynamically:
+    1. Extracts all inline paired definitions: 'Full Term (ACRONYM)'.
+    2. Identifies uppercase candidate acronyms and checks if their initials match expanded phrases in text.
+    3. If agent-generated domain terms are supplied (e.g. from the Drafter/Reviewer agent),
+       verifies that both the full form and acronym appear in the profile.
     """
-    inline_raw = re.findall(r"\b([A-Za-z][A-Za-z0-9\s\-/]{2,45})\s+\(([A-Z0-9]{2,8})\)", content)
-    # Deduplicate inline pairs
-    seen_inline = set()
-    inline_pairs = []
-    for term, acr in inline_raw:
-        pair_key = (term.strip().lower(), acr.strip().upper())
-        if pair_key not in seen_inline:
-            seen_inline.add(pair_key)
-            inline_pairs.append((term.strip(), acr.strip()))
+    inline_pairs = extract_inline_acronym_pairs(content)
+    inline_acrs = {acr for _, acr in inline_pairs}
 
-    pair_results = []
-    matched_count = 0
-    relevant_terms = 0
+    # Discover candidate uppercase acronyms (2 to 6 capital letters)
+    raw_acrs = set(re.findall(r"\b[A-Z]{2,6}\b", content)) - STOPWORDS_ACRONYM
 
-    # Check multi-industry catalog for terms relevant to this candidate
-    for full_regex, acr_regex, label in MULTI_INDUSTRY_ACRONYM_PAIRS:
-        has_full = bool(re.search(full_regex, content, re.IGNORECASE))
-        has_acr = bool(re.search(acr_regex, content)) or (bool(re.search(acr_regex, content, re.IGNORECASE)) and "ACLS" not in acr_regex)
+    paired_acronyms = []
+    unpaired_acronyms = []
+    for acr in sorted(raw_acrs):
+        if acr in inline_acrs:
+            paired_acronyms.append((acr, "inline definition"))
+        elif check_acronym_initials_in_text(acr, content):
+            paired_acronyms.append((acr, "expanded phrase in text"))
+        else:
+            unpaired_acronyms.append(acr)
 
-        # Only evaluate pairs where the candidate actually works in that area (at least one term mentioned)
-        if has_full or has_acr:
-            relevant_terms += 1
-            passed = has_full and has_acr
-            if passed:
-                matched_count += 1
-            pair_results.append({
-                "term": label,
-                "has_full_term": has_full,
-                "has_acronym": has_acr,
-                "both_present": passed,
-            })
+    # Agent-supplied domain terms (if generated dynamically on the fly by the agent pipeline)
+    agent_terms_results = []
+    if domain_terms:
+        for item in domain_terms:
+            full = item.get("full_term", "")
+            acr = item.get("acronym", "")
+            label = item.get("label", f"{full} / {acr}" if full and acr else (full or acr))
+            has_full = bool(re.search(r"\b" + re.escape(full) + r"\b", content, re.IGNORECASE)) if full else False
+            has_acr = bool(re.search(r"\b" + re.escape(acr) + r"\b", content)) if acr else False
+            if has_full or has_acr:
+                agent_terms_results.append({
+                    "term": label,
+                    "has_full_term": has_full,
+                    "has_acronym": has_acr,
+                    "both_present": has_full and has_acr,
+                })
 
-    total_verified = max(matched_count, len(inline_pairs))
+    matched_agent = sum(1 for r in agent_terms_results if r["both_present"])
+    total_agent = len(agent_terms_results)
+
+    total_verified = len(inline_pairs) + len(paired_acronyms) + matched_agent
 
     return {
-        "matched_pairs": matched_count,
-        "total_checked": relevant_terms,
         "inline_discovered_count": len(inline_pairs),
-        "inline_pairs": inline_pairs[:10],
+        "inline_pairs": inline_pairs,
+        "paired_acronyms": paired_acronyms,
+        "unpaired_acronyms": unpaired_acronyms,
+        "agent_terms_checked": total_agent,
+        "agent_terms_matched": matched_agent,
+        "agent_terms_details": agent_terms_results,
         "total_verified_pairs": total_verified,
-        "details": pair_results,
+        "passed": len(inline_pairs) >= 3 or matched_agent >= 1 or len(paired_acronyms) >= 3,
     }
 
 
@@ -234,7 +234,7 @@ def audit_spotlight_readiness(content: str) -> Dict[str, Any]:
 
     # 1. Open to work & availability signals (25 pts)
     has_avail = bool(re.search(
-        r"\b(open to work|available for|seeking|immediate availability|open to opportunities|work term|available [a-z]+)\b",
+        r"\b(open to work|available for|seeking|immediate availability|open to opportunities|work term|looking for|available [a-z]+)\b",
         content,
         re.IGNORECASE,
     ))
@@ -245,22 +245,28 @@ def audit_spotlight_readiness(content: str) -> Dict[str, Any]:
         checks.append(("Availability / Open to Work signal missing", False, 0))
 
     # 2. Target Role & Seniority Anchoring (25 pts)
-    # Supports both early-career dual terms (Co-op/Internship) and professional roles (Engineer, Manager, Analyst, Specialist, etc.)
+    headline_info = audit_headline(content)
+    headline_text = headline_info.get("headline_text", "")
+    has_separator = headline_info.get("has_role_separator", False)
+
     has_coop = bool(re.search(r"\bco-?op\b", content, re.IGNORECASE))
     has_intern = bool(re.search(r"\bintern(ship)?\b", content, re.IGNORECASE))
-    has_role_title = bool(re.search(
-        r"\b(engineer|administrator|analyst|specialist|developer|manager|director|lead|consultant|technician|nurse|architect|coordinator|scientist|officer|practitioner|accountant|strategist)\b",
+
+    # In professional LinkedIn profiles, headline frontloads the target role before the separator
+    has_title_in_headline = bool(headline_text and has_separator and len(headline_text.split("|")[0].split("•")[0].strip()) >= 3)
+    has_seniority_signal = bool(re.search(
+        r"\b(student|co-?op|intern(ship)?|junior|entry[- ]level|associate|senior|lead|principal|director|manager|specialist|consultant|officer|practitioner|head|analyst|engineer)\b",
         content,
         re.IGNORECASE,
     ))
 
-    if (has_coop and has_intern) or (has_role_title and (has_coop or has_intern or "senior" in content.lower() or "lead" in content.lower() or "specialist" in content.lower() or "analyst" in content.lower() or "engineer" in content.lower())):
+    if (has_coop and has_intern) or (has_title_in_headline and has_seniority_signal):
         score += 25
         if has_coop and has_intern:
             checks.append(("Target role & dual 'Co-op'/'Internship' terminology aligned", True, 25))
         else:
-            checks.append(("Target role & professional seniority positioning defined", True, 25))
-    elif has_role_title or has_coop or has_intern:
+            checks.append(("Target role & seniority positioning defined in headline", True, 25))
+    elif has_title_in_headline or has_seniority_signal or has_coop or has_intern:
         score += 15
         checks.append(("Target role keywords present (partial seniority alignment)", True, 15))
     else:
@@ -268,7 +274,7 @@ def audit_spotlight_readiness(content: str) -> Dict[str, Any]:
 
     # 3. Quantified metrics in experience & projects (25 pts)
     # Matches currency ($), percentages (%), counts/volumes (10+, 100k, 4.0 GPA, numbers)
-    metrics = re.findall(r"(\$[\d,]+(?:\.\d+)?|\b\d+%\b|\b\d+\+\b|\b\d+(?:k|M|B)\b|\b\d{2,}\b|\b\d\.\d\b)", content)
+    metrics = re.findall(r"(\$[\d,]+(?:\.\d+)?(?:k|M|B)?|\b\d+%|\d+\+|\b\d+(?:k|M|B)\b|\b\d{2,}\b|\b\d\.\d\b)", content)
     if len(metrics) >= 4:
         score += 25
         checks.append((f"High metric density ({len(metrics)} quantifiable markers found)", True, 25))
@@ -279,9 +285,9 @@ def audit_spotlight_readiness(content: str) -> Dict[str, Any]:
         checks.append(("Low quantifiable metric presence", False, 0))
 
     # 4. Regional or Metropolitan Search Radius Positioning (25 pts)
-    # Matches metropolitan areas, cities, provinces/states, countries, or Remote/Hybrid
+    # Matches geographic indicators (based in, location, city/province/country patterns, remote, hybrid, metro, area)
     has_location = bool(re.search(
-        r"\b(based in|location:|greater\s+[a-z]+|[a-z]+,\s*[a-z]{2}\b|remote|hybrid|metro|gta|area|toronto|new\s*york|chicago|london|vancouver|montreal|ottawa|calgary|seattle|san\s*francisco|boston|austin|berlin|copenhagen|denmark|ontario|california|texas|alberta|quebec|british\s*columbia)\b",
+        r"\b(based in|location:|located in|residing in|remote|hybrid|greater\s+[a-z]+|[a-zA-Z\s]+,\s*[a-zA-Z]{2,15}\b|metro\b|\barea\b|city\b|region\b|nationwide|worldwide)\b",
         content,
         re.IGNORECASE,
     ))
@@ -297,8 +303,7 @@ def audit_spotlight_readiness(content: str) -> Dict[str, Any]:
     }
 
 
-
-def verify_linkedin_profile(profile_path: str) -> Dict[str, Any]:
+def verify_linkedin_profile(profile_path: str, domain_terms: List[Dict[str, str]] = None) -> Dict[str, Any]:
     """Runs complete verification suite on target profile file."""
     if not os.path.exists(profile_path):
         return {"error": f"Profile file not found at: {profile_path}", "passed": False}
@@ -306,10 +311,23 @@ def verify_linkedin_profile(profile_path: str) -> Dict[str, Any]:
     with open(profile_path, "r", encoding="utf-8") as f:
         content = f.read()
 
+    # If domain_terms not provided explicitly, look for agent-generated domain_terms.json
+    if domain_terms is None:
+        cand_dir = os.path.dirname(os.path.abspath(profile_path))
+        for cand_path in [os.path.join(cand_dir, "domain_terms.json"), "linkedin/domain_terms.json"]:
+            if os.path.exists(cand_path):
+                try:
+                    with open(cand_path, "r", encoding="utf-8") as tf:
+                        loaded = json.load(tf)
+                        domain_terms = loaded if isinstance(loaded, list) else loaded.get("terms", [])
+                    break
+                except Exception:
+                    pass
+
     h_audit = audit_headline(content)
     a_audit = audit_about(content)
     s_audit = audit_skills(content)
-    p_audit = audit_acronym_pairing(content)
+    p_audit = audit_acronym_pairing(content, domain_terms=domain_terms)
     r_audit = audit_spotlight_readiness(content)
 
     all_passed = (
@@ -317,6 +335,7 @@ def verify_linkedin_profile(profile_path: str) -> Dict[str, Any]:
         and a_audit["pass_limit"]
         and s_audit["skills_found_count"] >= 30
         and r_audit["spotlight_score"] >= 75
+        and p_audit["passed"]
     )
 
     return {
@@ -362,15 +381,26 @@ def print_report(res: Dict[str, Any]):
 
     # Acronyms
     p = res["acronym_pairing"]
-    print(f"[*] RECRUITER BOOLEAN ACRONYM PAIRS:")
-    if p.get("total_checked", 0) > 0:
-        print(f"       {p['matched_pairs']} of {p['total_checked']} domain terms have both full-form and acronym present.")
-        for detail in p["details"]:
+    print(f"[*] RECRUITER BOOLEAN ACRONYM PAIRS (AGENTIC DYNAMIC AUDIT):")
+    if p.get("inline_discovered_count", 0) > 0:
+        print(f"       [✓] {p['inline_discovered_count']} dynamic inline 'Full Term (ACRONYM)' pairings detected:")
+        for full, acr in p["inline_pairs"][:8]:
+            print(f"           • {full} ({acr})")
+        if len(p["inline_pairs"]) > 8:
+            print(f"           ... and {len(p['inline_pairs']) - 8} more.")
+    if p.get("paired_acronyms"):
+        text_matches = [a for a, reason in p["paired_acronyms"] if reason == "expanded phrase in text"]
+        if text_matches:
+            print(f"       [✓] {len(text_matches)} acronyms matched with expanded phrases in text: {', '.join(text_matches[:10])}")
+    if p.get("agent_terms_checked", 0) > 0:
+        print(f"       Agent-Generated Terms: {p['agent_terms_matched']} of {p['agent_terms_checked']} paired.")
+        for detail in p["agent_terms_details"]:
             flag = "✓" if detail["both_present"] else "✗"
             advice = "" if detail["both_present"] else " (Add matching full-form/acronym for Boolean ATS)"
-            print(f"       [{flag}] {detail['term']}{advice}")
-    if p.get("inline_discovered_count", 0) > 0:
-        print(f"       [✓] {p['inline_discovered_count']} inline 'Full Term (ACRONYM)' pairings detected.")
+            print(f"           [{flag}] {detail['term']}{advice}")
+    if p.get("unpaired_acronyms"):
+        print(f"       [i] Note: {len(p['unpaired_acronyms'])} standalone acronyms without full phrase in text (optional ATS enrichment):")
+        print(f"           {', '.join(p['unpaired_acronyms'][:8])}")
     print()
 
     # Spotlight Score
@@ -391,9 +421,23 @@ def main():
     parser = argparse.ArgumentParser(description="LinkedIn Profile Verification & Algorithmic Linter")
     parser.add_argument("profile_path", help="Path to LinkedIn markdown profile or review file")
     parser.add_argument("--json", action="store_true", help="Output raw JSON results")
+    parser.add_argument("--domain-terms", help="Optional path to JSON file with agent-generated domain terms")
 
     args = parser.parse_args()
-    results = verify_linkedin_profile(args.profile_path)
+
+    domain_terms = None
+    if args.domain_terms:
+        if os.path.exists(args.domain_terms):
+            with open(args.domain_terms, "r", encoding="utf-8") as f:
+                loaded = json.load(f)
+                domain_terms = loaded if isinstance(loaded, list) else loaded.get("terms", [])
+        else:
+            try:
+                domain_terms = json.loads(args.domain_terms)
+            except Exception:
+                pass
+
+    results = verify_linkedin_profile(args.profile_path, domain_terms=domain_terms)
 
     if args.json:
         print(json.dumps(results, indent=2))

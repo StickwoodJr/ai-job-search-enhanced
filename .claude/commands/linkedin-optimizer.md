@@ -82,11 +82,13 @@ Read methodology reference:
    - **About Hook & Structure (20 pts):** First 300 chars hook, 5-block structure, contact CTA, character limit (<= 2600).
    - **Experience CAR Density (20 pts):** Action verbs, technical tool citations, quantified metrics, 5 tagged skills.
    - **Projects & Proof (15 pts):** Enterprise framing of homelab/engineering labs, Git repos, ADRs.
-   - **Skills & Acronym Pairing (15 pts):** Dual acronym/full-form pairing (`AD DS`, `GPO`, `DHCP`, `VLAN`), 50 skill slots.
-   - **Recruiter Spotlights (10 pts):** Open to Work, regional GTA location anchor, alumni connections.
+   - **Skills & Acronym Pairing (15 pts):** Dual acronym/full-form pairing generated dynamically based on candidate's domain (e.g. inline 'Full Term (ACRONYM)' pairings), 50 skill slots.
+   - **Recruiter Spotlights (10 pts):** Open to Work, regional metropolitan location anchor, alumni connections.
 2. Draft targeted **Before/After Upgrades** for each section with explicit rationale.
 
 ### In Generation Mode:
+*Agentic Dynamic Generation:* On the fly, identify and generate the candidate's domain-specific acronym pairings, Boolean search query terms, and 50-skill taxonomy as needed based on the user's unique target role, background, and evidence (with zero reliance on rigid static dictionaries).
+
 Draft the complete turnkey profile specification:
 - Banner / Visual setup instructions
 - 3–4 Headline variants tailored for recruiter SEO
@@ -110,8 +112,8 @@ You are a Senior Talent Acquisition Partner and Hiring Manager reviewing a Linke
 
 ## Your Tasks
 1. Audit Against Recruiter Boolean Search Filters:
-   - Does the profile hit high-frequency recruiter search terms for the candidate's target role and industry (core job titles, domain tools, regulatory/methodology standards, and seniority level)?
-   - Are full terms and industry acronyms paired together across the candidate's domain (e.g. Tech: API/AWS/VLAN, Finance: GAAP/EBITDA/ROI, Healthcare: EMR/HIPAA/BLS, Marketing: SEO/CTR/CRM, Operations: PMP/KPI/SLA)?
+   - Does the profile hit high-frequency recruiter search terms dynamically identified for the candidate's target role and industry (core job titles, domain tools, regulatory/methodology standards, and seniority level)?
+   - Are full terms and industry acronyms paired together across the candidate's domain (dynamically evaluated based on the user's field, ensuring inline 'Full Term (ACRONYM)' definitions or expanded terms exist for ATS queries)?
 2. Audit Visible Folds:
    - Headline: Does the primary target title fit in the first 65–70 characters?
    - About: Does the first 280–300 characters provide an irresistible hook before truncation?

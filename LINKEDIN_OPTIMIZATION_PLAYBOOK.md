@@ -54,9 +54,9 @@ flowchart TD
 
 ---
 
-## 2. Recruiter Boolean Search Archetypes
+## 2. Recruiter Boolean Search Archetypes (Agentic Dynamic Generation)
 
-Recruiters across every industry run strict Boolean queries on LinkedIn Recruiter. Below are representative archetypes across different domains:
+Because this is an **agentic pipeline**, recruiter Boolean search queries and domain acronym pairings are generated dynamically on the fly as needed based on the user's specific discipline, target role, and profile evidence (rather than looking up a static pre-configured list). Below are representative illustrative examples of what the agents generate across different domains:
 
 ### Archetype A: Systems & IT Infrastructure
 ```text
@@ -89,7 +89,7 @@ AND ("Google Analytics" OR "HubSpot" OR "SQL" OR "A/B Testing")
 ```
 
 ### Strategic Implications (Universal Across All Fields):
-1. **Universal Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text across any domain (e.g. Tech: `Virtual Local Area Network (VLAN)`, `Application Programming Interface (API)`; Finance: `Generally Accepted Accounting Principles (GAAP)`, `Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA)`; Healthcare: `Electronic Medical Records (EMR)`, `Basic Life Support (BLS)`; Marketing: `Search Engine Optimization (SEO)`, `Click-Through Rate (CTR)`).
+1. **Dynamic Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text across any domain (e.g. inline `Full Term (ACRONYM)` format). The agentic pipeline evaluates these dynamically for your specific field without relying on a rigid hardcoded dictionary.
 2. **Dual Terminology & Seniority Alignment:** Align search terms with recruiter query variations (e.g., dual "Co-op / Internship" for students, or "Senior / Lead / Specialist" for professional roles).
 3. **Location Radius Optimization:** Setting your LinkedIn location to your primary economic metropolitan area (e.g. Greater Toronto Area, Greater London Area, San Francisco Bay Area, Chicago Metropolitan Area) ensures you appear in searches centered anywhere across the region, avoiding narrow 25-km radius exclusions.
 

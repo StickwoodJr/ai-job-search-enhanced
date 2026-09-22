@@ -184,7 +184,7 @@ LinkedIn's Recruiter Search algorithm ranks candidate profiles against specific 
 | **Headline Hard Limit** | **Max 220 characters** | Must include primary title, secondary domain competencies, honors/certifications, and institution/organization. |
 | **Visible About Fold** | **First 280–300 characters** | Mobile apps and search summaries hide everything after 300 characters behind `"…see more"`. The first block must contain target title, availability, core domain expertise, and high-priority search keywords. |
 | **About Hard Limit** | **Max 2,600 characters** | Packed with high-density bullet points, verified project deliverables, and direct contact details. |
-| **Universal Boolean Acronym Pairing** | **ATS Query Compatibility** | Recruiters alternate between abbreviations and full terms in Boolean queries across every field. Both must appear in context: Tech (`API`, `VLAN`, `CI/CD`, `AWS`), Finance (`GAAP`, `EBITDA`, `ROI`), Healthcare (`EMR`, `HIPAA`, `BLS`), Marketing (`SEO`, `CTR`, `CRM`), Operations (`PMP`, `KPI`, `SLA`). |
+| **Agentic Boolean Acronym Pairing** | **ATS Query Compatibility** | Because this is an agentic pipeline, domain-specific acronyms and full terms are generated dynamically as needed based on the user's field and target role (e.g. inline `Full Term (ACRONYM)` format), maximizing Boolean recruiter search hits with zero static dictionary limits. |
 | **Seniority & Search Alignment** | **Filter Coverage** | Strategically aligns terminology with recruiter habits (e.g., dual "Co-op / Internship" for early careers, or "Senior / Lead / Specialist" for experienced roles). |
 | **50-Skill Taxonomy** | **Skill Graph Coverage** | The profile must fill all 50 skill slots across core competencies, software/tools, industry standards, and leadership. |
 | **Spotlight Triggers** | **Priority Search Tabs** | Triggers "Open to Work", "More Likely to Respond", "Active Talent", and "Have Company Connections". |
@@ -202,7 +202,7 @@ python3 tools/verify_linkedin.py "LINKEDIN_PROFILE_MASTER.md"
 The linter enforces strict programmatic pass/fail checks:
 * **Character limits:** Headline (≤ 220), About (≤ 2,600), Experience (≤ 2,000).
 * **Fold previews:** Displays exactly what a recruiter sees on a smartphone screen before clicking "…see more".
-* **Multi-Industry Acronym audit:** Cross-references profile against universal multi-industry dictionary (covering Tech, Finance, Healthcare, Marketing, Operations, and Compliance) and auto-detects inline `Full Term (ACRONYM)` pairs.
+* **Agentic Dynamic Acronym Audit:** Dynamically extracts inline `Full Term (ACRONYM)` definitions, initials matching across text, and agent-generated domain terms on the fly as needed based on the user (with zero hardcoded dictionaries).
 * **50-skill taxonomy audit:** Categorizes and counts all technical skills.
 * **Recruiter Readiness Score:** Calculates a transparent 0–100 score based on Boolean indexability and metric density.
 

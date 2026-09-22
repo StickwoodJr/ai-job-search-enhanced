@@ -1,5 +1,5 @@
 ---
-framework_version: 1.2.8
+framework_version: 1.2.9
 ---
 
 # 11. LinkedIn Profile Optimization Methodology (2026 Edition)
@@ -25,9 +25,9 @@ In 2026, LinkedIn's recruiter search algorithm functions as an **AI-powered Sema
 
 ---
 
-## 2. Recruiter Boolean Search Archetypes
+## 2. Recruiter Boolean Search Archetypes (Agentic Dynamic Generation)
 
-Recruiters across every industry run strict Boolean queries on LinkedIn Recruiter. Below are representative archetypes across different domains:
+Because this is an **agentic pipeline**, recruiter Boolean search queries and domain acronym pairings are generated dynamically on the fly as needed based on the user's specific discipline, target role, and profile evidence (rather than looking up a static pre-configured list). Below are representative illustrative examples of what the agents generate across different domains:
 
 ### Archetype A: Systems & IT Infrastructure
 ```text
@@ -53,7 +53,7 @@ AND ("EMR" OR "EHR" OR "Epic" OR "Cerner")
 ```
 
 ### Strategic Implications (Universal Across All Fields):
-1. **Universal Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text across any domain (e.g. Tech: `Virtual Local Area Network (VLAN)`, `Application Programming Interface (API)`; Finance: `Generally Accepted Accounting Principles (GAAP)`, `Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA)`; Healthcare: `Electronic Medical Records (EMR)`, `Basic Life Support (BLS)`; Marketing: `Search Engine Optimization (SEO)`, `Click-Through Rate (CTR)`).
+1. **Dynamic Acronym & Full-Form Pairing:** Always include both the full term and the industry acronym in your profile text across any domain (e.g. inline `Full Term (ACRONYM)` format). The agentic pipeline evaluates these dynamically for your specific field without relying on a static hardcoded dictionary.
 2. **Dual Terminology & Seniority Alignment:** Align search terms with recruiter query variations (e.g., dual "Co-op / Internship" for students, or "Senior / Lead / Specialist" for professional roles).
 3. **Location Radius Optimization:** Setting your LinkedIn location to your primary economic metropolitan area (e.g. Greater Toronto Area, Greater London Area, San Francisco Bay Area, Chicago Metropolitan Area) ensures you appear in searches centered anywhere across the region, avoiding narrow 25-km radius exclusions.
 
@@ -110,6 +110,6 @@ When reviewing an existing profile, evaluate and score against this rubric:
 | **About Hook & Structure** | 20 | Compelling first 300 chars; 5-block structure; contact details present; <= 2,600 chars total. |
 | **Experience CAR Density** | 20 | Action verbs used; technical tools cited; quantifiable metrics (revenue, %, scale); 5 skills tagged per job. |
 | **Technical Projects & Proof**| 15 | Homelab or engineering projects framed professionally; repo links present; ADRs/documentation noted. |
-| **Skills & Boolean Pairing** | 15 | Acronym and full terms paired (`AD/AD DS`, `GPO`, `DHCP`, `VLAN`); >= 45 skills listed; top 3 pinned. |
-| **Spotlights & Location** | 10 | Open to Work configured; regional GTA location anchor; alumni/company connection followings. |
+| **Skills & Boolean Pairing** | 15 | Acronym and full terms dynamically paired (`Full Term (ACRONYM)`); >= 45 skills listed; top 3 pinned. |
+| **Spotlights & Location** | 10 | Open to Work configured; regional metropolitan location anchor; alumni/company connection followings. |
 | **Total** | **100** | **Target: >= 85 for top-tier recruiter visibility.** |
